@@ -118,7 +118,7 @@ class UserController extends Controller
 
         $user->user_description = $request->input('user_description');
 
-        Session::flash('success', 'Your account has been updated.');
+        Session::flash('success', 'Profile updated successfully.');
 
         $user->save();
 
