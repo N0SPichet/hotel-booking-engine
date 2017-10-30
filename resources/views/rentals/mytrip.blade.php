@@ -16,7 +16,8 @@
 				@foreach($rentals as $rental)
 					<div class="row">
 						<div class="col-md-5 col-sm-5">
-							<p><b>House Name :  {{ $rental->houses->house_title }}  </b></p>
+							<p><b> Rent #ID : {{ $rental->id }} </b></p>
+							<p>House Name :  {{ $rental->houses->house_title }}  </p>
 							<p>{{ date('jS F, Y', strtotime($rental->rental_datein)) }} <span class="glyphicon glyphicon-arrow-right"></span> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
 							<p>{{ $rental->rental_guest }} guest</p>
 

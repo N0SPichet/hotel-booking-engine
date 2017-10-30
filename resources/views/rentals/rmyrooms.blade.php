@@ -6,20 +6,30 @@
 <div class="container">
 	<div class="row">
 
-		<div class="col-md-4 col-md-offset-0">
+		<div class="col-md-3 col-md-offset-0">
 			<h1>Check in Code</h1>
-			{{ Form::open(array('route' => 'checkin.code')) }}
+			@if ($errors->any())
+			    <div class="alert alert-danger">
+			        <ul>
+			            @foreach ($errors->all() as $error)
+			                <li>{{ $error }}</li>
+			            @endforeach
+			        </ul>
+			    </div>
+			@endif
+			{{ Form::open(array('route' => 'checkin.code', 'data-parsley-validate' => '')) }}
 				{{ Form::label('rent_id', 'Rent id') }}
-				{{ Form::text('rent_id', null, array('class' => 'form-control')) }}
+				{{ Form::text('rent_id', null, array('class' => 'form-control', 'required' => '')) }}
 
 				{{ Form::label('checkin_code', 'Code here') }}
-				{{ Form::text('checkin_code', null, array('class' => 'form-control')) }}
-
-				{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+				{{ Form::text('checkin_code', null, array('class' => 'form-control', 'required' => '')) }}
+				<div class="text-center">
+					{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+				</div>
 			{{ Form::close() }}
 		</div>
 
-		<div class="col-md-4 col-md-offset-0">
+		<div class="col-md-5 col-md-offset-0">
 			<h1>New rental</h1>
 			<label>Room</label>
 			@foreach ($houses as $house)

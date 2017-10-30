@@ -40,7 +40,7 @@ class PagesController extends Controller
     }
 
     public function mytrip(){
-        $rentals = Rental::where('users_id', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(10);
+        $rentals = Rental::where('users_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(10);
         return view('rentals.mytrip')->with('rentals', $rentals);
     }
 

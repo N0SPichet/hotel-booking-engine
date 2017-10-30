@@ -263,11 +263,21 @@ class RentalController extends Controller
         $idpayment = $rental->payments_id;
         $payments = Payment::where('id', $idpayment)->first();
 
-        $payments->payment_status = "Cancel";
+        if ($payment->payment_status == 'Waiting') {
 
-        $payments->save();
-
-        Session::flash('success', 'This trip has been canceled.');
+            $payments->payment_status = "Cancel";
+            $payments->save();
+            Session::flash('success', 'This trip has been canceled.');
+        }
+        else if ($payment->payment_status == 'Approved') {
+            Session::flash('fail', 'Cannot Cancel - This trip is already approved.');
+        }
+        else if ($payment->payment_status == 'Reject') {
+            Session::flash('fail', 'Cannot Cancel - This trip is already reject.');
+        }
+        else if ($payment->payment_status == 'Cancel') {
+            Session::flash('fail', 'Cannot Cancel - This trip is already cancel.');
+        }
 
         return redirect()->route('mytrips');
     }
@@ -276,13 +286,23 @@ class RentalController extends Controller
         $rental = Rental::find($id);
 
         $idpayment = $rental->payments_id;
-        $payments = Payment::where('id', $idpayment)->first();
+        $payment = Payment::where('id', $idpayment)->first();
+        if ($payment->payment_status == 'Waiting') {
+            $payment->payment_status = "Reject";
 
-        $payments->payment_status = "Reject";
+            $payment->save();
 
-        $payments->save();
-
-        Session::flash('success', 'This trip has been rejected.');
+            Session::flash('success', 'This trip has been rejected.');
+        }
+        else if ($payment->payment_status == 'Approved') {
+            Session::flash('fail', 'Cannot Reject - This trip is already approved.');
+        }
+        else if ($payment->payment_status == 'Reject') {
+            Session::flash('fail', 'Cannot Reject - This trip is already reject.');
+        }
+        else if ($payment->payment_status == 'Cancel') {
+            Session::flash('fail', 'Cannot Reject - This trip is already cancel.');
+        }
 
         return redirect()->route('rentals.index');
     }
