@@ -8,16 +8,18 @@ use Illuminate\Support\Facades\DB;
 use App\Rental;
 use App\Payment;
 use App\House;
+use App\Houserule;
 use App\Himage;
 use Image;
+use Mail;
 use Session;
 
 class RentalController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth');
-    // }
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -152,12 +154,14 @@ class RentalController extends Controller
         $dateout = $request->dateout;
         $guest = $request->guest;
 
+        $house = House::find($id);
+
         $data = array(  'id' => $id,
                         'datein' => $datein,
                         'dateout' => $dateout,
                         'guest' => $guest);
         if (Auth::check()){
-            return view('rentals.agreement')->with($data);
+            return view('rentals.agreement')->with($data)->with('house', $house);
         }
         else{
             return redirect()->route('login');
@@ -236,7 +240,7 @@ class RentalController extends Controller
         $rental = Rental::find($id);
 
         $idpayment = $rental->payments_id;
-        $payments = Payment::where('id', $idpayment)->first();
+        $payment = Payment::where('id', $idpayment)->first();
 
         $length = 10;
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -246,13 +250,37 @@ class RentalController extends Controller
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
 
-        $rental->checkincode = $randomString;
-        $payments->payment_status = "Approved";
+        if ($payment->payment_status == 'Waiting') {
 
-        $rental->save();
-        $payments->save();
+            $rental->checkincode = $randomString;
+            $payment->payment_status = "Approved";
+            $rental->save();
+            $payment->save();
+            $premessage = $rental->users->user_fname . " " . $rental->users->user_lname . " has rented your room please check Rentals page";
 
-        Session::flash('success', 'This trip has been approved.');
+            $data = array(
+                'email' => $rental->houses->users->email,
+                'subject' => "You Have New Renter",
+                'bodyMessage' => $premessage
+            );
+
+            Mail::send('emails.booking', $data, function($message) use ($data){
+                $message->from('noreply@ltt.com');
+                $message->to($data['email']);
+                $message->subject($data['subject']);
+            });
+
+            Session::flash('success', 'This trip has been approved.');
+        }
+        else if ($payment->payment_status == 'Approved') {
+            Session::flash('fail', 'Cannot Approve - This trip is already approved.');
+        }
+        else if ($payment->payment_status == 'Reject') {
+            Session::flash('fail', 'Cannot Approve - This trip is already reject.');
+        }
+        else if ($payment->payment_status == 'Cancel') {
+            Session::flash('fail', 'Cannot Approve - This trip is already cancel.');
+        }
 
         return redirect()->route('rentals.index');
     }
@@ -261,12 +289,12 @@ class RentalController extends Controller
         $rental = Rental::find($id);
 
         $idpayment = $rental->payments_id;
-        $payments = Payment::where('id', $idpayment)->first();
+        $payment = Payment::where('id', $idpayment)->first();
 
         if ($payment->payment_status == 'Waiting') {
 
-            $payments->payment_status = "Cancel";
-            $payments->save();
+            $payment->payment_status = "Cancel";
+            $payment->save();
             Session::flash('success', 'This trip has been canceled.');
         }
         else if ($payment->payment_status == 'Approved') {

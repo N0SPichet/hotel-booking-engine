@@ -2,6 +2,10 @@
 
 @section ('title', 'Hosting')
 
+@section('stylesheets')
+	{!! Html::style('css/select2.min.css') !!}
+@endsection
+
 @section ('content')
 <div class="container">
 	<div class="row">
@@ -44,6 +48,22 @@
 					{{ Form::label('image_names[]', 'Images') }}
 					{{ Form::file('image_names[]', array('class' => 'form-control-file', 'multiple' => 'multiple')) }}
 
+					{{ Form::label('houseitems', 'Amenities') }}
+					<select class="form-control select2-multi form-spacing-top-8" name="houseitems[]" multiple="multiple">
+						@foreach ($houseitems as $houseitem)
+							<option value="{{ $houseitem->id }}">{{ $houseitem->houseitem_name }}</option>
+							<!-- <input type="checkbox" name="houseitems[]" value="{{ $houseitem->id }}">{{ $houseitem->houseitem_name }} -->
+						@endforeach
+					</select>
+
+					{{ Form::label('houserules', 'Rules') }}
+					<select class="form-control select2-multi form-spacing-top-8" name="houserules[]" multiple="multiple">
+						@foreach ($houserules as $houserule)
+							<option value="{{ $houserule->id }}">{{ $houserule->houserule_name }}</option>
+							<!-- <input type="checkbox" name="houseitems[]" value="{{ $houseitem->id }}">{{ $houseitem->houseitem_name }} -->
+						@endforeach
+					</select>
+
 					{{ Form::label('house_price', 'Pricing', array('class' => 'form-spacing-top-8')) }}
 					{{ Form::text('house_price', null, array('class' => 'form-control form-spacing-top-8', 'required' => '')) }}
 
@@ -68,4 +88,12 @@
 	</div>
 	<a href="{{ URL::previous() }}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-left "></span></a>
 </div>
+@endsection
+
+@section('scripts')
+	{!! Html::script('js/select2.min.js') !!}
+
+	<script type="text/javascript">
+		$('.select2-multi').select2();
+	</script>
 @endsection

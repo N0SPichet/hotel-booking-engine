@@ -38,16 +38,16 @@
 										<div class="text-center">{{ $rental->payments->payment_status }}</div>
 									</div>
 									</button>
-									@elseif($rental->payments->payment_status == 'Cancel')
-									<button type="submit" class="btn btn-default btn-warning btn-block btn-sm">
+									@endif
+								{!! Form::close() !!}
+								
+								@if($rental->payments->payment_status == 'Cancel')
+									<button type="submit" class="btn btn-default btn-warning btn-block btn-sm disabled">
 									<div class="text-white">
 										<div class="text-center">{{ $rental->payments->payment_status }}</div>
 									</div>
 									</button>
-									@endif
-								{!! Form::close() !!}
-
-								@if($rental->payments->payment_status == 'Reject')
+								@elseif($rental->payments->payment_status == 'Reject')
 									<button type="button" class="btn btn-default btn-danger btn-block btn-sm disabled">
 									<div class="text-white">
 										<div class="text-center">{{ $rental->payments->payment_status }}</div>

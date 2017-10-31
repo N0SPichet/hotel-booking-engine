@@ -2,6 +2,10 @@
 
 @section ('title', 'Hosting')
 
+@section('stylesheets')
+	{!! Html::style('css/select2.min.css') !!}
+@endsection
+
 @section ('content')
 <div class="container">
 	<div class="row">
@@ -106,4 +110,8 @@
 		</div>
 	</div> 
 </div>
+@endsection
+
+@section('scripts')
+	{!! Html::script('js/select2.min.js') !!}
 @endsection

@@ -1,6 +1,6 @@
 @extends ('main')
 
-@section ('title', $house->users->user_fname. ' | ' .'Houses')
+@section ('title', $house->users->user_fname. ' | ' .'Rooms')
 
 @section ('content')
 <div class="container">
@@ -44,6 +44,22 @@
 							No
 						@endif
 					</p>
+					
+					<br>
+					<h4>Amenities</h4>
+					<ul>
+						@foreach ($house->houseitems as $houseitem)
+							<li>{{ $houseitem->houseitem_name }}</li>
+						@endforeach
+					</ul>
+
+					<br>
+					<h4>Rules</h4>
+					<ul>
+						@foreach ($house->houserules as $houserule)
+							<li>{{ $houserule->houserule_name }}</li>
+						@endforeach
+					</ul>
 
 					<br>
 					<h4>Address</h4>

@@ -23,6 +23,8 @@ Route::get('diaries/mydiaries', 'PagesController@mydiaries')->name('diaries.mydi
 Route::get('diary/{id}', 'PagesController@single')->name('diary.single');
 Route::get('user/profile', 'PagesController@userprofile')->name('users.profile');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
+Route::get('contact', 'PagesController@getContact')->name('contact');
+Route::post('contact', 'PagesController@postContact')->name('contact.sent');
 
 
 //Create resource route for UserController
@@ -46,6 +48,12 @@ Route::resource('diaries', 'DiaryController');
 
 //Create resource route for CategoryController
 Route::resource('categories', 'CategoryController', ['except' => ['create']]);
+
+//Create resource route for TagController
+Route::resource('tags', 'TagController', ['except' => ['create']]);
+
+//Create resource route for HouseitemController
+Route::resource('houseitems', 'HouseitemController', ['except' => ['create']]);
 
 //Create resource route for RoomController
 Route::resource('rooms', 'RoomController');

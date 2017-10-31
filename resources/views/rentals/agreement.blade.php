@@ -10,12 +10,9 @@
 			<h1>House Rules</h1>
 				<div>
 					<ul>
-						<li>No smoking</li>
-						<li>Not suitable for pets</li>
-						<li>No parties or events</li>
-						<li>Not safe or suitable for children (0-12 years)</li>
-						<li>Check in is anytime after 2PM</li>
-						<li>Check out by 10AM</li>
+						@foreach ($house->houserules as $houserule)
+							<li>{{ $houserule->houserule_name }}</li>
+						@endforeach
 						
 						<hr>
 
@@ -40,7 +37,7 @@
 
 					<hr>
 
-					{{ Form::submit('Payment', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+					{{ Form::submit('Agree and continue', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
 				{!! Form::close() !!}
 		</div>
 	</div> <!-- end of detail row-->

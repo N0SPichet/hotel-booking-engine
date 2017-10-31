@@ -77,7 +77,6 @@
 
 							</a>
 							<br>
-							<br>
 						@endif
 					@endif
 				@endforeach

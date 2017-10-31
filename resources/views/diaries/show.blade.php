@@ -9,6 +9,12 @@
 				<h1>{{ $diary->title }}</h1>
 				<p> {{ $diary->message }}</p>
 				<hr>
+				<div class="tags">
+					@foreach ($diary->tags as $tag)
+						<span class="label label-default">{{ $tag->tag_name }}</span>
+					@endforeach
+				</div>
+				<hr>
 				<p>Public by : {{ $diary->users->user_fname }}</p>
 				<p>Public date : {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
 			</div>

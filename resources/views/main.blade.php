@@ -15,6 +15,8 @@
 
     {{ Html::style('css/parsley.css') }}
     {{ Html::style('css/styles.css') }}
+
+    @yield('stylesheets')
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -23,33 +25,6 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/contentstyle.css') }}">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    <!-- Scripts -->
-
-    <script>
-      window.Laravel = {!! json_encode([
-        'csrfToken' => csrf_token(),
-      ]) !!};
-      /* When the user clicks on the button, 
-      toggle between hiding and showing the dropdown content */
-      function myFunction() {
-          document.getElementById("myDropdown").classList.toggle("show");
-      }
-
-      // Close the dropdown if the user clicks outside of it
-      window.onclick = function(event) {
-        if (!event.target.matches('.dropbtn')) {
-
-          var dropdowns = document.getElementsByClassName("dropdown-content");
-          var i;
-          for (i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show')) {
-              openDropdown.classList.remove('show');
-            }
-          }
-        }
-      }
-    </script>
     
   </head>
 <body>
@@ -76,6 +51,7 @@
           <li class="{{ Request::is('/') ? 'active'  : ''}}">         <a href="/">Home</a></li>
           <li class="{{ Request::is('diaries') ? 'active'  : ''}}">   <a href="{{ route('diaries.index') }}"> Diary     </a></li>
           <li class="{{ Request::is('about-us') ? 'active'  : ''}}">  <a href="{{ route('aboutus') }}">       About Us  </a></li>
+          <li class="{{ Request::is('contact') ? 'active'  : ''}}">  <a href="{{ route('contact') }}">       Contact Us  </a></li>
           <li><a href="{{ route('generateRandomString') }}">Check in Code</a></li>
 
         </ul>
@@ -110,8 +86,11 @@
                 <li class="text-center">Administrator</li>
                 <li><a href="{{ route('users.index') }}">Users</a></li>
                 <li><a href="{{ route('rooms.index') }}">Rooms</a></li>
+                <li><a href="{{ route('rentals.index') }}">Trips</a></li>
+                <li class="text-center">Add new</li>
                 <li><a href="{{ route('categories.index') }}">Categories</a></li>
-                <li><a href="{{ route('rentals.index') }}">Trips</li>
+                <li><a href="{{ route('tags.index') }}">Tags</a></li>
+                <li><a href="{{ route('houseitems.index') }}">House Items</a></li>
 
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ route('logout') }}"
@@ -136,8 +115,9 @@
 
 @yield('content')
 
-
 {!! Html::script('js/parsley.min.js') !!}
+
+@yield ('scripts')
 
 @include('pages._footer')
 </body>

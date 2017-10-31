@@ -142,7 +142,7 @@
 					</div>
 
 					<div class="text-center">
-						{{ Form::submit('Book Now', array('class' => 'btn btn-success btn-lg btn-h1-spacing')) }}
+						{{ Form::submit('Request to Book', array('class' => 'btn btn-success btn-lg btn-h1-spacing')) }}
 					</div>
 
 				{!! Form::close() !!}

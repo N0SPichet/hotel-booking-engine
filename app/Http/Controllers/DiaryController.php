@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Diary;
 use App\Category;
+use App\Tag;
 use Session;
 
 class DiaryController extends Controller
@@ -30,7 +31,8 @@ class DiaryController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('diaries.create')->with('categories', $categories);
+        $tags = Tag::all();
+        return view('diaries.create')->with('categories', $categories)->with('tags', $tags);
     }
 
     /**
@@ -56,6 +58,8 @@ class DiaryController extends Controller
         $diary->message = $request->message;
 
         $diary->save();
+
+        $diary->tags()->sync($request->tags, false);
 
         Session::flash('success', 'This diary was succussfully save!');
 
@@ -84,12 +88,19 @@ class DiaryController extends Controller
     public function edit($id)
     {
         $diary = Diary::find($id);
+        
         $categories = Category::all();
         $cats = array();
         foreach ($categories as $category) {
             $cats[$category->id] = $category->category_name;
         }
-        return view('diaries.edit')->with('diary', $diary)->with('categories', $cats);
+
+        $tags = Tag::all();
+        $tag2 = array();
+        foreach ($tags as $tag) {
+            $tag2[$tag->id] = $tag->tag_name;
+        }
+        return view('diaries.edit')->with('diary', $diary)->with('tags', $tag2)->with('categories', $cats);
     }
 
     /**
@@ -117,6 +128,13 @@ class DiaryController extends Controller
 
         $diary->save();
 
+        if (isset($request->tags)) {
+            $diary->tags()->sync($request->tags);
+        }
+        else{
+            $diary->tags()->sync(array());
+        }
+
         Session::flash('success', 'This diary was successfully saved.');
 
         return redirect()->route('diary.single', $diary->id);
@@ -131,9 +149,10 @@ class DiaryController extends Controller
     public function destroy($id)
     {
         $diary = Diary::find($id);
-
+        $diary->tags()->detach();
         $diary->delete();
 
+        Session::flash('success', 'The diary was successfully deleted');
         return redirect()->route('diaries.index');
     }
 }

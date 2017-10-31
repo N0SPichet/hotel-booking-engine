@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\House;
+use App\Houseitem;
+use App\Houserule;
 use App\Address;
 use App\Addresscity;
 use App\Addressstate;
@@ -55,6 +57,7 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
+
         $this->validate($request, array(
             'house_title' => 'required',
             'house_capacity' => 'required',
@@ -112,6 +115,10 @@ class RoomController extends Controller
             $count++;
         }
 
+        $house->houseitems()->sync($request->houseitems, false);
+
+        $house->houserules()->sync($request->houserules, false);
+
         Session::flash('success', 'This house was succussfully uploaded!');
 
         return redirect()->route('rooms.single', $house->id);
@@ -164,6 +171,8 @@ class RoomController extends Controller
         $rental = Rental::where('houses_id', $house->id)->first();
         $images = Himage::all();
         if ($rental == NULL){
+            $house->houseitems()->detach();
+            $house->houserules()->detach();
             foreach ($images as $image) {
                 if ($image->houses_id == $house->id) {
                     $filename = $image->image_name;
@@ -208,6 +217,10 @@ class RoomController extends Controller
         $addressstates_id = $request->addressstates_id;
         $addresscountries_id = $request->addresscountries_id;
 
+        $houseitems = Houseitem::all();
+
+        $houserules = Houserule::all();
+
         $data = array(  'house_property' => $house_property,
                         'house_capacity' => $house_capacity,
                         'house_guestspace' => $house_guestspace,
@@ -223,6 +236,6 @@ class RoomController extends Controller
                         'addressstates_id' => $addressstates_id,
                         'addresscountries_id' => $addresscountries_id);
 
-        return view('rooms.setscene')->with($data);
+        return view('rooms.setscene')->with($data)->with('houseitems', $houseitems)->with('houserules', $houserules);
     }
 }
