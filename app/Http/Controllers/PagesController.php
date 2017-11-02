@@ -48,31 +48,4 @@ class PagesController extends Controller
     public function aboutus(){
     	return view('pages.about');
     }
-
-    public function getContact(){
-        return view('pages.contact');
-    }
-
-    public function postContact(Request $request){
-        $this->validate($request, [
-            'email' => 'required|email',
-            'subject' => 'required|min:3',
-            'message' => 'required|min:10'
-        ]);
-
-        $data = array(
-            'email' => $request->email,
-            'subject' => $request->subject,
-            'bodyMessage' => $request->message
-        );
-
-        Mail::send('emails.contact', $data, function($message) use ($data){
-            $message->from($data['email']);
-            $message->to('pichetfuengfoo@gmail.com');
-            $message->subject($data['subject']);
-        });
-
-        Session::flash('success', 'Your Email was sent');
-        return redirect()->route('contact');
-    }
 }

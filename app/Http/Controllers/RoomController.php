@@ -133,7 +133,8 @@ class RoomController extends Controller
     public function show($id)
     {
         $house = House::find($id);
-        return view('rooms.room-detail')->with('house', $house);
+        $images = Himage::where('houses_id', $id)->get();
+        return view('rooms.room-detail')->with('house', $house)->with('images', $images);
     }
 
     /**

@@ -2,6 +2,10 @@
 
 @section ('title', 'Rentals')
 
+@section('stylesheets')
+	{{ Html::style('css/parsley.css') }}
+@endsection
+
 @section ('content')
 <div class="container">
 	<div class="row">

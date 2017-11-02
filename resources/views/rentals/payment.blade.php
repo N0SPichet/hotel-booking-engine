@@ -2,6 +2,10 @@
 
 @section ('title', 'Room Detail | Payment')
 
+@section('stylesheets')
+	{{ Html::style('css/parsley.css') }}
+@endsection
+
 @section ('content')
 <div class="container">
 	<div class="row">
@@ -21,7 +25,9 @@
 
 					<div class="row">
 						<div class="col-md-12 col-md-offset-0">
-							<span> ฿{{ $house_price }} x {{ $diff }} {{ $diff > 1 ? "nights" : "night" }} </span>
+							<span> ฿{{ $house_price }} x {{ $diff }} {{ $diff > 1 ? "nights" : "night" }} 
+								@if ( $diff >=7 ) (%6 discount) @endif
+							</span>
 							<span class="pull-right"> ฿{{ $stay_price }} </span>
 						</div>
 					</div>
@@ -47,7 +53,7 @@
 
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
-			<p class="lead">Payment detail</p>
+			<div class="lead">Payment detail</div>
 			
 			<div class="row">
 				<div class="col-md-4 col-sm-4">
@@ -93,20 +99,24 @@
 
 			<div class="row">
 				{!! Form::open(array('route' => 'rentals.store', 'data-parsley-validate' => '', 'files' => true )) !!}
+					
+					<div class="col-md-12">
+						<input type="hidden" name="id" value="{{ $id }}">
+						<input type="hidden" name="datein" value="{{ $datein }}" class="form-control">
+						<input type="hidden" name="dateout" value="{{ $dateout }}" class="form-control">
+						<input type="hidden" name="guest" value="{{ $guest }}" class="form-control">						
+					</div>
 
-					<input type="hidden" name="id" value="{{ $id }}">
-					<input type="hidden" name="datein" value="{{ $datein }}" class="form-control">
-					<input type="hidden" name="dateout" value="{{ $dateout }}" class="form-control">
-					<input type="hidden" name="guest" value="{{ $guest }}" class="form-control">
-					<div class="col-md-6">
+					<div class="col-md-12">
 						{{ Form::label('payment_bankaccount', 'Bank Account: ') }}
 						{{ Form::text('payment_bankaccount', null, array('class' => 'form-control', 'required' => '')) }}
 					</div>
 
-					<div class="col-md-6">
+					<div class="col-md-12">
 						{{ Form::label('payment_holder', 'Bank Holder Name') }}
 						{{ Form::text('payment_holder', null, array('class' => 'form-control', 'required' => '')) }}
 					</div>
+
 					<div class="col-md-12">
 						{{ Form::label('banks_id', 'Bank Name') }}
 						<select class="form-control" name="banks_id">
@@ -125,14 +135,12 @@
 
 					<div class="col-md-12">
 						{{ Form::label('payment_transfer_slip', 'Upload your transfer slip: ', array('class' => 'form-spacing-top-8')) }}
-						<div class="form-control-file">
-						{{ Form::file('payment_transfer_slip') }}
-						</div>
-					</div>
+						{{ Form::file('payment_transfer_slip', ['class' => 'form-control-file']) }}
 
-					{{ Form::hidden('payment_status', "Waiting", array('class' => 'form-control')) }}
+						{{ Form::hidden('payment_status', "Waiting", array('class' => 'form-control')) }}
+					</div>
 						
-					<div class="col-md-4 col-md-offset-4 text-center">
+					<div class="col-md-12 text-center">
 						{{ Form::submit('Sent Booking', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
 					</div>
 						

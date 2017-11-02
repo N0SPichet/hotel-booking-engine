@@ -23,8 +23,6 @@ Route::get('diaries/mydiaries', 'PagesController@mydiaries')->name('diaries.mydi
 Route::get('diary/{id}', 'PagesController@single')->name('diary.single');
 Route::get('user/profile', 'PagesController@userprofile')->name('users.profile');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
-Route::get('contact', 'PagesController@getContact')->name('contact');
-Route::post('contact', 'PagesController@postContact')->name('contact.sent');
 
 
 //Create resource route for UserController
@@ -61,8 +59,11 @@ Route::post('rooms/setscene', 'RoomController@rsetscene')->name('rooms.setscene'
 Route::get('room/{id}', 'RoomController@single')->name('rooms.single');
 Route::post('rooms/{id}/report', 'RoomController@hreport')->name('rooms.report');
 
-//Generate Random String
-Route::get('checkin/code/generate', 'RentalController@generateRandomString')->name('generateRandomString');
+//Create resource route for HelpController
+Route::resource('helps', 'HelpController', ['except' => ['create']]);
+Route::get('helps/checkin/code', 'HelpController@checkincode')->name('checkincode');
+Route::get('contact', 'HelpController@getContact')->name('getcontact');
+Route::post('contact', 'HelpController@postContact')->name('postcontact');
 
 //Check Database Connection
 Route::get('check-connect',function(){

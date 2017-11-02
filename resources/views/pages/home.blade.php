@@ -27,10 +27,9 @@
 
                         </div>
 
-                        <!-- @foreach ($images as $image)
+                       <!--  @foreach ($images as $image)
                             @if ($image->houses_id == $house->id)
                               <a href="rooms/{{ $house->id }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive"></a>
-                            <span><h5>{{ $house->house_title }}</h5></span>
                             @endif
                         @endforeach -->
                       </div>

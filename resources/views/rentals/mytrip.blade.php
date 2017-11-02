@@ -75,8 +75,6 @@
 
 							{!! Form::open(['route' => ['rental.rentalcancel', $rental->id], 'method' => 'POST']) !!}
 
-							{{ csrf_field() }}
-
 							{!! Form::submit('Cancel This Trip', ['class' => 'btn btn-danger btn-sm btn-block btn-h1-spacing']) !!}
 
 							{!! Form::close() !!}

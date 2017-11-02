@@ -28,8 +28,6 @@
 
 								{!! Form::open(['route' => ['users.report', $user->id]]) !!}
 
-								{{ csrf_field() }}
-
 								{!! Form::submit('Report this User', ['class' => 'btn btn-danger btn-sm btn-block btn-h1-spacing']) !!}
 
 								{!! Form::close() !!}

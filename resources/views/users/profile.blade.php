@@ -88,12 +88,6 @@
 					{!! Form::open(['route' => ['users.updateimage', $user->id], 'files' => true]) !!}
 						{{ Form::label('user_image', 'Prifile Photo', array('class' => 'form-spacing-top-8')) }}
 						
-						<!-- <div class="col-md-6 col-md-offset-3">
-							<div class="form-control-file">
-								{{ Form::file('user_image') }}
-							</div>
-						</div> -->
-						
 						<div class="fileupload fileupload-new" data-provides="fileupload">
 						    <span class="btn btn-primary btn-file">
 						    	<span class="fileupload-new">Select file</span>

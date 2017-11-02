@@ -10,7 +10,7 @@
 			<h1>Contact Us</h1>
 			<hr>
 
-			<form action="{{ route('contact.sent') }}" method="POST">
+			<form action="{{ route('postcontact') }}" method="POST">
 				{{ csrf_field() }}
 				<div class="form-group">
 					<label name="email">Email</label>

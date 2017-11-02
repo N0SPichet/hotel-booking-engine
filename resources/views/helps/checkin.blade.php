@@ -1,13 +1,13 @@
 @extends('main')
 
-@section('title','Blank Page')
+@section('title','Check in with Code')
 
 @section('content')
 
 <div class="container">
 	<div class="row">
 		<div class="panel panel-default">
-			<div class="panel-heading"><h4>Blank Page</h4></div>
+			<div class="panel-heading"><h1>Check in with Code</h1></div>
 
 			<div class="panel-body">
 				<p>Genarated Code for Check in : {{ $randomString }}</p>

@@ -2,6 +2,10 @@
 
 @section ('title', 'Room Detail | Agreement')
 
+@section('stylesheets')
+	{{ Html::style('css/parsley.css') }}
+@endsection
+
 @section ('content')
 <div class="container">
 

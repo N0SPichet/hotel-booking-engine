@@ -219,7 +219,12 @@ class RentalController extends Controller
             $diff = $temp_m + $diff_d;
         }
 
-        $stay_price = $house_price * $diff;
+        if (($diff%7 ==0) || $diff/7 >= 1) {
+            $stay_price = ($house_price * $diff)*0.94;
+        }
+        else {
+            $stay_price = $house_price * $diff;
+        }
 
         $total_price = ($stay_price/100)*7 + $stay_price;
 
@@ -340,7 +345,7 @@ class RentalController extends Controller
         //SELECT * FROM rentals WHERE houses_id IN ('1', '11', '12')
         $houses = House::where('users_id', Auth::user()->id)->get();
         $i = 0;
-        $hid[] = NULL;
+        $hid = array();
         foreach ($houses as $house) {
             $hid[$i] = $house->id;
             $i++;
@@ -387,19 +392,6 @@ class RentalController extends Controller
             $error_m = $checkin_code;
             return view('pages._error')->with('error_m', $error_m);
         }
-    }
-
-    public function generateRandomString() {
-        $length = 10;
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        $randomString;
-
-        return view('pages._blank')->with('randomString', $randomString);
     }
 
 }

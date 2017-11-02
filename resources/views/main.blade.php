@@ -13,7 +13,6 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    {{ Html::style('css/parsley.css') }}
     {{ Html::style('css/styles.css') }}
 
     @yield('stylesheets')
@@ -25,6 +24,7 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/contentstyle.css') }}">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
   </head>
 <body>
@@ -51,8 +51,7 @@
           <li class="{{ Request::is('/') ? 'active'  : ''}}">         <a href="/">Home</a></li>
           <li class="{{ Request::is('diaries') ? 'active'  : ''}}">   <a href="{{ route('diaries.index') }}"> Diary     </a></li>
           <li class="{{ Request::is('about-us') ? 'active'  : ''}}">  <a href="{{ route('aboutus') }}">       About Us  </a></li>
-          <li class="{{ Request::is('contact') ? 'active'  : ''}}">  <a href="{{ route('contact') }}">       Contact Us  </a></li>
-          <li><a href="{{ route('generateRandomString') }}">Check in Code</a></li>
+          <li><a href="{{ route('helps.index') }}">Help</a></li>
 
         </ul>
 
