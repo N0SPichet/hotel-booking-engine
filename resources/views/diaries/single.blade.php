@@ -16,7 +16,7 @@
 				</div>
 				<hr>
 				<p>Public by : {{ $diary->users->user_fname }}</p>
-				<p>Public date : {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
+				<p>Publish date : {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
 			</div>
 
 			<div class="col-md-4">

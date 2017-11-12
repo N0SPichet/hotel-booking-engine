@@ -51,10 +51,10 @@
 					{{ Form::label('notice', 'How much notice do you need before a guest arrives?') }}
 					<select class="form-control form-spacing-top-8" name="notice">
 						<option value="Same Day">Same Day</option>
-						<option value="1">1 Day</option>
-						<option value="2">2 Days</option>
-						<option value="3">3 Days</option>
-						<option value="7">7 Days</option>
+						<option value="1Day">1 Day</option>
+						<option value="2Days">2 Days</option>
+						<option value="3Days">3 Days</option>
+						<option value="7Days">7 Days</option>
 					</select>
 
 					<p><b>When can guests check in?</b></p>

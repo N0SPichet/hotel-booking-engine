@@ -132,6 +132,11 @@
 
 						{{ Form::hidden('payment_status', "Waiting", array('class' => 'form-control')) }}
 					</div>
+
+					<div class="col-md-12">
+						<p>Cancellation policy: Strict</p>
+						<p>Cancel up to 7 days before check in and get a 50% refund (minus service fees). Cancel within 7 days of your trip and the reservation is non-refundable. Service fees are refunded when cancellation happens before check in and within 48 hours of booking.</p>
+					</div>
 						
 					<div class="col-md-12 text-center">
 						{{ Form::submit('Pay', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}

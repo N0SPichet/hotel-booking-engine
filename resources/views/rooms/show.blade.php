@@ -30,7 +30,26 @@
 			<p><img src="https://www.shareicon.net/data/128x128/2015/10/29/663979_users_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_capacity }} guests 
 				<img src="https://www.shareicon.net/data/128x128/2016/07/11/598206_home_64x64.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_bedrooms }} bedroom 
 				<img src="https://www.shareicon.net/data/128x128/2015/12/21/691012_sleep_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_beds}} bed 
-				<img src="https://www.shareicon.net/data/128x128/2016/02/24/724310_tool_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_bathroom }} bathroom</p>
+				<img src="https://www.shareicon.net/data/128x128/2016/02/24/724310_tool_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_bathroom }} bathroom
+			</p>
+
+			<hr>
+			@if ( $house->about_your_place != NULL)
+			<h5>About place</h5>
+			<p> {{ $house->about_your_place }}</p>
+			<br>
+			@endif
+			@if ($house->guest_can_access != NULL)
+			<h5>Guest access</h5>
+			<p> {{ $house->guest_can_access }}</p>
+			<br>
+			@endif
+			@if ($house->optional_note != NULL)
+			<h5>Optional Note</h5>
+			<p> {{ $house->optional_note }}</p>
+			<br>
+			@endif
+
 			<h4>Cancellations</h4>
 			<div class="well">
 				<p>Free cancellation</p>

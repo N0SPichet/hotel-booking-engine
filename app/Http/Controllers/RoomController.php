@@ -164,8 +164,9 @@ class RoomController extends Controller
         $price->monthly_discount = $request->monthly_discount;
         $price->save();
 
-        $cover_image = Himage::where('houses_id', $house->id)->first();
+        $cover_image = Himage::where('houses_id', $request->id)->first();
         $house->image_name = $cover_image;
+        $house->save();
 
         $house->houserules()->sync($request->houserules, false);
         $house->housedetails()->sync($request->housedetails, false);

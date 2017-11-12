@@ -23,6 +23,11 @@
 						@foreach ($house->housedetails as $housedetail)
 							<li>{{ $housedetail->must_know }}</li>
 						@endforeach
+						@if ($house->optional_rules != NULL)
+						<hr>
+						<p>Additional rules</p>
+						<p>{{ $house->optional_rules }}</p>
+						@endif
 					</ul>
 				</div>
 				<hr>
