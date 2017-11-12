@@ -10,19 +10,15 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-
-    {{ Html::style('css/styles.css') }}
-
-    @yield('stylesheets')
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <!-- Styles -->
+    @yield('stylesheets')
+    {{ Html::style('css/styles.css') }}
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/contentstyle.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     
@@ -51,17 +47,16 @@
           <li class="{{ Request::is('/') ? 'active'  : ''}}">         <a href="/">Home</a></li>
           <li class="{{ Request::is('diaries') ? 'active'  : ''}}">   <a href="{{ route('diaries.index') }}"> Diary     </a></li>
           <li class="{{ Request::is('about-us') ? 'active'  : ''}}">  <a href="{{ route('aboutus') }}">       About Us  </a></li>
-          <li><a href="{{ route('helps.index') }}">Help</a></li>
+          <li class="{{ Request::is('helps') ? 'active'  : ''}}">     <a href="{{ route('helps.index') }}">   Help      </a></li>
 
         </ul>
 
-        <!-- Right Side Of Navbar -->
         <ul class="nav navbar-nav navbar-right">
 
-          <!-- @if (Auth::guest()) -->
+          @if (Auth::guest())
             <li><a href="{{ route('login') }}">Login</a></li>
             <li><a href="{{ route('register') }}">Register</a></li>
-          <!-- @else -->
+          @else
             <li><li><a href="{{ route('rooms.create') }}">Host</a></li></li>
             <li><a href="{{ route('mytrips') }}">Trips</a></li>
             <li class="dropdown">
@@ -69,18 +64,19 @@
                 @if (Auth::user()->user_image == NULL)
                   <img src="{{ asset('images/users/blank-profile-picture.png') }}" style="width: 32px; height: 32px; position: absolute; border-radius: 50%; top: 10px; left: 10px;">
                 @else
-                  <img src="{{ asset('images/users/' . Auth::user()->user_image) }}" style="width: 32px; height: 32px; position: absolute; border-radius: 50%; top: 10px; left: 10px;">
+                  <div style="position: relative; position: absolute; top: 10px; left: 10px; width: 32px; height: 32px; overflow: hidden; border-radius: 50%;">
+                    <img src="{{ asset('images/users/' . Auth::user()->user_image) }}" style="position: absolute; width: auto; height: 32px;">
+                  </div>
                 @endif
                   {{ Auth::user()->user_fname }}<span class="caret"></span>
               </a>
-
-              <!-- <a data-toggle="dropdown" class="dropbtn" style="position: relative;"><img src="{{ asset('images/users/' . Auth::user()->user_image) }}" style="width: 32px; height: 32px; position: absolute; border-radius: 50%; top: 10px; left: 10px;">{{ Auth::user()->user_fname }}<span class="caret"></span></a> -->
               
               <ul class="dropdown-menu" role="menu">
                 <li class="text-center">User</li>
                 <li><a href="{{ route('users.profile') }}">Profile</a></li>
                 <li><a href="{{ route('diaries.mydiaries') }}">My Diary</a></li>
                 <li><a href="{{ route('rentals.rmyrooms') }}">Rentals</a></li>
+                <li><a href="{{ route('index-myroom', Auth::user()->id) }}">Rooms</a></li>
                 <li role="separator" class="divider"></li>
                 <li class="text-center">Administrator</li>
                 <li><a href="{{ route('users.index') }}">Users</a></li>
@@ -89,7 +85,7 @@
                 <li class="text-center">Add new</li>
                 <li><a href="{{ route('categories.index') }}">Categories</a></li>
                 <li><a href="{{ route('tags.index') }}">Tags</a></li>
-                <li><a href="{{ route('houseitems.index') }}">House Items</a></li>
+                <li><a href="{{ route('houseamenities.index') }}">Amenities</a></li>
 
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ route('logout') }}"
@@ -101,7 +97,7 @@
                   </form></li>
               </ul>
             </li>
-          <!-- @endif -->
+          @endif
         </ul>
       </div>
     </div>

@@ -34,7 +34,6 @@
 			@endforeach
 
 			<div class="text-center">
-				<!-- generate link for siary item -->
 				{!! $diaries->links() !!}
 			</div>
 		</div>

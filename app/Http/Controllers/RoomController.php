@@ -5,13 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\House;
-use App\Houseitem;
-use App\Houserule;
 use App\Address;
 use App\Addresscity;
 use App\Addressstate;
 use App\Addresscountry;
 use App\Housetype;
+use App\Houseamenity;
+use App\Housespace;
+use App\Guestarrive;
+use App\Houserule;
+use App\Housedetail;
+use App\Houseprice;
 use App\Rental;
 use App\Himage;
 use Image;
@@ -28,8 +32,12 @@ class RoomController extends Controller
     public function index()
     {
         $houses = House::orderBy('updated_at', 'desc')->paginate(10);
-
         return view('rooms.index')->with('houses', $houses);
+    }
+
+    public function indexmyroom($id) {
+        $houses = House::where('users_id', $id)->orderBy('updated_at', 'desc')->paginate(10);
+        return view('rooms.index-myroom')->with('houses', $houses);
     }
 
     /**
@@ -43,10 +51,88 @@ class RoomController extends Controller
         $cities = Addresscity::all();
         $states = Addressstate::all();
         $countries = Addresscountry::all();
-        return view('rooms.create')->with('htypes', $htypes)
-                                   ->with('cities', $cities)
-                                   ->with('states', $states)
-                                   ->with('countries', $countries);
+        $houseamenities = Houseamenity::all();
+        $housespaces = Housespace::all();
+        return view('rooms.create')->with('htypes', $htypes)->with('cities', $cities)->with('states', $states)->with('countries', $countries)->with('houseamenities', $houseamenities)->with('housespaces', $housespaces);
+    }
+
+    public function rsetscene(Request $request)
+    {
+        $this->validate($request, array(
+            'house_property' => 'required',
+            'house_capacity' => 'required',
+            'house_guestspace' => 'required',
+            'house_bedrooms' => 'required',
+            'house_beds' => 'required',
+            'house_bathroom' => 'required',
+            'house_bathroomprivate' => 'required',
+            'house_address' => 'required',
+            'house_postcode' => 'required',
+            'housetypes_id' => 'required',
+            'addresscities_id' => 'required',
+            'addressstates_id' => 'required',
+            'addresscountries_id' => 'required',
+        ));
+
+        $house = new House;
+        $house->users_id = Auth::user()->id;
+        $house->house_property = $request->house_property;
+        $house->house_capacity = $request->house_capacity;
+        $house->house_guestspace = $request->house_guestspace;
+        $house->house_bedrooms = $request->house_bedrooms;
+        $house->house_beds = $request->house_beds;
+        $house->house_bathroom = $request->house_bathroom;
+        $house->house_bathroomprivate = $request->house_bathroomprivate;
+        $house->house_address = $request->house_address;
+        $house->house_postcode = $request->house_postcode;
+        $house->housetypes_id = $request->housetypes_id;
+        $house->addresscities_id = $request->addresscities_id;
+        $house->addressstates_id = $request->addressstates_id;
+        $house->addresscountries_id = $request->addresscountries_id;
+        
+        $guestarrive = new Guestarrive;
+        $guestarrive->save();
+        $house->guestarrives_id = $guestarrive->id;
+
+        $houseprice = new Houseprice;
+        $houseprice->save();
+        $house->houseprices_id = $houseprice->id;
+
+        $house->save();
+        $house->houseamenities()->sync($request->houseamenities, false);
+        $house->housespaces()->sync($request->housespaces, false);
+        return view('rooms.setscene')->with('id', $house->id);
+    }
+
+    public function rfinalstep(Request $request)
+    {
+        $this->validate($request, array(
+            'id' => 'required',
+            'house_title' => 'required'
+        ));
+        $house = House::find($request->id);
+        $house->house_title = $request->house_title;
+        $house->house_description = $request->house_description;
+        $house->about_your_place = $request->about_your_place;
+        $house->guest_can_access = $request->guest_can_access;
+        $house->optional_note = $request->optional_note;
+        $house->about_neighborhood = $request->about_neighborhood;
+
+        foreach ($request->image_names as $image_name) {
+            $images = new Himage;
+            $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
+            $location = public_path('images/houses/'.$filename);
+            Image::make($image_name)->resize(1600, 1000)->save($location);
+
+            $images->houses_id = $house->id;
+            $images->image_name = $filename;
+            $images->save();
+        }
+        $house->save();
+
+        $houserules = Houserule::all();
+        $housedetails = Housedetail::all();
+        return view('rooms.finalstep')->with('id', $house->id)->with('houserules', $houserules)->with('housedetails', $housedetails);
     }
 
     /**
@@ -57,12 +143,126 @@ class RoomController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, array(
+            'id' => 'required',
+            'notice' => 'required',
+            'checkin_from' => 'required',
+            'checkin_to' => 'required'
+        ));
 
+        $house = House::find($request->id);
+        $guestarrive = Guestarrive::find($house->guestarrives_id);
+        $guestarrive->notice = $request->notice;
+        $guestarrive->checkin_from = $request->checkin_from;
+        $guestarrive->checkin_to = $request->checkin_to;
+        $guestarrive->save();
+
+        $price = Houseprice::find($house->houseprices_id);
+        $price->price = $request->price;
+        $price->welcome_offer = $request->welcome_offer;
+        $price->weekly_discount = $request->weekly_discount;
+        $price->monthly_discount = $request->monthly_discount;
+        $price->save();
+
+        $cover_image = Himage::where('houses_id', $house->id)->first();
+        $house->image_name = $cover_image;
+
+        $house->houserules()->sync($request->houserules, false);
+        $house->housedetails()->sync($request->housedetails, false);
+
+        Session::flash('success', 'This house was succussfully published!');
+
+        return redirect()->route('rooms.single', $house->id);
+    }
+
+    public function single($id){
+        $house = House::find($id);
+        $rentcount = Rental::where('houses_id', $house->id)->count();
+        $images = Himage::where('houses_id', $id)->get();
+        return view('rooms.single')->with('house', $house)->with('rentcount', $rentcount)->with('images', $images);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $house = House::find($id);
+        $images = Himage::where('houses_id', $id)->get();
+        return view('rooms.show')->with('house', $house)->with('images', $images);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $house = House::find($id);
+
+        $housetypes = Housetype::all();
+        $types = array();
+        foreach ($housetypes as $housetype) {
+            $types[$housetype->id] = $housetype->type_name;
+        }
+
+        $housecities = Addresscity::all();
+        $cities = array();
+        foreach ($housecities as $housecity) {
+            $cities[$housecity->id] = $housecity->city_name;
+        }
+
+        $housestates = Addressstate::all();
+        $states = array();
+        foreach ($housestates as $housestate) {
+            $states[$housestate->id] = $housestate->state_name;
+        }
+
+        $housecountries = Addresscountry::all();
+        $countries = array();
+        foreach ($housecountries as $housecountry) {
+            $countries[$housecountry->id] = $housecountry->country_name;
+        }
+
+        $houseitems = Houseamenity::all();
+        $items = array();
+        foreach ($houseitems as $houseitem) {
+            $items[$houseitem->id] = $houseitem->houseitem_name;
+        }
+
+        $houserules = Houserule::all();
+        $rules = array();
+        foreach ($houserules as $houserule) {
+            $rules[$houserule->id] = $houserule->houserule_name;
+        }
+
+        $houseimages = Himage::where('houses_id', $house->id)->get();
+        $images = array();
+        $count = 1;
+        foreach ($houseimages as $houseimage) {
+            $images[$houseimage->id] = $count;
+            $count++;
+        }
+        return view('rooms.edit')->with('house', $house)->with('types', $types)->with('cities', $cities)->with('states', $states)->with('countries', $countries)->with('items', $items)->with('rules', $rules)->with('images', $images);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
         $this->validate($request, array(
             'house_title' => 'required',
             'house_capacity' => 'required',
-            'house_property' => 'required',
-            'house_guestspace' => 'required',
             'house_bedrooms' => 'required',
             'house_beds' => 'required',
             'house_bathroom' => 'required',
@@ -77,13 +277,9 @@ class RoomController extends Controller
             'house_description' => 'required'
         ));
 
-        $house = new House;
-
-        $house->users_id = Auth::user()->id;
+        $house = House::find($id);
         $house->house_title = $request->house_title;
-        $house->house_property = $request->house_property;
         $house->house_capacity = $request->house_capacity;
-        $house->house_guestspace = $request->house_guestspace;
         $house->house_bedrooms = $request->house_bedrooms;
         $house->house_beds = $request->house_beds;
         $house->house_bathroom = $request->house_bathroom;
@@ -96,68 +292,44 @@ class RoomController extends Controller
         $house->addressstates_id = $request->addressstates_id;
         $house->addresscountries_id = $request->addresscountries_id;
         $house->house_description = $request->house_description;
-
-        $house->save();
-        $house = House::orderby('created_at', 'desc')->first();
-        $houseid = $house->id;
+        $idimage = $request->image_name;
+        $image = Himage::find($idimage);
+        $house->image_name = $image->image_name;
 
         $count = 0;
-        foreach ($request->image_names as $image_name) {
-            $images = new Himage;
-            $filename = time() . $count . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
-            $location = public_path('images/houses/'.$filename);
-            Image::make($image_name)->resize(1600, 1000)->save($location);
+        if ($request->hasFile('image_names')) {
+            foreach ($request->image_names as $image_name) {
+                $image = new Himage;
+                $filename = time() . $count . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
+                $location = public_path('images/houses/'.$filename);
+                Image::make($image_name)->resize(1600, 1000)->save($location);
 
-            $images->houses_id = $houseid;
-            $images->image_name = $filename;
-            $images->save();
+                $image->houses_id = $house->id;
+                $image->image_name = $filename;
+                $image->save();
 
-            $count++;
+                $count++;
+            }
         }
 
-        $house->houseitems()->sync($request->houseitems, false);
+        $house->save();
+        if (isset($request->houseitems)) {
+            $house->houseamenities()->sync($request->houseitems);
+        }
+        else{
+            $house->houseamenities()->sync(array());
+        }
 
-        $house->houserules()->sync($request->houserules, false);
+        if (isset($request->houserules)) {
+            $house->houserules()->sync($request->houserules);
+        }
+        else{
+            $house->houserules()->sync(array());
+        }
 
-        Session::flash('success', 'This house was succussfully uploaded!');
+        Session::flash('success', 'This house was succussfully updated!');
 
         return redirect()->route('rooms.single', $house->id);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        $house = House::find($id);
-        $images = Himage::where('houses_id', $id)->get();
-        return view('rooms.room-detail')->with('house', $house)->with('images', $images);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**
@@ -172,7 +344,7 @@ class RoomController extends Controller
         $rental = Rental::where('houses_id', $house->id)->first();
         $images = Himage::all();
         if ($rental == NULL){
-            $house->houseitems()->detach();
+            $house->houseamenities()->detach();
             $house->houserules()->detach();
             foreach ($images as $image) {
                 if ($image->houses_id == $house->id) {
@@ -190,53 +362,5 @@ class RoomController extends Controller
         }
 
         return redirect()->route('rooms.index')->with('alert', $alt);
-    }
-
-    public function hreport($id){
-        //
-    }
-
-    public function single($id){
-        $house = House::find($id);
-        $images = Himage::where('houses_id', $id)->get();
-        return view('rooms.single')->with('house', $house)->with('images', $images);
-    }
-
-    public function rsetscene(Request $request){
-
-        $house_property = $request->house_property;
-        $house_capacity = $request->house_capacity;
-        $house_guestspace = $request->house_guestspace;
-        $house_bedrooms = $request->house_bedrooms;
-        $house_beds = $request->house_beds;
-        $house_bathroom = $request->house_bathroom;
-        $house_bathroomprivate = $request->house_bathroomprivate;
-        $house_address = $request->house_address;
-        $house_postcode = $request->house_postcode;
-        $housetypes_id = $request->housetypes_id;
-        $addresscities_id = $request->addresscities_id;
-        $addressstates_id = $request->addressstates_id;
-        $addresscountries_id = $request->addresscountries_id;
-
-        $houseitems = Houseitem::all();
-
-        $houserules = Houserule::all();
-
-        $data = array(  'house_property' => $house_property,
-                        'house_capacity' => $house_capacity,
-                        'house_guestspace' => $house_guestspace,
-                        'dateout' => $house_beds,
-                        'house_bedrooms' => $house_bedrooms,
-                        'house_beds' => $house_beds,
-                        'house_bathroom' => $house_bathroom,
-                        'house_bathroomprivate' => $house_bathroomprivate,
-                        'house_address' => $house_address,
-                        'house_postcode' => $house_postcode,
-                        'housetypes_id' => $housetypes_id,
-                        'addresscities_id' => $addresscities_id,
-                        'addressstates_id' => $addressstates_id,
-                        'addresscountries_id' => $addresscountries_id);
-
-        return view('rooms.setscene')->with($data)->with('houseitems', $houseitems)->with('houserules', $houserules);
     }
 }

@@ -19,7 +19,7 @@
   				<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
 			</div>
 		</div>
-	</div> <!-- end of header row-->
+	</div>
 
 	<div class="row">
 		<div class="col-md-7">
@@ -31,12 +31,17 @@
 				<img src="https://www.shareicon.net/data/128x128/2016/07/11/598206_home_64x64.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_bedrooms }} bedroom 
 				<img src="https://www.shareicon.net/data/128x128/2015/12/21/691012_sleep_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_beds}} bed 
 				<img src="https://www.shareicon.net/data/128x128/2016/02/24/724310_tool_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_bathroom }} bathroom</p>
+			<h4>Cancellations</h4>
+			<div class="well">
+				<p>Free cancellation</p>
+				<p>Cancel within {{ ($house->guestarrives->notice) }} of booking to get a full refund.</p>
+			</div>
 
 			<h4>Amenities</h4>
 			<div class="well">
 				<ul>
-					@foreach ($house->houseitems as $houseitem)
-					<li>{{ $houseitem->houseitem_name }}</li>
+					@foreach ($house->houseamenities as $houseamenity)
+					<li>{{ $houseamenity->amenityname }}</li>
 					@endforeach
 				</ul>
 			</div>
@@ -46,10 +51,9 @@
 			<div class="well">
 				<ul>
 					<li>Cleaning Fee ฿400</li>
-					<li>Security Deposit ฿2000</li>
-					<li>Weekly Discount: 6%</li>
-					<li>Monthly Discount: 25%</li>
-					<li>Weekend Price ฿{{ ($house->house_price)*1.2 }}/ night</li>
+					<li>Weekly discount: {{ $house->houseprices->weekly_discount }}%</li>
+					<li>Monthly discount: {{ $house->houseprices->monthly_discount }}%</li>
+					<li>Weekend Price ฿{{ ($house->houseprices->price)*1.2 }}/ night</li>
 				</ul>
 			</div>
 
@@ -62,8 +66,10 @@
 					@endforeach
 					
 					<hr>
-
-					<li>No parties, events, photo shoots or film shoots are allowed without express advance permission from home owner- additional fees and supervision required. Rental of the Off-grid it house is for vacation purposes only, personal photos are allowed. Additional rental terms and fees apply to rent the house for commercial photo shoots or events. Please contact us through airbnb if you wish to rent the house for an event or a photoshoot for additional details.</li>
+					<p>You must also acknowledge</p>
+					@foreach ($house->housedetails as $housedetail)
+					<li>{{ $housedetail->must_know }}</li>
+					@endforeach
 				</ul>
 			</div>
 
@@ -78,14 +84,15 @@
 			</div>
 
 			<br>
-			<h2>Hosted by {{ $house->users->user_fname }} {{ $house->users->user_lname }}</h2>
+			<h2>Hosted by {{ $house->users->user_fname }}</h2>
+			<p>{{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }}</p>
 			<p>{{ $house->users->user_description }}</p>
 			<div>
 				<button class="btn btn-info btn-sm">Contact Host</button>
 			</div>
 			
 			<br>
-			<h2>Location</h2>
+			<h2>The neighborhood</h2>
 			<p>{{ $house->users->user_fname }}'s home is located in {{ $house->addresscities->city_name }} {{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }} </p>
 			<br>
 			<div class="text-center">
@@ -103,57 +110,24 @@
 			<div class="row">
 				<div class="col-md-12">
 					<br>
-					Room {{ $house->id }} : {{ $house->house_price }} THB/Night
+					<p>฿{{ $house->houseprices->price }} per night</p>
 				</div>
-			
-				<!-- <form method="post" action="/rentals/agreement">
-					<input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-					<input type="hidden" name="id" value="{{ $house->id }}" class="form-control">
-					
-					<label>Check In:</label>
-					<input type="date" name="datein" class="form-control" required>
-
-					<label>Check Out:</label>
-					<input type="date" name="dateout" class="form-control" required>
-
-					<label>Guest</label>
-					<select class="form-control" name="guest">
-						<option value="1">1</option>
-						<option value="2">2</option>
-						<option value="3">3</option>
-						<option value="4">4</option>
-						<option value="5">5</option>
-						<option value="6">6</option>
-						<option value="7">7</option>
-						<option value="8">8</option>
-						<option value="9">9</option>
-						<option value="10">10</option>
-						<option value="11">11</option>
-						<option value="12">12</option>
-					</select>
-
-					<input type="submit" name="submit" class="btn btn-success btn-lg btn-h1-spacing" value="Book Now">
-				</form> -->
 
 				{!! Form::open(array('route' => 'rentals.agreement', 'data-parsley-validate' => '')) !!}
-
-					{{ csrf_field() }}
 
 					{{ Form::hidden('id', $house->id, array('class' => 'form-control input-lg')) }}
 
 					<div class="col-sm-6 col-md-12">
-						{{ Form::label('datein', 'Check In:') }}
+						{{ Form::label('datein', 'Check In') }}
 						{{ Form::date('datein', null, array('class' => 'form-control', 'required' => '')) }}
 					</div>
-
 					<div class="col-sm-6 col-md-12">
-						{{ Form::label('dateout', 'Check Out:') }}
+						{{ Form::label('dateout', 'Check Out') }}
 					{{ Form::date('dateout', null, array('class' => 'form-control', 'required' => '')) }}
 					</div>
 
 					<div class="col-md-12">
-						{{ Form::label('guest', 'Guest:') }}
+						{{ Form::label('guest', 'Guest') }}
 						<select class="form-control" name="guest">
 							<option value="1">1</option>
 							<option value="2">2</option>
@@ -177,7 +151,7 @@
 				{!! Form::close() !!}
 			</div>
 		</div>
-	</div> <!-- end of detail row-->
+	</div>
 </div>
 @endsection
 

@@ -12,14 +12,9 @@
 				<div class="col-md-8">
 					@foreach($users as $user)
 					<dl class="dl-horizontal">
-						<dt>First Name</dt>
+						<dt>Name</dt>
 						<dd>
-							{{ $user->user_fname }}
-						</dd>
-
-						<dt>Last Name</dt>
-						<dd>
-							{{ $user->user_lname }}
+							{{ $user->user_fname }} {{ $user->user_lname }}
 						</dd>
 
 						@if ($user->user_tel != NULL)
@@ -80,8 +75,8 @@
 							<img src="{{ asset('images/users/blank-profile-picture.png') }}" style="width:150px; height: 150px; float: left; border-radius: 50%; margin-right: 25px;">
 						</div>
 					@else
-						<div class="text-center">
-							<img src="{{ asset('images/users/' . $user->user_image) }}" style="width:150px; height: 150px; float: left; border-radius: 50%; margin-right: 25px;">
+						<div class="text-center" style="position: relative; width: 100px; height: 100px; overflow: hidden; border-radius: 50%;">
+							<img src="{{ asset('images/users/' . $user->user_image) }}" style="width: auto; height: 100px;">
 						</div>
 					@endif
 

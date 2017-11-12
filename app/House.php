@@ -29,18 +29,34 @@ class House extends Model
     }
 
     public function housetypes() {
-        return $this->belongsTo('App\housetypes');
+        return $this->belongsTo('App\Housetype');
+    }
+
+    public function guestarrives() {
+        return $this->belongsTo('App\Guestarrive');
     }
 
     public function images() {
         return $this->hasMany('App\Himage');
     }
 
-    public function houseitems() {
-        return $this->belongsToMany('App\Houseitem');
+    public function houseamenities() {
+        return $this->belongsToMany('App\Houseamenity');
+    }
+
+    public function housespaces() {
+        return $this->belongsToMany('App\Housespace');
     }
 
     public function houserules() {
         return $this->belongsToMany('App\Houserule');
+    }
+
+    public function housedetails() {
+        return $this->belongsToMany('App\Housedetail');
+    }
+
+    public function houseprices() {
+        return $this->belongsTo('App\Houseprice');
     }
 }

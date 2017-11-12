@@ -1,6 +1,6 @@
 @extends ('main')
 
-@section ('title', 'Hosting')
+@section ('title', 'Basic | Hosting')
 
 @section('stylesheets')
 	{{ Html::style('css/parsley.css') }}
@@ -10,11 +10,6 @@
 @section ('content')
 <div class="container">
 	<div class="row">
-		<div class="col-md-12 col-md-offset-0">
-			<h2>Basic Information</h2>
-			<hr>
-		</div>
-		<div class="col-md-6 col-md-offset-3">
 			@if ($errors->any())
 			    <div class="alert alert-danger">
 			        <ul>
@@ -25,30 +20,35 @@
 			    </div>
 			@endif
 			{!! Form::open(array('route' => 'rooms.setscene', 'data-parsley-validate' => '')) !!}
-
+				<div class="col-md-12 col-md-offset-0">
+					<h2>Place type</h2>
+				</div>
+				<div class="col-md-6 col-md-offset-3">
 					{{ Form::label('house_property', 'Is this listing a home, hotel, or something else?') }}
 					<select class="form-control form-spacing-top-8" name="house_property">
 						<option value="home">Home</option>
 						<option value="hotel">Hotel</option>
 						<option value="something">Something else</option>
 					</select>
-
 					{{ Form::label('housetypes_id', 'What type of property is this?') }}
 					<select class="form-control form-spacing-top-8" name="housetypes_id">
 						@foreach ($htypes as $htype)
 						<option value="{{ $htype->id }}">{{ $htype->type_name }}</option>
 						@endforeach
 					</select>
-
 					{{ Form::label('house_guestspace', 'What will guests have?') }}
 					<select class="form-control form-spacing-top-8" name="house_guestspace">
 						<option value="Entrie Place">Entrie place</option>
 						<option value="Private room">Private room</option>
 						<option value="Shared room">Shared room</option>
 					</select>
-
+				</div>
+				
+				<div class="col-md-12 col-md-offset-0">
 					<hr>
-					
+					<h2>Bedrooms</h2>
+				</div>
+				<div class="col-md-6 col-md-offset-3">
 					{{ Form::label('house_capacity', 'How many guests can your place accommodate?') }}
 					{{ Form::number('house_capacity', null, array('class' => 'form-control form-spacing-top-8', 'required' => '')) }}
 
@@ -57,7 +57,13 @@
 
 					{{ Form::label('house_beds', 'How many beds can guests use?') }}
 					{{ Form::number('house_beds', '1', array('class' => 'form-control form-spacing-top-8', 'required' => '')) }}
+				</div>
 
+				<div class="col-md-12 col-md-offset-0">
+					<hr>
+					<h2>Baths</h2>
+				</div>
+				<div class="col-md-6 col-md-offset-3">
 					{{ Form::label('house_bathroom', 'How many bathrooms?') }}
 					{{ Form::number('house_bathroom', '1', array('class' => 'form-control form-spacing-top-8', 'required' => '')) }}
 
@@ -74,10 +80,13 @@
 				        	No
 				      	</label>
 				    </div>
+				</div>
 
-				    <hr>
-
-
+				<div class="col-md-12 col-md-offset-0">
+					<hr>
+					<h2>Locations</h2>
+				</div>
+				<div class="col-md-6 col-md-offset-3">
 					{{ Form::label('addresscountries_id', 'Country', array('class' => 'form-spacing-top-8')) }}
 					<select class="form-control form-spacing-top-8" name="addresscountries_id">
 						@foreach ($countries as $country)
@@ -104,8 +113,37 @@
 
 					{{ Form::label('house_postcode', 'ZIP Code') }}
 					{{ Form::text('house_postcode', null, array('class' => 'form-control form-spacing-top-8', 'required' => '')) }}
+				</div>
 
+				<div class="col-md-12 col-md-offset-0">
+					<hr>
+					<h2>Amenities</h2>
+				</div>
+				<div class="col-md-6 col-md-offset-3">
+					{{ Form::label('houseamenities', 'What amenities do you offer?', ['class' => 'form-spacing-top-8']) }}
+					<select class="form-control select2-multi form-spacing-top-8" name="houseamenities[]" multiple="multiple">
+						@foreach ($houseamenities as $houseamenity)
+							<option value="{{ $houseamenity->id }}">{{ $houseamenity->amenityname }}</option>
+						@endforeach
+					</select>
+				</div>
+
+				<div class="col-md-12 col-md-offset-0">
+					<hr>
+					<h2>Shared spaces</h2>
+				</div>
+				<div class="col-md-6 col-md-offset-3">
+					{{ Form::label('housespaces', 'What spaces can guests use?', ['class' => 'form-spacing-top-8']) }}
+					<select class="form-control select2-multi form-spacing-top-8" name="housespaces[]" multiple="multiple">
+						@foreach ($housespaces as $housespace)
+							<option value="{{ $housespace->id }}">{{ $housespace->spacename }}</option>
+						@endforeach
+					</select>
+				</div>
+
+				<div class="col-md-6 col-md-offset-3">
 					{{ Form::submit('Next', array('class' => 'btn btn-success btn-lg form-spacing-top pull-right')) }}
+				</div>
 
 			{!! Form::close() !!}
 		</div>
@@ -115,4 +153,7 @@
 
 @section('scripts')
 	{!! Html::script('js/select2.min.js') !!}
+	<script type="text/javascript">
+		$('.select2-multi').select2();
+	</script>
 @endsection

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\House;
+use Mail;
+use Session;
 
 class HelpController extends Controller
 {
@@ -82,24 +85,19 @@ class HelpController extends Controller
         //
     }
 
-    public function checkincode() {
-        $length = 10;
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-        $randomString;
-
+    public function checkincode() 
+    {
+        $randomString = str_random(10);
         return view('helps.checkin')->with('randomString', $randomString);
     }
 
-    public function getContact(){
+    public function getContact()
+    {
         return view('helps.contact');
     }
 
-    public function postContact(Request $request){
+    public function postContact(Request $request)
+    {
         $this->validate($request, [
             'email' => 'required|email',
             'subject' => 'required|min:3',
@@ -119,6 +117,38 @@ class HelpController extends Controller
         });
 
         Session::flash('success', 'Your Email was sent');
-        return redirect()->route('helps.contact');
+        return view('helps.contact');
+    }
+
+    public function getContactHost($id)
+    {
+        $house = House::where('users_id', $id)->first();
+        return view('helps.contacthost')->with('house', $house);
+    }
+
+    public function postContactHost(Request $request)
+    {
+        $this->validate($request, [
+            'receiveremail' => 'required',
+            'senderemail' => 'required|email',
+            'subject' => 'required|min:3',
+            'message' => 'required|min:10'
+        ]);
+
+        $data = array(
+            'receiveremail' => $request->receiveremail,
+            'senderemail' => $request->senderemail,
+            'subject' => $request->subject,
+            'bodyMessage' => $request->message
+        );
+
+        Mail::send('emails.contacthost', $data, function($message) use ($data){
+            $message->from($data['senderemail']);
+            $message->to($data['receiveremail']);
+            $message->subject($data['subject']);
+        });
+
+        Session::flash('success', 'Your Email was sent');
+        return redirect()->route('rooms.show', $request->id);
     }
 }

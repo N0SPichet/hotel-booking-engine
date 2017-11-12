@@ -11,7 +11,7 @@
 
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
-			<h1>House Rules</h1>
+			<h1>Review house rules</h1>
 				<div>
 					<ul>
 						@foreach ($house->houserules as $houserule)
@@ -19,13 +19,15 @@
 						@endforeach
 						
 						<hr>
-
-						<li>No parties, events, photo shoots or film shoots are allowed without express advance permission from home owner- additional fees and supervision required. Rental of the Off-grid it house is for vacation purposes only, personal photos are allowed. Additional rental terms and fees apply to rent the house for commercial photo shoots or events. Please contact us through airbnb if you wish to rent the house for an event or a photoshoot for additional details.</li>
+						<p>You must also acknowledge</p>
+						@foreach ($house->housedetails as $housedetail)
+							<li>{{ $housedetail->must_know }}</li>
+						@endforeach
 					</ul>
 				</div>
 				<hr>
 
-				{!! Form::open(array('route' => 'rentals.payment', 'data-parsley-validate' => '')) !!}
+				{!! Form::open(array('route' => 'rentals.store', 'data-parsley-validate' => '')) !!}
 
 					<div class="form-check">
 				    	<label class="form-check-label">

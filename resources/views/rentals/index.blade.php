@@ -42,7 +42,7 @@
 								{!! Form::close() !!}
 								
 								@if($rental->payments->payment_status == 'Cancel')
-									<button type="submit" class="btn btn-default btn-warning btn-block btn-sm disabled">
+									<button type="button" class="btn btn-default btn-warning btn-block btn-sm disabled">
 									<div class="text-white">
 										<div class="text-center">{{ $rental->payments->payment_status }}</div>
 									</div>
@@ -54,7 +54,7 @@
 									</div>
 									</button>
 								@elseif($rental->payments->payment_status == 'Approved')
-									<button type="submit" class="btn btn-default btn-success btn-block btn-sm disabled">
+									<button type="button" class="btn btn-default btn-success btn-block btn-sm disabled">
 									<div class="text-white">
 										<div class="text-center">{{ $rental->payments->payment_status }}</div>
 									</div>

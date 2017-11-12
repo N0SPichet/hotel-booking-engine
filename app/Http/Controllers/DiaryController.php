@@ -43,15 +43,13 @@ class DiaryController extends Controller
      */
     public function store(Request $request)
     {
-        //validate the data
         $this->validate($request, array(
             'title' => 'required|max:255',
-            'categories_id' => 'required|integer',
+            'categories_id' => 'required',
             'message' => 'required'
         ));
-        //store in the database
-        $diary = new Diary;
 
+        $diary = new Diary;
         $diary->users_id = Auth::user()->id;
         $diary->title = $request->title;
         $diary->categories_id = $request->categories_id;

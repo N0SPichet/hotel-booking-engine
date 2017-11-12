@@ -13,20 +13,20 @@
 			<div class="lead">Booking summary</div>
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<p> <b>{{ $house_title }}</b> for <b> {{ $diff }} {{ $diff > 1 ? "Nights" : "Night" }}</b> </p>
+					<p> <b>{{ $rental->houses->house_title }}</b> for <b> {{ $diff }} {{ $diff > 1 ? "Nights" : "Night" }}</b> </p>
 					<hr>
 					<div class="row">
 						<div class="col-md-12 col-md-offset-0">
 							<p> {{ $guest }} guest</p>
-							<p> {{ date('jS F, Y', strtotime($datein)) }} <span class="glyphicon glyphicon-arrow-right"></span> {{ date('jS F, Y', strtotime($dateout)) }}</p>
+							<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <span class="glyphicon glyphicon-arrow-right"></span> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
 						</div>
 					</div>
 					<hr>
 
 					<div class="row">
 						<div class="col-md-12 col-md-offset-0">
-							<span> ฿{{ $house_price }} x {{ $diff }} {{ $diff > 1 ? "nights" : "night" }} 
-								@if ( $diff >=7 ) (%6 discount) @endif
+							<span> ฿{{ $rental->houses->houseprices->price }} x {{ $diff }} {{ $diff > 1 ? "nights" : "night" }} 
+								@if ( $diff >=7 ) ({{ $rental->houses->houseprices->weekly_discount }}% discount) @endif
 							</span>
 							<span class="pull-right"> ฿{{ $stay_price }} </span>
 						</div>
@@ -98,14 +98,7 @@
 			</div>
 
 			<div class="row">
-				{!! Form::open(array('route' => 'rentals.store', 'data-parsley-validate' => '', 'files' => true )) !!}
-					
-					<div class="col-md-12">
-						<input type="hidden" name="id" value="{{ $id }}">
-						<input type="hidden" name="datein" value="{{ $datein }}" class="form-control">
-						<input type="hidden" name="dateout" value="{{ $dateout }}" class="form-control">
-						<input type="hidden" name="guest" value="{{ $guest }}" class="form-control">						
-					</div>
+				{!! Form::model($payment, ['route' => ['rentals.update', $rental->id], 'files' => true, 'method' => 'PUT']) !!}
 
 					<div class="col-md-12">
 						{{ Form::label('payment_bankaccount', 'Bank Account: ') }}
@@ -141,7 +134,7 @@
 					</div>
 						
 					<div class="col-md-12 text-center">
-						{{ Form::submit('Sent Booking', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+						{{ Form::submit('Pay', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
 					</div>
 						
 				{!! Form::close() !!}

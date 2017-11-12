@@ -11,11 +11,15 @@
 					<label>Booking Detail</label>
 					<p>House Name :  {{ $rental->houses->house_title }}  </p>
 					<p>Hosted by : {{ $rental->houses->users->user_fname }} {{ $rental->houses->users->user_lname }}</p>
-					<p>Rented by : {{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</p>
+					<p>Rented by : <a href="{{ route('users.show', $rental->users->id) }}" target="_blank" class="btn btn-default">{{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</a></p>
 					<p>Address : {{ $rental->houses->house_address }} {{ $rental->houses->addresscities->city_name }} {{ $rental->houses->addressstates->state_name }}, {{ $rental->houses->addresscountries->country_name }}</p>
 					<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <span class="glyphicon glyphicon-arrow-right"></span> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
 					<p> {{ $rental->rental_guest }} guest</p>
 					<br>
+
+					@if ($rental->host_decision == 'ACCEPT')
+						<p><b style="color: green;">Host Accepted.</b></p>
+					@endif
 
 					@if ( Auth::user()->id == $rental->users->id && $rental->payments->payment_status != 'Reject' )
 					<p>Code : {{ $rental->checkincode }}</p>
@@ -62,8 +66,17 @@
 					<hr>
 					<div class="row">
 						<div class="col-sm-6">
-							<a href="{{ URL::previous() }}" class="btn btn btn-link btn-md">Back</a>
+							<a href="{{ URL::previous() }}" class="btn btn btn-link btn-md"><span class="glyphicon glyphicon-chevron-left"></span>Back</a>
 						</div>
+						@if ($rental->houses->users_id == Auth::user()->id)
+						<dir class="col-sm-6">
+							@if ($rental->host_decision != 'ACCEPT')
+							{!! Form::open(['route' => ['rentals.acceptnew', $rental->id]]) !!}
+								<button type="submit" class="btn btn-default btn-primary btn-block btn-sm">Accept</button>
+							{!! Form::close() !!}
+							@endif
+						</dir>
+						@endif
 					</div>
 				</div>
 			</div>

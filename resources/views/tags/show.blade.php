@@ -1,6 +1,6 @@
 @extends ('main')
 
-@section ('title', "Administrator | $tag->tag_name Tags")
+@section ('title', "Administrator | $tag->tag_name Tag")
 
 @section('content')
 <div class="container">

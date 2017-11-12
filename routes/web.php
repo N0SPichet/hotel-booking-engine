@@ -34,8 +34,10 @@ Route::get('users/{id}/description', 'UserController@description')->name('users.
 //Create resource route for RentalController
 Route::resource('rentals', 'RentalController');
 Route::post('rentals/agreement', 'RentalController@rentals_agreement')->name('rentals.agreement');
+Route::post('rentals/{id}/acceptnew', 'RentalController@acceptnew')->name('rentals.acceptnew');
 Route::post('rentals/payment', 'RentalController@payment')->name('rentals.payment');
 Route::get('rentals/mr/rentmyrooms', 'RentalController@rmyrooms')->name('rentals.rmyrooms');
+Route::get('rentals/mr/histories', 'RentalController@rhistories')->name('rentals.rhistories');
 Route::post('checkin/code/check', 'RentalController@checkcode')->name('checkin.code');
 Route::post('rentals/{id}/approve', 'RentalController@rapproved')->name('rentals.approve');
 Route::post('mytrips/{id}/cancel', 'RentalController@rcancel')->name('rental.rentalcancel');
@@ -51,19 +53,22 @@ Route::resource('categories', 'CategoryController', ['except' => ['create']]);
 Route::resource('tags', 'TagController', ['except' => ['create']]);
 
 //Create resource route for HouseitemController
-Route::resource('houseitems', 'HouseitemController', ['except' => ['create']]);
+Route::resource('houseamenities', 'HouseamenityController', ['except' => ['create']]);
 
 //Create resource route for RoomController
 Route::resource('rooms', 'RoomController');
 Route::post('rooms/setscene', 'RoomController@rsetscene')->name('rooms.setscene');
+Route::post('rooms/finalstep', 'RoomController@rfinalstep')->name('rooms.finalstep');
+Route::get('rooms/myroom/{id}', 'RoomController@indexmyroom')->name('index-myroom');
 Route::get('room/{id}', 'RoomController@single')->name('rooms.single');
-Route::post('rooms/{id}/report', 'RoomController@hreport')->name('rooms.report');
 
 //Create resource route for HelpController
 Route::resource('helps', 'HelpController', ['except' => ['create']]);
 Route::get('helps/checkin/code', 'HelpController@checkincode')->name('checkincode');
 Route::get('contact', 'HelpController@getContact')->name('getcontact');
 Route::post('contact', 'HelpController@postContact')->name('postcontact');
+Route::get('contact/host/{host}', 'HelpController@getContactHost')->name('getcontacthost');
+Route::post('contact/host', 'HelpController@postContactHost')->name('postcontacthost');
 
 //Check Database Connection
 Route::get('check-connect',function(){

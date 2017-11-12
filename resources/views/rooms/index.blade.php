@@ -17,15 +17,11 @@
 				@foreach($houses as $house)
 					<div class="row">
 						<div class="col-md-12">
-							<div class="col-md-6">
+							<div class="col-md-8">
 								<p>#ID {{ $house->id }}</p>
 								<p>Title : {{ $house->house_title }} </p>
 								<p>Created by : {{ $house->users->user_fname }} {{ $house->users->user_lname }}</p>
 								<p>Created at : {{ date("jS F, Y", strtotime($house->created_at)) }}</p>
-							</div>
-
-							<div class="col-md-2 text-center">
-								<p class="">Rating <h3> {{ $house->house_score }}</h3></p>
 							</div>
 
 							<div class="col-md-2 col-md-offset-1">
@@ -35,7 +31,7 @@
 
 								{!! Form::open(['route' => ['rooms.destroy', $house->id], 'method' => 'DELETE']) !!}
 								
-								{!! Form::submit('Delete this house', ['class' => 'btn btn-danger btn-sm btn-block btn-h1-spacing']) !!}
+								{!! Form::submit('Delete this room', ['class' => 'btn btn-danger btn-sm btn-block btn-h1-spacing']) !!}
 
 								{!! Form::close() !!}
 								@endif

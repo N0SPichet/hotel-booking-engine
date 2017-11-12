@@ -48,7 +48,7 @@
 							{{ $user->user_country }}
 						</dd>
 
-						<dt>Description</dt>
+						<dt><a href="{{ route('users.description', $user->id) }}" class="btn">Description</a></dt>
 						<dd>
 							{{ $user->user_description }}
 						</dd>
@@ -63,9 +63,11 @@
 			<div class="col-md-4">
 				<p class="lead">Hosting List</p>
 				@foreach ($houses as $house)
-					<p>#ID : {{ $house->id }}</p>
+					<a href="{{ route('rooms.single', $house->id) }}">
+						<p>#ID : {{ $house->id }}</p>
+					</a>
 					<p>Title : {{ $house->house_title }}</p>
-					<p>Created at : {{ date("jS F, Y", strtotime($house->created_at)) }}</p>
+					<p>Last update : {{ date("jS F, Y", strtotime($house->updated_at)) }}</p>
 					<br>
 				@endforeach
 			</div>

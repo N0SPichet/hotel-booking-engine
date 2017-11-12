@@ -38,7 +38,6 @@ class RentalController extends Controller
      */
     public function create()
     {
-        //
         return view('rentals.create');
     }
 
@@ -50,36 +49,16 @@ class RentalController extends Controller
      */
     public function store(Request $request)
     {
-        //validate the data
         $this->validate($request, array(
             'id' => 'required',
             'datein' => 'required',
             'dateout' => 'required',
             'guest' => 'required',
         ));
-        //store in the database
         $payment = new Payment;
-
-        $payment->payment_bankname = $request->banks_id;
-        $payment->payment_bankaccount = $request->payment_bankaccount;
-        $payment->payment_holder = $request->payment_holder;
-        $payment->payment_status = $request->payment_status;
-
-        if ($request->hasFile('payment_transfer_slip')) {
-            $image = $request->file('payment_transfer_slip');
-            $filename = time() . Auth::user()->id . '.' . $image->getClientOriginalExtension();
-            $location = public_path('images/payments/'.$filename);
-            Image::make($image)->resize(640, 1062)->save($location);
-            $payment->payment_transfer_slip = $filename;
-        }
-
-        $payment->save();
-
-        $paymentid = Payment::orderby('created_at', 'desc')->first();
-
         $rental = new Rental;
-
-        $rental->payments_id = $paymentid->id;
+        $payment->save();
+        $rental->payments_id = $payment->id;
         $rental->users_id = Auth::user()->id;
         $rental->houses_id = $request->id;
         $rental->rental_datein = $request->datein;
@@ -88,7 +67,7 @@ class RentalController extends Controller
 
         $rental->save();
 
-        Session::flash('success', 'This booking was succussfully save!');
+        Session::flash('success', 'You was succussfully booking, Now wait for host accept your booking and have a payment!');
 
         return redirect()->route('mytrips');
     }
@@ -113,92 +92,12 @@ class RentalController extends Controller
      */
     public function edit($id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
-    public function rentals_agreement(Request $request){
-        //validate the data
-        $this->validate($request, array(
-            'datein' => 'required',
-            'dateout' => 'required',
-            'guest' => 'required'
-        ));
-        
-        $rentals = new Rental;
-
-        $id = $request->id;
-        $datein = $request->datein;
-        $dateout = $request->dateout;
-        $guest = $request->guest;
-
-        $house = House::find($id);
-
-        $data = array(  'id' => $id,
-                        'datein' => $datein,
-                        'dateout' => $dateout,
-                        'guest' => $guest);
-        if (Auth::check()){
-            return view('rentals.agreement')->with($data)->with('house', $house);
-        }
-        else{
-            return redirect()->route('login');
-        }
-        
-    }
-
-    public function payment(Request $request){
-        if ($request->agreement == 'not agree') {
-            return redirect()->route('home');
-        }
-        //validate the data
-        $this->validate($request, array(
-            'datein' => 'required',
-            'dateout' => 'required',
-            'guest' => 'required'
-        ));
-        $rentals = new Rental;
-
-        $id = $request->id;
-        $guest = $request->guest;
-
-        $houses = House::where('id', $id)->get();
-        foreach ($houses as $house) {
-            $house_title = $house->house_title;
-            $house_price = $house->house_price;
-        }
-
-        $datein = $request->datein;
-        $dateout = $request->dateout;
-       
-        $din_m = date('m', strtotime($request->datein));
-        $dout_m = date('m', strtotime($request->dateout));
-
-        $din_d = date('j', strtotime($request->datein));
-        $dout_d = date('j', strtotime($request->dateout));
-        
+        $rental = Rental::find($id);
+        $payment = Payment::where('id', $rental->payments->payments_id)->first();
+        $din_m = date('m', strtotime($rental->rental_datein));
+        $dout_m = date('m', strtotime($rental->rental_dateout));
+        $din_d = date('j', strtotime($rental->rental_datein));
+        $dout_d = date('j', strtotime($rental->rental_dateout));
         $diff_m = $dout_m - $din_m;
         $diff_d = $dout_d - $din_d;
 
@@ -220,47 +119,114 @@ class RentalController extends Controller
         }
 
         if (($diff%7 ==0) || $diff/7 >= 1) {
-            $stay_price = ($house_price * $diff)*0.94;
+            $stay_price = ($rental->houses->houseprices->price * $diff)*0.94;
         }
         else {
-            $stay_price = $house_price * $diff;
+            $stay_price = $rental->houses->houseprices->price * $diff;
         }
 
         $total_price = ($stay_price/100)*7 + $stay_price;
 
         $data = array(  'id' => $id,
-                        'house_title' => $house_title,
-                        'house_price' => $house_price,
                         'stay_price' => $stay_price,
                         'total_price' => $total_price,
-                        'datein' => $datein,
-                        'dateout' => $dateout,
+                        'datein' => $rental->rental_datein,
+                        'dateout' => $rental->rental_dateout,
                         'diff' => $diff,
-                        'guest' => $guest);
+                        'guest' => $rental->rental_guest);
         
-        return view('rentals.payment')->with($data);
+        return view('rentals.payment')->with($data)->with('rental', $rental)->with('payment', $payment);
     }
 
-    public function rapproved($id){
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $payment = Payment::find($id);
+        $payment->payment_bankname = $request->banks_id;
+        $payment->payment_bankaccount = $request->payment_bankaccount;
+        $payment->payment_holder = $request->payment_holder;
+        $payment->payment_status = $request->payment_status;
+        if ($request->hasFile('payment_transfer_slip')) {
+            $image = $request->file('payment_transfer_slip');
+            $filename = time() . Auth::user()->id . '.' . $image->getClientOriginalExtension();
+            $location = public_path('images/payments/'.$filename);
+            Image::make($image)->resize(640, 1062)->save($location);
+            $payment->payment_transfer_slip = $filename;
+        }
+        $payment->save();
+        return redirect()->route('mytrips');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
+    public function rentals_agreement(Request $request)
+    {
+        $this->validate($request, array(
+            'datein' => 'required',
+            'dateout' => 'required',
+            'guest' => 'required'
+        ));
+
+        $id = $request->id;
+        $house = House::find($id);
+        $datein = $request->datein;
+        $dateout = $request->dateout;
+        $guest = $request->guest;
+
+        $data = array(  'id' => $id,
+                        'datein' => $datein,
+                        'dateout' => $dateout,
+                        'guest' => $guest);
+        if (Auth::check()){
+            return view('rentals.agreement')->with($data)->with('house', $house);
+        }
+        else{
+            return redirect()->route('login');
+        }
+    }
+
+    public function acceptnew($id)
+    {
+        $rental = Rental::find($id);
+        $rental->host_decision = 'ACCEPT';
+        $rental->save();
+        return redirect()->route('rentals.rmyrooms');
+    }
+
+    public function payment(Request $request)
+    {
+        //
+    }
+
+    public function rapproved($id)
+    {
         $rental = Rental::find($id);
 
         $idpayment = $rental->payments_id;
         $payment = Payment::where('id', $idpayment)->first();
 
-        $length = 10;
-        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        $charactersLength = strlen($characters);
-        $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
-        }
-
         if ($payment->payment_status == 'Waiting') {
 
-            $rental->checkincode = $randomString;
+            $rental->checkincode = str_random(10);
             $payment->payment_status = "Approved";
             $rental->save();
             $payment->save();
+
             $premessage = $rental->users->user_fname . " " . $rental->users->user_lname . " has rented your room please check Rentals page";
 
             $data = array(
@@ -363,6 +329,29 @@ class RentalController extends Controller
             return view('rentals.rmyrooms')->with('rentals', $rentals)->with('houses', $houses);
         }
         
+    }
+
+    public function rhistories()
+    {
+        $houses = House::where('users_id', Auth::user()->id)->get();
+        $i = 0;
+        $hid = array();
+        foreach ($houses as $house) {
+            $hid[$i] = $house->id;
+            $i++;
+        }
+
+        if (count($houses) != '0') {
+            foreach ($houses as $house) {
+                $rentals = Rental::whereIn('houses_id', $hid)->get();
+            }
+        }
+
+        else{
+            $rentals = Rental::where('id', '0')->get();
+        }
+
+        return view('rentals.rhistories')->with('rentals', $rentals)->with('houses', $houses);
     }
 
     public function checkcode(Request $request) {

@@ -9,7 +9,6 @@ class Himage extends Model
     protected $table = 'images';
 
     public function houses(){
-    	return $this->belongsTo('App\
-    		House');
+    	return $this->belongsTo('App\House');
     }
 }

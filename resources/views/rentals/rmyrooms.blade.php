@@ -9,9 +9,13 @@
 @section ('content')
 <div class="container">
 	<div class="row">
+		<div class="col-md-12">
+			<h1>Rentals</h1>
+		</div>
 
 		<div class="col-md-3 col-md-offset-0">
-			<h1>Check in Code</h1>
+			<h2>Check in Code</h2>
+			<p><small>put checkin code here if it true, you will get granted status</small></p>
 			@if ($errors->any())
 			    <div class="alert alert-danger">
 			        <ul>
@@ -34,8 +38,9 @@
 		</div>
 
 		<div class="col-md-5 col-md-offset-0">
-			<h1>New rental</h1>
-			<label>Room</label>
+			<h2>New rental</h2>
+			<p><small>rental at new state</small></p>
+			<label>Rooms</label>
 			@foreach ($houses as $house)
 				<button class="btn btn-default btn-block form-spacing-top-8" type="button" data-toggle="collapse" data-target="#{{ $house->id }}" aria-expanded="true">
 					{{ $house->house_title }}
@@ -44,7 +49,7 @@
 					<div class="card card-block">
 					@foreach ($rentals as $rental)
 						@if ($rental->houses_id == $house->id)
-							@if ($rental->payments->payment_status == 'Waiting')
+							@if ($rental->payments->payment_status == NULL  && $rental->host_decision != 'ACCEPT')
 								<a href="{{ route('rentals.show', $rental->id) }}">
 									<p>Rent #ID : {{ $rental->id }}</p>
 									<p>Rented by :{{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</p>
@@ -59,35 +64,11 @@
 		</div>
 
 		<div class="col-md-4 col-md-offset-0">
-			<h1>History</h1>
-			@foreach ($houses as $house)
-				@foreach ($rentals as $rental)
-					@if ($rental->houses_id == $house->id)
-						@if ($rental->payments->payment_status != 'Waiting')
-							<a href="{{ route('rentals.show', $rental->id) }}">
-								<p>Rent #ID : {{ $rental->id }}</p>
-								<p>Rent by :{{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</p>
-								<p>Status : {{ $rental->payments->payment_status }}</p>
-
-								@if ($rental->payments->payment_status != 'Reject')
-								<p>Check in status :
-									@if ( $rental->checkin_status == '1')
-										granted
-									@else
-										Not check in now
-									@endif
-								</p>
-								@endif
-
-							</a>
-							<br>
-						@endif
-					@endif
-				@endforeach
-			@endforeach
-
+			<h2>History</h2>
+			<p><small>approved, cancel and rejected rental</small></p>
+			{!! Html::linkRoute('rentals.rhistories', 'View History', array(), ['class' => 'btn btn-info btn-md btn-block', 'target' => '_blank']) !!}
 		</div>
 
-	</div> <!-- end of col-md-12 row-->
+	</div>
 </div>
 @endsection

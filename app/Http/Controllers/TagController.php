@@ -8,6 +8,11 @@ use Session;
 
 class TagController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +43,9 @@ class TagController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, array('tag_name' => 'required'));
+        $this->validate($request, array(
+            'tag_name' => 'required'
+        ));
         $tag = new Tag;
         $tag->tag_name = $request->tag_name;
         $tag->save();

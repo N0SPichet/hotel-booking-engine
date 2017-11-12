@@ -18,20 +18,13 @@
                       
                       <div class="col-sm-6 col-md-6 col-lg-6">
                         <div class="rooms">
-                            
-                            <!-- <a href="rooms/{{ $house->id }}"><img src="http://cdn-image.travelandleisure.com/sites/default/files/styles/1600x1000/public/hotel-interior-room0416.jpg?itok=5gENxAK1" class="img-responsive"></a>
-                            <span><h5>{{ $house->house_title }}</h5></span> -->
-
-                            <a href="rooms/{{ $house->id }}"><img src="https://www.proprofs.com/flashcards/topic/images/p1bi8acpumdi81kqp1kmq1hop1kp3.jpg" class="img-responsive"></a>
-                            <span><h5>{{ $house->house_title }}</h5></span>
-
-                        </div>
-
-                       <!--  @foreach ($images as $image)
-                            @if ($image->houses_id == $house->id)
-                              <a href="rooms/{{ $house->id }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive"></a>
+                            @if ($house->image_name == NULL)
+                              <a href="rooms/{{ $house->id }}"><img src="{{ asset('images/houses/default-room-picture.jpg') }}" class="img-responsive"></a>
+                            @else
+                              <a href="rooms/{{ $house->id }}"><img src="{{ asset('images/houses/'. $house->image_name) }}" class="img-responsive"></a>
                             @endif
-                        @endforeach -->
+                            <span><h5>{{ $house->house_title }}</h5></span>
+                        </div>
                       </div>
 
                     @endforeach

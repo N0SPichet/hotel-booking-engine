@@ -47,6 +47,6 @@
 					</div>
 				</div>
 			</div>
-	</div> <!-- end of col-md-12 row-->
+	</div>
 </div>
 @endsection

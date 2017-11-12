@@ -18,18 +18,18 @@ use Session;
 
 class PagesController extends Controller
 {
-    public function index(){
+    public function index() {
         $houses = House::orderBy('updated_at', 'desc')->paginate(10);
         $images = Himage::all();
         return view('pages.home')->with('houses', $houses)->with('images', $images);
     }
 
-    public function userprofile(){
+    public function userprofile() {
         $users = User::where('email', Auth::user()->email)->get();
         return view('users.profile', compact('users'));
     }
 
-    public function mydiaries(){
+    public function mydiaries() {
         $diaries = Diary::where('users_id', Auth::user()->id)->orderBy('updated_at', 'desc')->paginate(10);
         return view('diaries.mydiary')->with('diaries', $diaries);
     }
@@ -40,12 +40,12 @@ class PagesController extends Controller
         return view('diaries.single')->with('diary', $diary)->with('categories', $categories);
     }
 
-    public function mytrip(){
+    public function mytrip() {
         $rentals = Rental::where('users_id', Auth::user()->id)->orderBy('created_at', 'desc')->paginate(10);
         return view('rentals.mytrip')->with('rentals', $rentals);
     }
 
-    public function aboutus(){
+    public function aboutus() {
     	return view('pages.about');
     }
 }

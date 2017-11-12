@@ -8,10 +8,11 @@ use Session;
 
 class CategoryController extends Controller
 {
-    //only login user can access
-    public function _construct(){
+    public function __construct()
+    {
         $this->middleware('auth');
     }
+    
     /**
      * Display a listing of the resource.
      *

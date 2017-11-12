@@ -32,7 +32,7 @@
 
 								{!! Form::close() !!}
 							</div>
-						</div> <!-- end of col-md-12 -->
+						</div>
 					</div>
 					<hr>
 				@endforeach

@@ -37,7 +37,7 @@
 			</div>
 		</div>
 		{!! Form::close() !!}
-	</div> <!-- end of header row-->
+	</div>
 </div>
 @endsection
 

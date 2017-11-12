@@ -18,8 +18,8 @@
 				{{ Form::label('title', 'Title: ') }}
 				{{ Form::text('title', null, array('class' => 'form-control input-lg', 'required' => '')) }}
 
-				{{ Form::label('category_name', 'Category:') }}
-				<select class="form-control input-lg" name="categories_id">
+				{{ Form::label('category_name', 'Category:', ['class' => 'form-spacing-top-8']) }}
+				<select class="form-control form-spacing-top-8" name="categories_id">
 					
 					@foreach ($categories as $category)
 					<option value="{{ $category->id }}">{{ $category->category_name }}</option>
@@ -27,14 +27,14 @@
 
 				</select>
 
-				{{ Form::label('tags', 'Tag: ') }}
+				{{ Form::label('tags', 'Tag: ', ['class' => 'form-spacing-top-8']) }}
 				<select class="form-control select2-multi form-spacing-top-8" name="tags[]" multiple="multiple">
 					@foreach ($tags as $tag)
 						<option value="{{ $tag->id }}">{{ $tag->tag_name }}</option>
 					@endforeach
 				</select>
 				
-				{{ Form::label('message', 'Message: ') }}
+				{{ Form::label('message', 'Message: ', ['class' => 'form-spacing-top-8']) }}
 				{{ Form::textarea('message', null, array('class' => 'form-control input-lg', 'required' => '')) }}
 				
 				{{ Form::submit('Create Post', array('class' => 'btn btn-success btn-lg form-spacing-top')) }}
