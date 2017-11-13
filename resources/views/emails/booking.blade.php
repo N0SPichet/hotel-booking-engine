@@ -1,6 +1,8 @@
 <h3>You Have a New Rental</h3>
 
 <div class="col-md-8 col-md-offset-2">
+	<p>Hi {{ $hostName }}</p>
+	<br>
 	<p>{{ $bodyMessage }}</p>
 	<a href="{{ route('rentals.rmyrooms') }}" class="btn btn-primary btn-sm">Rentals</a>
 	<hr>

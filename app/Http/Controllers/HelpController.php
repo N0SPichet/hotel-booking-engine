@@ -129,21 +129,26 @@ class HelpController extends Controller
     public function postContactHost(Request $request)
     {
         $this->validate($request, [
+            'hostname' => 'required',
             'receiveremail' => 'required',
-            'senderemail' => 'required|email',
-            'subject' => 'required|min:3',
+            'checkin' => 'required',
+            'checkout' => 'required',
+            'guest' => 'required',
             'message' => 'required|min:10'
         ]);
 
         $data = array(
+            'hostName' => $request->hostname,
             'receiveremail' => $request->receiveremail,
-            'senderemail' => $request->senderemail,
-            'subject' => $request->subject,
+            'checkin' => $request->checkin,
+            'checkout' => $request->checkout,
+            'guest' => $request->guest,
+            'subject' => 'You have new contact from Contact Host',
             'bodyMessage' => $request->message
         );
 
         Mail::send('emails.contacthost', $data, function($message) use ($data){
-            $message->from($data['senderemail']);
+            $message->from('noreply@ltt.com');
             $message->to($data['receiveremail']);
             $message->subject($data['subject']);
         });

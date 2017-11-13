@@ -1,7 +1,11 @@
-<h3>You Have a New Contact Via the Contact Host</h3>
+<h3>Hi {{ $hostName }}</h3>
 
 <div>
 	{{ $bodyMessage }}
+	<br>
+	<p>Arrive date : {{ $checkin }}</p>
+	<p>Leaving date : {{ $checkout }}</p>
+	<p>Guests : {{ $guest }} people</p>
 </div>
 
-<p>Sent from {{ $senderemail }}</p>
+<p>Sent via <b>Love to Travel</b></p>

@@ -35,7 +35,6 @@ Route::get('users/{id}/description', 'UserController@description')->name('users.
 Route::resource('rentals', 'RentalController');
 Route::post('rentals/agreement', 'RentalController@rentals_agreement')->name('rentals.agreement');
 Route::post('rentals/{id}/acceptnew', 'RentalController@acceptnew')->name('rentals.acceptnew');
-Route::post('rentals/payment', 'RentalController@payment')->name('rentals.payment');
 Route::get('rentals/mr/rentmyrooms', 'RentalController@rmyrooms')->name('rentals.rmyrooms');
 Route::get('rentals/mr/histories', 'RentalController@rhistories')->name('rentals.rhistories');
 Route::post('checkin/code/check', 'RentalController@checkcode')->name('checkin.code');

@@ -53,7 +53,6 @@
 								<a href="{{ route('rentals.show', $rental->id) }}">
 									<p>Rent #ID : {{ $rental->id }}</p>
 									<p>Rented by :{{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</p>
-									<p>Status : {{ $rental->payments->payment_status }}</p>
 								</a>
 							@endif
 						@endif

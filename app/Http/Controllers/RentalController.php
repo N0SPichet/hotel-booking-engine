@@ -41,6 +41,42 @@ class RentalController extends Controller
         return view('rentals.create');
     }
 
+    public function rentals_agreement(Request $request)
+    {
+        $this->validate($request, array(
+            'datein' => 'required',
+            'dateout' => 'required',
+            'guest' => 'required'
+        ));
+
+        $id = $request->id;
+        $house = House::find($id);
+        $datein = $request->datein;
+        $dateout = $request->dateout;
+        $guest = $request->guest;
+        $data = array(  'id' => $id,
+                        'datein' => $datein,
+                        'dateout' => $dateout,
+                        'guest' => $guest);
+        if (Auth::check()){
+            return view('rentals.agreement')->with($data)->with('house', $house);
+        }
+        else{
+            return redirect()->route('login');
+        }
+    }
+
+    public function acceptnew($id)
+    {
+        $rental = Rental::find($id);
+        if ($rental->payments->payment_status == NULL) {
+            $rental->host_decision = 'ACCEPT';
+        }
+        $rental->save();
+        Session::flash('success', 'Thank you for accept this request.');
+        return redirect()->route('rentals.rmyrooms');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -64,8 +100,22 @@ class RentalController extends Controller
         $rental->rental_datein = $request->datein;
         $rental->rental_dateout = $request->dateout;
         $rental->rental_guest = $request->guest;
-
         $rental->save();
+
+        $premessage = $rental->users->user_fname . " " . $rental->users->user_lname . " request to booking your room. Please check Rentals page for accept this request";
+
+        $data = array(
+            'email' => $rental->houses->users->email,
+            'subject' => "You Have New Renter",
+            'hostName' => $rental->houses->users->user_fname,
+            'bodyMessage' => $premessage
+        );
+
+        Mail::send('emails.booking', $data, function($message) use ($data){
+            $message->from('noreply@ltt.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
 
         Session::flash('success', 'You was succussfully booking, Now wait for host accept your booking and have a payment!');
 
@@ -174,45 +224,6 @@ class RentalController extends Controller
         //
     }
 
-    public function rentals_agreement(Request $request)
-    {
-        $this->validate($request, array(
-            'datein' => 'required',
-            'dateout' => 'required',
-            'guest' => 'required'
-        ));
-
-        $id = $request->id;
-        $house = House::find($id);
-        $datein = $request->datein;
-        $dateout = $request->dateout;
-        $guest = $request->guest;
-
-        $data = array(  'id' => $id,
-                        'datein' => $datein,
-                        'dateout' => $dateout,
-                        'guest' => $guest);
-        if (Auth::check()){
-            return view('rentals.agreement')->with($data)->with('house', $house);
-        }
-        else{
-            return redirect()->route('login');
-        }
-    }
-
-    public function acceptnew($id)
-    {
-        $rental = Rental::find($id);
-        $rental->host_decision = 'ACCEPT';
-        $rental->save();
-        return redirect()->route('rentals.rmyrooms');
-    }
-
-    public function payment(Request $request)
-    {
-        //
-    }
-
     public function rapproved($id)
     {
         $rental = Rental::find($id);
@@ -226,20 +237,6 @@ class RentalController extends Controller
             $payment->payment_status = "Approved";
             $rental->save();
             $payment->save();
-
-            $premessage = $rental->users->user_fname . " " . $rental->users->user_lname . " has rented your room please check Rentals page";
-
-            $data = array(
-                'email' => $rental->houses->users->email,
-                'subject' => "You Have New Renter",
-                'bodyMessage' => $premessage
-            );
-
-            Mail::send('emails.booking', $data, function($message) use ($data){
-                $message->from('noreply@ltt.com');
-                $message->to($data['email']);
-                $message->subject($data['subject']);
-            });
 
             Session::flash('success', 'This trip has been approved.');
         }
@@ -306,8 +303,8 @@ class RentalController extends Controller
         return redirect()->route('rentals.index');
     }
 
-    public function rmyrooms(){
-
+    public function rmyrooms()
+    {
         //SELECT * FROM rentals WHERE houses_id IN ('1', '11', '12')
         $houses = House::where('users_id', Auth::user()->id)->get();
         $i = 0;
@@ -365,7 +362,6 @@ class RentalController extends Controller
         $checkin_code = $request->checkin_code;
 
         $rental = Rental::find($rent_id);
-        //$rental = Rental::where('houses_id', $rental->houses->id)->first();
 
         if ($rental != NULL) {
             if ($user_id == $rental->houses->users_id){

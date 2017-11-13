@@ -107,7 +107,7 @@
 			<p>{{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }}</p>
 			<p>{{ $house->users->user_description }}</p>
 			<div>
-				<a href="{{ route('getcontacthost', $house->users->id) }}" class="btn btn-info btn-sm">Contact Host</a>
+				<a href="{{ route('getcontacthost', $house->users->id) }}" target="_blank" class="btn btn-info btn-sm">Contact Host</a>
 			</div>
 			
 			<br>
