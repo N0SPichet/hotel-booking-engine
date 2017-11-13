@@ -13,7 +13,7 @@
 			<div class="lead">Booking summary</div>
 			<div class="panel panel-default">
 				<div class="panel-body">
-					<p> <b>{{ $rental->houses->house_title }}</b> for <b> {{ $diff }} {{ $diff > 1 ? "Nights" : "Night" }}</b> </p>
+					<p> <b>{{ $rental->houses->house_title }}</b> for <b> {{ $days }} {{ $days > 1 ? "Nights" : "Night" }}</b> </p>
 					<hr>
 					<div class="row">
 						<div class="col-md-12 col-md-offset-0">
@@ -25,8 +25,8 @@
 
 					<div class="row">
 						<div class="col-md-12 col-md-offset-0">
-							<span> ฿{{ $rental->houses->houseprices->price }} x {{ $diff }} {{ $diff > 1 ? "nights" : "night" }} 
-								@if ( $diff >=7 ) ({{ $rental->houses->houseprices->weekly_discount }}% discount) @endif
+							<span> ฿{{ $rental->houses->houseprices->price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }} 
+								@if ( $days >=7 ) ({{ $rental->houses->houseprices->weekly_discount }}% discount) @endif
 							</span>
 							<span class="pull-right"> ฿{{ $stay_price }} </span>
 						</div>

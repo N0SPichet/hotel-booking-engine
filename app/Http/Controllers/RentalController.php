@@ -13,6 +13,7 @@ use App\Himage;
 use Image;
 use Mail;
 use Session;
+use DateTime;
 
 class RentalController extends Controller
 {
@@ -144,35 +145,18 @@ class RentalController extends Controller
     {
         $rental = Rental::find($id);
         $payment = Payment::where('id', $rental->payments->payments_id)->first();
-        $din_m = date('m', strtotime($rental->rental_datein));
-        $dout_m = date('m', strtotime($rental->rental_dateout));
-        $din_d = date('j', strtotime($rental->rental_datein));
-        $dout_d = date('j', strtotime($rental->rental_dateout));
-        $diff_m = $dout_m - $din_m;
-        $diff_d = $dout_d - $din_d;
+        $datetime1 = new DateTime($rental->rental_datein);
+        $datetime2 = new DateTime($rental->rental_dateout);
+        $interval = $datetime1->diff($datetime2);
+        $years = $interval->format('%y');
+        $months = $interval->format('%m');
+        $days = $interval->format('%d');
 
-        if ($diff_m == 0){
-            $diff = $diff_d;
-        }
-        else{
-            if ($din_m == 1||$din_m == 3||$din_m == 5||$din_m == 7||$din_m == 8||$din_m == 10||$din_m == 12){
-                $number = 31;
-            }
-            else if ($din_m == 4||$din_m == 6||$din_m == 9||$din_m == 11){
-                $number = 30;
-            }
-            else if ($din_m == 2){
-                $number = 28;
-            }
-            $temp_m = $diff_m * $number;
-            $diff = $temp_m + $diff_d;
-        }
-
-        if (($diff%7 ==0) || $diff/7 >= 1) {
-            $stay_price = ($rental->houses->houseprices->price * $diff)*0.94;
+        if (($days%7 ==0) || $days/7 >= 1) {
+            $stay_price = ($rental->houses->houseprices->price * $days) - (($rental->houses->houseprices->price * $days) * (($rental->houses->houseprices->weekly_discount)/100));
         }
         else {
-            $stay_price = $rental->houses->houseprices->price * $diff;
+            $stay_price = $rental->houses->houseprices->price * $days;
         }
 
         $total_price = ($stay_price/100)*7 + $stay_price;
@@ -182,7 +166,9 @@ class RentalController extends Controller
                         'total_price' => $total_price,
                         'datein' => $rental->rental_datein,
                         'dateout' => $rental->rental_dateout,
-                        'diff' => $diff,
+                        'years' => $years,
+                        'months' => $months,
+                        'days' => $days,
                         'guest' => $rental->rental_guest);
         
         return view('rentals.payment')->with($data)->with('rental', $rental)->with('payment', $payment);
