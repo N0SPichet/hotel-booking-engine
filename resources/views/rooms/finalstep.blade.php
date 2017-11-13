@@ -117,10 +117,10 @@
 					{{ Form::label('welcome_offer', 'Offer 15% off to your first guest ') }}
 					{{ Form::text('welcome_offer', null, ['class' => 'form-control form-spacing-top-8']) }}
 
-					{{ Form::label('weekly_discount', 'Weekly discount') }}
+					{{ Form::label('weekly_discount', 'Weekly discount (%)') }}
 					{{ Form::text('weekly_discount', null, ['class' => 'form-control form-spacing-top-8']) }}
 
-					{{ Form::label('monthly_discount', 'Monthly discount') }}
+					{{ Form::label('monthly_discount', 'Monthly discount (%)') }}
 					{{ Form::text('monthly_discount', null, ['class' => 'form-control form-spacing-top-8']) }}
 				</div>
 
@@ -131,7 +131,6 @@
 
 			{!! Form::close() !!}
 	</div>
-	<!-- <a href="{{ URL::previous() }}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-left "></span></a> -->
 </div>
 @endsection
 

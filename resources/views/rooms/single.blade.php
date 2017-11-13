@@ -76,8 +76,7 @@
 					<hr>
 					<h4>Availability</h4>
 					<br>
-					<p>Advance notice: 2 days</p>
-					<p>Booking window: Any time</p>
+					<p>Advance notice: {{$house->guestarrives->notice }}</p>
 					@if ($house->guestarrives->checkin_to == 'Flexible')
 					<p>Check-in: Anytime after {{ $house->guestarrives->checkin_from }}</p>
 					@else

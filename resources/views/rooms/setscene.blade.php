@@ -19,7 +19,6 @@
 			        </ul>
 			    </div>
 			@endif
-
 			{!! Form::open(array('route' => 'rooms.finalstep', 'data-parsley-validate' => '','files' => true )) !!}
 				
 				<div class="col-md-12 col-md-offset-0">
@@ -72,7 +71,6 @@
 				</div>
 			{!! Form::close() !!}
 	</div>
-	<!-- <a href="{{ URL::previous() }}" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-left "></span></a> -->
 </div>
 @endsection
 

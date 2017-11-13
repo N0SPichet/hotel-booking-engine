@@ -31,12 +31,12 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $houses = House::orderBy('updated_at', 'desc')->paginate(10);
+        $houses = House::inRandomOrder()->paginate(10);
         return view('rooms.index')->with('houses', $houses);
     }
 
     public function indexmyroom($id) {
-        $houses = House::where('users_id', $id)->orderBy('updated_at', 'desc')->paginate(10);
+        $houses = House::where('users_id', $id)->orderBy('id')->paginate(10);
         return view('rooms.index-myroom')->with('houses', $houses);
     }
 
@@ -230,16 +230,16 @@ class RoomController extends Controller
             $countries[$housecountry->id] = $housecountry->country_name;
         }
 
-        $houseitems = Houseamenity::all();
-        $items = array();
-        foreach ($houseitems as $houseitem) {
-            $items[$houseitem->id] = $houseitem->houseitem_name;
+        $houseamenities = Houseamenity::all();
+        $amenities = array();
+        foreach ($houseamenities as $houseamenity) {
+            $amenities[$houseamenity->id] = $houseamenity->amenityname;
         }
 
-        $houserules = Houserule::all();
-        $rules = array();
-        foreach ($houserules as $houserule) {
-            $rules[$houserule->id] = $houserule->houserule_name;
+        $housespaces = Housespace::all();
+        $spaces = array();
+        foreach ($housespaces as $housespace) {
+            $spaces[$housespace->id] = $housespace->spacename;
         }
 
         $houseimages = Himage::where('houses_id', $house->id)->get();
@@ -249,7 +249,19 @@ class RoomController extends Controller
             $images[$houseimage->id] = $count;
             $count++;
         }
-        return view('rooms.edit')->with('house', $house)->with('types', $types)->with('cities', $cities)->with('states', $states)->with('countries', $countries)->with('items', $items)->with('rules', $rules)->with('images', $images);
+
+        $houserules = Houserule::all();
+        $rules = array();
+        foreach ($houserules as $houserule) {
+            $rules[$houserule->id] = $houserule->houserule_name;
+        }
+
+        $housedetails = Housedetail::all();
+        $details = array();
+        foreach ($housedetails as $housedetail) {
+            $details[$housedetail->id] = $housedetail->must_know;
+        }
+        return view('rooms.edit')->with('house', $house)->with('types', $types)->with('cities', $cities)->with('states', $states)->with('countries', $countries)->with('amenities', $amenities)->with('spaces', $spaces)->with('images', $images)->with('rules', $rules)->with('details', $details);
     }
 
     /**
@@ -262,70 +274,96 @@ class RoomController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, array(
-            'house_title' => 'required',
+            'housetypes_id' => 'required',
             'house_capacity' => 'required',
             'house_bedrooms' => 'required',
             'house_beds' => 'required',
             'house_bathroom' => 'required',
             'house_bathroomprivate' => 'required',
+            'addresscountries_id' => 'required',
             'house_address' => 'required',
-            'house_postcode' => 'required',
-            'house_price' => 'required',
-            'housetypes_id' => 'required',
             'addresscities_id' => 'required',
             'addressstates_id' => 'required',
-            'addresscountries_id' => 'required',
-            'house_description' => 'required'
+            'house_postcode' => 'required',
+            'house_title' => 'required',
+            'notice' => 'required',
+            'price' => 'required'
         ));
 
         $house = House::find($id);
-        $house->house_title = $request->house_title;
+        $house->housetypes_id = $request->housetypes_id;
         $house->house_capacity = $request->house_capacity;
         $house->house_bedrooms = $request->house_bedrooms;
         $house->house_beds = $request->house_beds;
         $house->house_bathroom = $request->house_bathroom;
         $house->house_bathroomprivate = $request->house_bathroomprivate;
+        $house->addresscountries_id = $request->addresscountries_id;
         $house->house_address = $request->house_address;
-        $house->house_postcode = $request->house_postcode;
-        $house->house_price = $request->house_price;
-        $house->housetypes_id = $request->housetypes_id;
         $house->addresscities_id = $request->addresscities_id;
         $house->addressstates_id = $request->addressstates_id;
-        $house->addresscountries_id = $request->addresscountries_id;
-        $house->house_description = $request->house_description;
+        $house->house_postcode = $request->house_postcode;
+        $house->house_title = $request->house_title;
+        
         $idimage = $request->image_name;
         $image = Himage::find($idimage);
         $house->image_name = $image->image_name;
+        $house->house_description = $request->house_description;
+        $house->about_your_place = $request->about_your_place;
+        $house->guest_can_access = $request->guest_can_access;
+        $house->optional_note = $request->optional_note;
+        $house->about_neighborhood = $request->about_neighborhood;
+        echo $house->guestarrives_id;
+        $guestarrive = Guestarrive::find($house->guestarrives_id);
+        $guestarrive->notice = $request->notice;
 
-        $count = 0;
+        $houseprice = Houseprice::find($house->houseprices_id);
+        $houseprice->price = $request->price;
+        $houseprice->welcome_offer = $request->welcome_offer;
+        $houseprice->weekly_discount = $request->weekly_discount;
+        $houseprice->monthly_discount = $request->monthly_discount;
         if ($request->hasFile('image_names')) {
+            $count = 0;
             foreach ($request->image_names as $image_name) {
                 $image = new Himage;
                 $filename = time() . $count . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$filename);
                 Image::make($image_name)->resize(1600, 1000)->save($location);
-
                 $image->houses_id = $house->id;
                 $image->image_name = $filename;
                 $image->save();
-
                 $count++;
             }
         }
-
+        $guestarrive->save();
+        $houseprice->save();
         $house->save();
-        if (isset($request->houseitems)) {
-            $house->houseamenities()->sync($request->houseitems);
+
+        if (isset($request->houseamenities)) {
+            $house->houseamenities()->sync($request->houseamenities);
         }
-        else{
+        else {
             $house->houseamenities()->sync(array());
+        }
+
+        if (isset($request->housespaces)) {
+            $house->housespaces()->sync($request->housespaces);
+        }
+        else {
+            $house->housespaces()->sync(array());
         }
 
         if (isset($request->houserules)) {
             $house->houserules()->sync($request->houserules);
         }
-        else{
+        else {
             $house->houserules()->sync(array());
+        }
+
+        if (isset($request->housedetails)) {
+            $house->housedetails()->sync($request->housedetails);
+        }
+        else {
+            $house->housedetails()->sync(array());
         }
 
         Session::flash('success', 'This house was succussfully updated!');
