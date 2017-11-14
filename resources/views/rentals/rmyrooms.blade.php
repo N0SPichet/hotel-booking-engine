@@ -42,7 +42,7 @@
 			<p><small>rental at new state</small></p>
 			<label>Rooms</label>
 			@foreach ($houses as $house)
-				<button class="btn btn-default btn-block form-spacing-top-8" type="button" data-toggle="collapse" data-target="#{{ $house->id }}" aria-expanded="true">
+				<button class="btn btn-info btn-md btn-block form-spacing-top-8" type="button" data-toggle="collapse" data-target="#{{ $house->id }}" aria-expanded="true">
 					{{ $house->house_title }}
 				</button>
 				<div class="collapse" id="{{ $house->id }}">
