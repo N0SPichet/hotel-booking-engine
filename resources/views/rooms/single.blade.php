@@ -14,16 +14,20 @@
 					@foreach ($images as $image)
 					<div class="col-md-4">
 						<img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="width:100%;">
+						<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position:absolute; top:5px; right: 20px;" class="btn btn-default btn-sm">Del</a>
 						<br>
 					</div>
 					@endforeach
-
 				</div>
 				<div class="col-md-12">
 					<h4>Room</h4>
 					<br>
 					<p> Room Title : {{ $house->house_title }} </p>
 					<p> Room Description : {{ $house->house_description }}</p>
+					<p> About your place (optional) : {{ $house->about_your_place }}</p>
+					<p> What guests can access (optional) : {{ $house->guest_can_access }}</p>
+					<p> Other things to note (optional) : {{ $house->optional_note }}</p>
+					<p> About the neighborhood (optional) : {{ $house->about_neighborhood }} </p>
 					<p> Type of property : {{ $house->house_property }} </p>
 					<p> Guests have : {{ $house->house_guestspace }} </p>
 
@@ -72,6 +76,8 @@
 					@foreach ($house->houserules as $houserule)
 						<p>{{ $houserule->houserule_name }}</p>
 					@endforeach
+					<br>
+					<p> {{ $house->optional_rules }}</p>
 
 					<hr>
 					<h4>Availability</h4>

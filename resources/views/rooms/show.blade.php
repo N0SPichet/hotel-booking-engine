@@ -36,6 +36,8 @@
 			<hr>
 			@if ( $house->about_your_place != NULL)
 			<h5>About place</h5>
+			<p> {{ $house->house_description }}</p>
+			<br>
 			<p> {{ $house->about_your_place }}</p>
 			<br>
 			@endif
@@ -113,6 +115,8 @@
 			<br>
 			<h2>The neighborhood</h2>
 			<p>{{ $house->users->user_fname }}'s home is located in {{ $house->addresscities->city_name }} {{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }} </p>
+			<br>
+			<p>{{ $house->about_neighborhood }}</p>
 			<br>
 			<div class="text-center">
 				<iframe

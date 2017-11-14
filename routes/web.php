@@ -60,6 +60,7 @@ Route::post('rooms/setscene', 'RoomController@rsetscene')->name('rooms.setscene'
 Route::post('rooms/finalstep', 'RoomController@rfinalstep')->name('rooms.finalstep');
 Route::get('rooms/myroom/{id}', 'RoomController@indexmyroom')->name('index-myroom');
 Route::get('room/{id}', 'RoomController@single')->name('rooms.single');
+Route::get('room/{id}/delete/image', 'RoomController@detroyimage')->name('rooms.detroyimage');
 
 //Create resource route for HelpController
 Route::resource('helps', 'HelpController', ['except' => ['create']]);

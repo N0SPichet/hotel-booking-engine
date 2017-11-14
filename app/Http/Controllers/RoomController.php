@@ -122,7 +122,7 @@ class RoomController extends Controller
             $images = new Himage;
             $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
             $location = public_path('images/houses/'.$filename);
-            Image::make($image_name)->resize(1600, 1000)->save($location);
+            Image::make($image_name)->resize(1500, 1000)->save($location);
 
             $images->houses_id = $house->id;
             $images->image_name = $filename;
@@ -165,7 +165,7 @@ class RoomController extends Controller
         $price->save();
 
         $cover_image = Himage::where('houses_id', $request->id)->first();
-        $house->image_name = $cover_image;
+        $house->image_name = $cover_image->image_name;
         $house->save();
 
         $house->houserules()->sync($request->houserules, false);
@@ -322,16 +322,14 @@ class RoomController extends Controller
         $houseprice->weekly_discount = $request->weekly_discount;
         $houseprice->monthly_discount = $request->monthly_discount;
         if ($request->hasFile('image_names')) {
-            $count = 0;
             foreach ($request->image_names as $image_name) {
                 $image = new Himage;
-                $filename = time() . $count . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
+                $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$filename);
-                Image::make($image_name)->resize(1600, 1000)->save($location);
+                Image::make($image_name)->resize(1500, 1000)->save($location);
                 $image->houses_id = $house->id;
                 $image->image_name = $filename;
                 $image->save();
-                $count++;
             }
         }
         $guestarrive->save();
@@ -401,5 +399,15 @@ class RoomController extends Controller
         }
 
         return redirect()->route('rooms.index')->with('alert', $alt);
+    }
+
+    public function detroyimage($id)
+    {
+        $image = Himage::find($id);
+        $filename = $image->image_name;
+        $house_id = $image->houses_id;
+        Storage::delete('houses/'.$filename);
+        $image->delete();
+        return redirect()->route('rooms.single', $house_id);
     }
 }

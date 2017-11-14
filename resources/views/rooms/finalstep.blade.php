@@ -32,6 +32,9 @@
 							<option value="{{ $houserule->id }}">{{ $houserule->houserule_name }}</option>
 						@endforeach
 					</select>
+
+					{{ Form::label('optional_rules' 'Rules (Optional)') }}
+					{{ Form::text('optional_rules', null, ['class' => 'form-control form-spacing-top-8']) }}
 				</div>
 				<div class="col-md-6 col-md-offset-3">
 					{{ Form::label('housedetails', 'Details guests must know about your home', ['class' => 'form-spacing-top-8']) }}
