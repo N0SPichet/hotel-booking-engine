@@ -77,6 +77,7 @@
                 <li><a href="{{ route('diaries.mydiaries') }}">My Diary</a></li>
                 <li><a href="{{ route('rentals.rmyrooms') }}">Rentals</a></li>
                 <li><a href="{{ route('index-myroom', Auth::user()->id) }}">Rooms</a></li>
+                @if (Auth::user()->level == '0')
                 <li role="separator" class="divider"></li>
                 <li class="text-center">Administrator</li>
                 <li><a href="{{ route('users.index') }}">Users</a></li>
@@ -86,7 +87,7 @@
                 <li><a href="{{ route('categories.index') }}">Categories</a></li>
                 <li><a href="{{ route('tags.index') }}">Tags</a></li>
                 <li><a href="{{ route('houseamenities.index') }}">Amenities</a></li>
-
+                @endif
                 <li role="separator" class="divider"></li>
                 <li><a href="{{ route('logout') }}"
                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">

@@ -35,7 +35,7 @@
 						
 						<h2>New Tag</h2>
 						{{ Form::label('tag_name', 'Name:') }}
-						{{ Form::text('tag_name', null, ['class' => 'form-control input-lg']) }}
+						{{ Form::text('tag_name', null, ['class' => 'form-control input-lg', 'autofocus' => true]) }}
 
 						{{ Form::submit('Create New Tag', ['class' => 'btn btn-primary btn-block']) }}
 					{!! Form::close() !!}
