@@ -44,16 +44,16 @@
 				</div>
 				<div class="col-md-6 col-md-offset-3">
 					{{ Form::label('house_description', 'Short description of your house', ['class' => 'form-spacing-top-8']) }}
-					{{ Form::textarea('house_description', null, array('class' => 'form-control form-spacing-top-8', 'required' => '')) }}
+					{{ Form::textarea('house_description', null, array('class' => 'form-control form-spacing-top-8', 'required' => '', 'rows' => '5')) }}
 						
 					{{ Form::label('about_your_place', 'About your place (optional)', ['class' => 'form-spacing-top-8']) }}
-					{{ Form::textarea('about_your_place', null, ['class' => 'form-control form-spacing-top-8']) }}
+					{{ Form::textarea('about_your_place', null, ['class' => 'form-control form-spacing-top-8', 'rows' => '5']) }}
 
 					{{ Form::label('guest_can_access', 'What guests can access (optional)', ['class' => 'form-spacing-top-8']) }}
-					{{ Form::textarea('guest_can_access', null, ['class' => 'form-control form-spacing-top-8']) }}
+					{{ Form::textarea('guest_can_access', null, ['class' => 'form-control form-spacing-top-8', 'rows' => '5']) }}
 
 					{{ Form::label('optional_note', 'Other things to note (optional)', ['class' => 'form-spacing-top-8']) }}
-					{{ Form::textarea('optional_note', null, ['class' => 'form-control form-spacing-top-8']) }}
+					{{ Form::textarea('optional_note', null, ['class' => 'form-control form-spacing-top-8', 'rows' => '5']) }}
 				</div>
 
 				<div class="col-md-12 col-md-offset-0">

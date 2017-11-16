@@ -1,6 +1,6 @@
 @extends ('main')
 
-@section ('title', 'Administrator | Houses')
+@section ('title', 'Administrator | Rooms')
 
 @section ('content')
 

@@ -14,7 +14,7 @@
 					@foreach ($images as $image)
 					<div class="col-md-4">
 						<img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="width:100%;">
-						<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position:absolute; top:5px; right: 20px;" class="btn btn-default btn-sm">Del</a>
+						<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position:absolute; top:5px; right: 20px;" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
 						<br>
 					</div>
 					@endforeach

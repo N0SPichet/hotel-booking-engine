@@ -35,12 +35,12 @@
 				</select>
 				
 				{{ Form::label('message', 'Message: ', ['class' => 'form-spacing-top-8']) }}
-				{{ Form::textarea('message', null, array('class' => 'form-control input-lg', 'required' => '')) }}
+				{{ Form::textarea('message', null, array('class' => 'form-control input-lg', 'required' => '', 'rows' => '5')) }}
 				
 				{{ Form::submit('Create Post', array('class' => 'btn btn-success btn-lg form-spacing-top')) }}
 			{!! Form::close() !!}
 		</div>
-	</div> <!-- end of header row-->
+	</div>
 </div>
 @endsection
 

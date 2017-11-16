@@ -19,7 +19,7 @@ use Session;
 class PagesController extends Controller
 {
     public function index() {
-        $houses = House::orderBy('updated_at', 'desc')->paginate(10);
+        $houses = House::inRandomOrder()->paginate(10);
         $images = Himage::all();
         return view('pages.home')->with('houses', $houses)->with('images', $images);
     }

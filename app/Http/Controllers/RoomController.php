@@ -31,7 +31,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $houses = House::inRandomOrder()->paginate(10);
+        $houses = House::orderBy('id')->paginate(10);
         return view('rooms.index')->with('houses', $houses);
     }
 
@@ -306,7 +306,9 @@ class RoomController extends Controller
         
         $idimage = $request->image_name;
         $image = Himage::find($idimage);
-        $house->image_name = $image->image_name;
+        if ($image != null) {
+            $house->image_name = $image->image_name;
+        }
         $house->house_description = $request->house_description;
         $house->about_your_place = $request->about_your_place;
         $house->guest_can_access = $request->guest_can_access;
@@ -382,7 +384,9 @@ class RoomController extends Controller
         $images = Himage::all();
         if ($rental == NULL){
             $house->houseamenities()->detach();
+            $house->housespaces()->detach();
             $house->houserules()->detach();
+            $house->housedetails()->detach();
             foreach ($images as $image) {
                 if ($image->houses_id == $house->id) {
                     $filename = $image->image_name;
@@ -392,13 +396,17 @@ class RoomController extends Controller
                 }
             }
             $house->delete();
+            $houseprice = Houseprice::find($house->houseprices_id);
+            $houseprice->delete();
+            $guestarrive = Guestarrive::find($house->guestarrives_id);
+            $guestarrive->delete();
             $alt = 'Room #ID ' . $house->id . ' Deleted';
         }
         else {
             $alt = 'Can not delete Room #ID ' . $house->id . ' because someone has rented.';
         }
 
-        return redirect()->route('rooms.index')->with('alert', $alt);
+        return redirect()->route('index-myroom', Auth::user()->id)->with('alert', $alt);
     }
 
     public function detroyimage($id)

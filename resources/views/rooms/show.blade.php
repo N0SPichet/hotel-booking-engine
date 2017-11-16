@@ -18,6 +18,7 @@
   				<button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
   				<button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
 			</div>
+			<hr>
 		</div>
 	</div>
 
@@ -35,22 +36,24 @@
 
 			<hr>
 			@if ( $house->about_your_place != NULL)
-			<h5>About place</h5>
-			<p> {{ $house->house_description }}</p>
-			<br>
-			<p> {{ $house->about_your_place }}</p>
-			<br>
+			<h4>About place</h4>
+			<div class="well">
+				<p> {{ $house->house_description }}</p>
+				<br>
+				<p> {{ $house->about_your_place }}</p>
+				<br>
+				@endif
+				@if ($house->guest_can_access != NULL)
+				<h5>Guest access</h5>
+				<p> {{ $house->guest_can_access }}</p>
+				<br>
+				@endif
+				@if ($house->optional_note != NULL)
+				<h5>Optional Note</h5>
+				<p> {{ $house->optional_note }}</p>
+				<br>
 			@endif
-			@if ($house->guest_can_access != NULL)
-			<h5>Guest access</h5>
-			<p> {{ $house->guest_can_access }}</p>
-			<br>
-			@endif
-			@if ($house->optional_note != NULL)
-			<h5>Optional Note</h5>
-			<p> {{ $house->optional_note }}</p>
-			<br>
-			@endif
+			</div>
 
 			<h4>Cancellations</h4>
 			<div class="well">
@@ -142,11 +145,11 @@
 
 					<div class="col-sm-6 col-md-12">
 						{{ Form::label('datein', 'Check In') }}
-						{{ Form::date('datein', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::date('datein', null, array('class' => 'form-control', 'required' => '', 'id' => 'datein')) }}
 					</div>
 					<div class="col-sm-6 col-md-12">
 						{{ Form::label('dateout', 'Check Out') }}
-					{{ Form::date('dateout', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::date('dateout', null, array('class' => 'form-control', 'required' => '', 'id' => 'dateout')) }}
 					</div>
 
 					<div class="col-md-12">

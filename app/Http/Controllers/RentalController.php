@@ -95,12 +95,12 @@ class RentalController extends Controller
         $payment = new Payment;
         $rental = new Rental;
         $payment->save();
-        $rental->payments_id = $payment->id;
         $rental->users_id = Auth::user()->id;
         $rental->houses_id = $request->id;
         $rental->rental_datein = $request->datein;
         $rental->rental_dateout = $request->dateout;
         $rental->rental_guest = $request->guest;
+        $rental->payments_id = $payment->id;
         $rental->save();
 
         $premessage = $rental->users->user_fname . " " . $rental->users->user_lname . " request to booking your room. Please check Rentals page for accept this request";
@@ -144,7 +144,7 @@ class RentalController extends Controller
     public function edit($id)
     {
         $rental = Rental::find($id);
-        $payment = Payment::where('id', $rental->payments->payments_id)->first();
+        $payment = Payment::where('id', $rental->payments->id)->first();
         $datetime1 = new DateTime($rental->rental_datein);
         $datetime2 = new DateTime($rental->rental_dateout);
         $interval = $datetime1->diff($datetime2);

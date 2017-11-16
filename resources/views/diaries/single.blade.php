@@ -17,6 +17,34 @@
 				<hr>
 				<p>Public by : {{ $diary->users->user_fname }}</p>
 				<p>Publish date : {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
+
+				<div class="backend-comment" style="margin-top: 50px;">
+					<h3>Comments <small>{{ $diary->comments()->count() }} total</small></h3>
+
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Comment</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach ($diary->comments as $comment)
+							<tr>
+								<td>{{ $comment->name }}</td>
+								<td>{{ $comment->email }}</td>
+								<td>{{ $comment->comment }}</td>
+								<td>
+									<a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-pencil"></span></a>
+									<a href="{{ route('comments.delete', $comment->id) }}" class="btn btn-xs btn-danger" onclick="return confirm('Are you sure you want to delete this comment?');"><span class="glyphicon glyphicon-trash"></span></a>
+								</td>
+							</tr>
+							@endforeach
+						</tbody>
+					</table>
+				</div>
 			</div>
 
 			<div class="col-md-4">

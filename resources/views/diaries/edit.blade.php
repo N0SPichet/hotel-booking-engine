@@ -24,7 +24,7 @@
 			{{ Form::select('tags[]', $tags, null, ['class' => 'form-control select2-multi', 'multiple' => 'multiple']) }}
 
 			{{ Form::label('message', 'Message:', ['class' => 'form-spacing-top']) }}
-			{{ Form::textarea('message', null, ['class' => 'form-control']) }}
+			{{ Form::textarea('message', null, ['class' => 'form-control', 'rows' => '5']) }}
 		</div>
 
 		<div class="col-md-4 btn-h1-spacing">

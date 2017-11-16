@@ -32,9 +32,17 @@
 					</div>
 						
 					<div class="col-md-3 col-sm-3">
+						@if ($rental->payments->payment_transfer_slip != NULL)
 						<div class="text-center">
 							<img src="{{ asset('images/payments/' . $rental->payments->payment_transfer_slip) }}" class="img-thumbnail" width="60" height="auto">
 						</div>
+						@endif
+						@if ($rental->host_decision != 'ACCEPT')
+						<div class="text-center">
+							<p style="color: orange;">Waiting</p> 
+							<p>for <b style="color: blue;">host accept</b> your request</p>
+						</div>
+						@endif
 					</div>
 
 					@if($rental->payments->payment_status == 'Waiting')
@@ -75,7 +83,7 @@
 					@endif
 						
 					<div class="col-md-2 col-sm-2 col-xs-12">
-						@if ($rental->host_decision == 'ACCEPT' )
+						@if ($rental->host_decision == 'ACCEPT')
 							@if ($rental->payments->payment_status == NULL)
 							{!! Html::linkRoute('rentals.edit', 'Payment', array($rental->id), array('class' => 'btn btn-success btn-sm btn-block btn-h1-spacing')) !!}
 							@else

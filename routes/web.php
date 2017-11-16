@@ -51,6 +51,10 @@ Route::resource('categories', 'CategoryController', ['except' => ['create']]);
 //Create resource route for TagController
 Route::resource('tags', 'TagController', ['except' => ['create']]);
 
+//Create resource route for CommentController
+Route::resource('comments', 'CommentController');
+Route::get('comments/{id}/delete', 'CommentController@delete')->name('comments.delete');
+
 //Create resource route for HouseitemController
 Route::resource('houseamenities', 'HouseamenityController', ['except' => ['create']]);
 

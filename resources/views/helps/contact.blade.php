@@ -24,7 +24,7 @@
 
 				<div class="form-group">
 					<label name="message">Message</label>
-					<textarea name="message" class="form-control"></textarea>
+					<textarea name="message" class="form-control" rows="5"></textarea>
 				</div>
 
 				<input type="submit" value="Sent Message" class="btn btn-success">

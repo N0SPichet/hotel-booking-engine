@@ -98,7 +98,7 @@
 			</div>
 
 			<div class="row">
-				{!! Form::model($payment, ['route' => ['rentals.update', $rental->id], 'files' => true, 'method' => 'PUT']) !!}
+				{!! Form::model($payment, ['route' => ['rentals.update', $payment->id], 'files' => true, 'method' => 'PUT']) !!}
 
 					<div class="col-md-12">
 						{{ Form::label('payment_bankaccount', 'Bank Account: ') }}
