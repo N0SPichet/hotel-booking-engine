@@ -6,103 +6,98 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-md-12 col-md-offset-0">
-			<div class="panel-heading text-center"> <h1>Your Trips</h1> </div>
+		<div class="col-md-12 col-sm-12">
+			<div class="panel-heading text-center "> <h1 class="title-page">Your Trips</h1> </div>
 		</div>
-	</div> <!-- end of header row-->
+	</div>
 
 	<div class="row">
-		<div class="col-md-12 col-md-offset-0">
+		<div class="col-md-12 col-sm-12">
+			<h4>
+				<a class="btn btn-outline-dark btn-md" href="{{ route('mytrips') }}">Show All</a>
+				<a class="btn btn-outline-dark btn-md" href="{{ route('mytrips.reviews') }}">Pending reviews <span class="badge badge-danger">{{ $review_count }}</span></a>
+			</h4>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 col-sm-12">
 			@foreach($rentals as $rental)
-				<div class="row">
+			<div class="card margin-top-10">
+				<div class="margin-content">
 					<div class="col-md-5 col-sm-5">
-						<p><b> Rent #ID : {{ $rental->id }} </b></p>
-						@if ($rental->host_decision == 'ACCEPT')
-							<p><b style="color: green;">Host Accepted.</b></p>
+						<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;">
+						@if ($rental->payments->payment_status == 'Approved' && $rental->checkin_status == '0' )
+						<p class="text-primary"><b>Payment Complete.</b></p>
+						@elseif ( $rental->host_decision == 'ACCEPT' && $rental->checkin_status == '0' )
+						<p class="text-primary"><b>Host Accepted.</b></p>
+						@elseif ( $rental->payments->payment_status == 'Approved' && $rental->checkin_status == '1' )
+						<p class="text-success"><b>Confirmed.</b></p>
 						@endif
-						<p>House Name :  {{ $rental->houses->house_title }}  </p>
-						<p>{{ date('jS F, Y', strtotime($rental->rental_datein)) }} <span class="glyphicon glyphicon-arrow-right"></span> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
-						<p>{{ $rental->rental_guest }} guest</p>
-
-						@if ( $rental->checkin_status == '1' )
-							<p>Check in Status: <button class="btn-success">Granted</button></p>
-						@elseif ($rental->checkin_status == '0')
-							<p>Check in Status: <button class="btn-danger">Not check in</button></p>
-						@endif
+						<p>@if($rental->houses->housetypes_id != '1') <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @elseif($rental->houses->housetypes_id == 1) <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->houses->house_title }}  </p>
+						<p><i class="far fa-calendar-alt"></i> Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
+						<p><i class="far fa-user"></i> {{ $rental->rental_guest }} guest</p>
+						</a>
 					</div>
-						
-					<div class="col-md-3 col-sm-3">
+								
+					<div class="col-md-3 col-sm-3" align="center">
 						@if ($rental->payments->payment_transfer_slip != NULL)
-						<div class="text-center">
-							<img src="{{ asset('images/payments/' . $rental->payments->payment_transfer_slip) }}" class="img-thumbnail" width="60" height="auto">
-						</div>
+						<img src="{{ asset('images/payments/' . $rental->payments->payment_transfer_slip) }}" class="img-thumbnail" width="60" height="auto">
 						@endif
-						@if ($rental->host_decision != 'ACCEPT')
-						<div class="text-center">
-							<p style="color: orange;">Waiting</p> 
-							<p>for <b style="color: blue;">host accept</b> your request</p>
-						</div>
+						@if ($rental->host_decision == NULL && $rental->payments->payment_status != 'Cancel')
+						<p class="text-warning">Waiting</p> 
+						<p>for <b class="text-primary">host accept</b> your request</p>
+						@elseif ($rental->host_decision == 'REJECT' && $rental->payments->payment_status != 'Cancel')
+						<p class="text-danger">Rejected</p> 
+						<p>your request was rejected by host</p>
 						@endif
 					</div>
 
-					@if($rental->payments->payment_status == 'Waiting')
-					<div class="col-md-2 col-md-offset-0 col-sm-1 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-						<button type="submit" class="btn-h1-spacing btn btn-default btn-primary btn-block btn-sm disabled">
+					<div class="col-md-2 col-sm-2" align="center">
+						@if($rental->payments->payment_status == 'Waiting')
+						<button class="btn-h1-spacing btn btn-primary btn-sm" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payments->payment_status }}</div>
 							</div>
 						</button>
-					</div>
-					@elseif($rental->payments->payment_status == 'Cancel')
-					<div class="col-md-2 col-md-offset-0 col-sm-1 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-						<button type="submit" class="btn-h1-spacing btn btn-default btn-warning btn-block btn-sm disabled">
+						@elseif($rental->payments->payment_status == 'Cancel')
+						<button type="submit" class="btn-h1-spacing btn btn-warning btn-sm disabled" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payments->payment_status }}</div>
 							</div>
 						</button>
-					</div>
-					@elseif($rental->payments->payment_status == 'Reject')
-					<div class="col-md-2 col-md-offset-0 col-sm-1 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-						<button type="button" class="btn-h1-spacing btn btn-default btn-danger btn-block btn-sm disabled">
+						@elseif($rental->payments->payment_status == 'Reject')
+						<button type="button" class="btn-h1-spacing btn-danger btn-sm disabled" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payments->payment_status }}</div>
 							</div>
 						</button>
-					</div>
-					@elseif($rental->payments->payment_status == 'Approved')
-					<div class="col-md-2 col-md-offset-0 col-sm-1 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-						<button type="submit" class="btn-h1-spacing btn btn-default btn-success btn-block btn-sm disabled">
+						@elseif($rental->payments->payment_status == 'Approved')
+						<button class="btn-h1-spacing btn btn-success btn-sm" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payments->payment_status }}</div>
 							</div>
 						</button>
+						@endif
 					</div>
-					@else
-					<div class="col-md-2 col-md-offset-0 col-sm-1 col-sm-offset-0 col-xs-10 col-xs-offset-1">
-					</div>
-					@endif
-						
-					<div class="col-md-2 col-sm-2 col-xs-12">
+							
+					<div class="col-md-2 col-sm-2" align="center">
 						@if ($rental->host_decision == 'ACCEPT')
 							@if ($rental->payments->payment_status == NULL)
-							{!! Html::linkRoute('rentals.edit', 'Payment', array($rental->id), array('class' => 'btn btn-success btn-sm btn-block btn-h1-spacing')) !!}
+							{!! Html::linkRoute('rentals.edit', 'Payment', array($rental->id), array('class' => 'btn btn-success btn-sm margin-top-10', 'style' => "width: 90%")) !!}
 							@else
-							<button type="button" class="btn btn-success btn-sm btn-block btn-h1-spacing disabled">
-								<div class="text-center">Payment already submit</div>
-							</button>
+							<button type="button" class="btn btn-success btn-sm margin-top-10" style="width: 95%">Payment Submitted</button>
 							@endif
 						@endif
-						{!! Html::linkRoute('rentals.show', 'View Detail', array($rental->id), array('class' => 'btn btn-info btn-sm btn-block btn-h1-spacing')) !!}
+						{!! Html::linkRoute('rentals.show', 'View Detail', array($rental->id), array('class' => 'btn btn-info btn-sm margin-top-10', 'style' => "width: 90%")) !!}
 						{!! Form::open(['route' => ['rental.rentalcancel', $rental->id], 'method' => 'POST']) !!}
-						{!! Form::submit('Cancel This Trip', ['class' => 'btn btn-danger btn-sm btn-block btn-h1-spacing']) !!}
+						{!! Form::submit('Cancel This Trip', ['class' => 'btn btn-danger btn-sm margin-top-10', 'style' =>"width: 90%"]) !!}
 						{!! Form::close() !!}
 					</div>
-				</div>
-				<hr>			
-				@endforeach
+				</div>	
 			</div>
+			@endforeach
 			<div class="text-center">
-				<!-- generate link for siary item -->
 				{!! $rentals->links() !!}
 			</div>
 		</div>

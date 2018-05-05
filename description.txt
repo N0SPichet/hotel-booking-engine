@@ -1,0 +1,9 @@
+- ปรับ UI diary หน้า index, show, single และเพิ่ม tripdiary
+- ปรับ UI diary แสดงรูปได้
+- ปรับ DiaryController เพิ่มรูป cover และ content
+- ปรับฐานข้อมูล diaries เพิ่ม cover_image
+- ปรับฐานข้อมูล houses เปลี่ยน image_name เป็น cover_image
+- ปรับฐานข้อมูลให้รองรับ address แบบใหม่
+- ปรับ UI หน้า Room และ Apartment create ใหม่
+- ปรับ diary รองรับ follower
+- รองรับ email อัตโนมัติ เพื่อตรวจสอบวันเข้าพักที่ใกล้มาก็จะส่งไปแจ้งเตือนคนๆ นั้น

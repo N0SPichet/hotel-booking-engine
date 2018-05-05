@@ -36,15 +36,28 @@
 
 					<div class="form-check">
 				    	<label class="form-check-label">
-				        	<input type="radio" class="form-check-input" name="agreement" id="agreement" value="agree" required="">
+				        	<input type="radio" class="form-check-input" name="agreement" id="agreement" value="agree" required="" style="margin-left: -20px;">
 				        	I agree with term & conditiions
 				      	</label>
 				    </div>
 
-					{{ Form::hidden('id', $id, array()) }}
-					{{ Form::hidden('datein', $datein, array()) }}
-					{{ Form::hidden('dateout', $dateout, array()) }}
-					{{ Form::hidden('guest', $guest, array()) }}
+					{{ Form::hidden('id', $id, []) }}
+					{{ Form::hidden('datein', $datein, []) }}
+					{{ Form::hidden('dateout', $dateout, []) }}
+					{{ Form::hidden('housetypes_id', $housetypes_id, []) }}
+
+					@if ($housetypes_id == '1' || $housetypes_id == '5')
+					{{ Form::hidden('no_type_single', $no_type_single, []) }}
+					{{ Form::hidden('no_type_deluxe_single', $no_type_deluxe_single, []) }}
+					{{ Form::hidden('no_type_double_room', $no_type_double_room, []) }}
+					{{ Form::hidden('type_single_price', $type_single_price, []) }}
+					{{ Form::hidden('type_deluxe_single_price', $type_deluxe_single_price, []) }}
+					{{ Form::hidden('type_double_room_price', $type_double_room_price, []) }}
+					@else
+					{{ Form::hidden('guest', $guest, []) }}
+					{{ Form::hidden('no_rooms', $no_rooms, []) }}
+					{{ Form::hidden('food', $food, []) }}
+					@endif
 
 					<hr>
 

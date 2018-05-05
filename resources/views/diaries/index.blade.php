@@ -6,38 +6,33 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Diaries</h1>
-			<hr>	
+			<h1 class="title-page">Diaries</h1>	
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-md-12">
 			@foreach($diaries as $diary)
-				<div class="row">
-					
-					<div class="col-md-9">
-						<p><b> {{ $diary->title }} </b></p>
-						<div class="text-over-flow-ellipsis"> {{ $diary->message }} </div>
-					</div>
-
-					<div class="col-md-3 col-md-offset-0">
-						<p><b> Category </b> : {{ $diary->categories->category_name }} </p>
-						<p><b> Created by </b> : {{ $diary->users->user_fname }} </p>
-					</div>
-
+			<div class="col-md-6 col-sm-6">
+				@if ($diary->days == '0' || $diary->days == NULL)
+				<div class="card" style="margin-top: 20px; width: 100%; height: 250px;">
 					<div class="col-md-12">
-						<p><a href="{{ route('diaries.show', $diary->id) }}" class="btn btn-primary btn-md">Read More</a></p>
-						<hr>
+						<p class="thumb-article__date">{{ $diary->users->user_fname }} {{ date('jS F, Y - g:iA', strtotime($diary->created_at)) }}</p>
+						<h3 class="thumb-article__title"><a href="{{ route('diaries.show', $diary->id) }}" style="text-decoration: none;">{{ $diary->title }}</a></h3>
+						<div class="thumb-article__excerpt text-over-flow-ellipsis">
+							<p>{{ substr(strip_tags($diary->message), 0, 200) }} {{ strlen(strip_tags($diary->message)) > 200 ? "..." : "" }}</p>
+						</div>
 					</div>
 				</div>
-			@endforeach
-
-			<div class="text-center">
-				{!! $diaries->links() !!}
+				@endif
 			</div>
+			@endforeach
 		</div>
 	</div>
-
+	<div class="row" align="center">
+		<div class="col-md-12">
+			{!! $diaries->links() !!}
+		</div>
+	</div>
 </div>
 @endsection

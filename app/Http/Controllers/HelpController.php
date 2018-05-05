@@ -106,8 +106,9 @@ class HelpController extends Controller
 
         $data = array(
             'email' => $request->email,
-            'subject' => $request->subject,
-            'bodyMessage' => $request->message
+            'subject' => 'LTT - You have new contact via contact form',
+            'bodyMessage' => $request->subject,
+            'detailmessage' => $request->message
         );
 
         Mail::send('emails.contact', $data, function($message) use ($data){
@@ -138,12 +139,12 @@ class HelpController extends Controller
         ]);
 
         $data = array(
-            'hostName' => $request->hostname,
+            'premessage' =>  "Dear " . $request->hostname,
             'receiveremail' => $request->receiveremail,
             'checkin' => $request->checkin,
             'checkout' => $request->checkout,
             'guest' => $request->guest,
-            'subject' => 'You have new contact from Contact Host',
+            'subject' => 'LTT - You have new contact via contact host',
             'bodyMessage' => $request->message
         );
 
@@ -155,5 +156,10 @@ class HelpController extends Controller
 
         Session::flash('success', 'Your Email was sent');
         return redirect()->route('rooms.show', $request->id);
+    }
+
+    public function getmaps ()
+    {
+        return view('helps.getmaps');
     }
 }

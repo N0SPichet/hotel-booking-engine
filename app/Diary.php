@@ -20,7 +20,15 @@ class Diary extends Model
         return $this->belongsToMany('App\Tag');
     }
 
+    public function diary_images(){
+        return $this->hasMany('App\DiaryImage');
+    }
+
     public function comments(){
         return $this->hasMany('App\Comment');
+    }
+
+    public function rentals(){
+        return $this->belongsTo('App\Rental');
     }
 }

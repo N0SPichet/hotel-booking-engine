@@ -19,4 +19,8 @@ class Rental extends Model
     public function payments(){
     	return $this->belongsTo('App\Payment');
     }
+
+    public function diaries(){
+        return $this->hasMany('App\Diary');
+    }
 }

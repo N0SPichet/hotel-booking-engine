@@ -6,35 +6,29 @@
 
 <div class="container">
 	<div class="row">
-		<div class="panel panel-default">
-			<div class="panel-heading"><h1>Users</h1></div>
+		<div class="panel panel-default col">
+			<div class="panel-heading"><h1 class="title-page">Users</h1></div>
 
 			<div class="panel-body">
-				@foreach($users as $user)
-					<div class="row">
-						<div class="col-md-12">
-							<div class="col-md-4">
-								<p> #ID {{ $user->id }}</p>
-								<p>Name {{ $user->user_fname }} {{ $user->user_lname }}</p>
-								<p>Email {{ $user->email }}</p>
-							</div>
+				@foreach ($users as $user)
+				<div class="card margin-top-10">
+					<div class="margin-content">
+						<div class="col-md-9">
+							<a href="{{ route('users.show', $user->id) }}" style="text-decoration-line: none; ">
+							<p><b>Level</b> {{ $user->level=='0' ? 'Admin' : 'User' }}</p>
+							<p>{{ $user->user_fname }} {{ $user->user_lname }}</p>
+							<p><b>Email</b> {{ $user->email }}</p>
+							</a>
+						</div>
 
-							<div class="col-md-4 text-center">
-								<p class="">Rating <h3>{{ $user->user_score }}</h3></p>
-							</div>
-
-							<div class="col-md-2 col-md-offset-1">
-								{!! Html::linkRoute('users.show', 'View User Profile', array($user->id), array('class' => 'btn btn-info btn-sm btn-block')) !!}
-
-								{!! Form::open(['route' => ['users.report', $user->id]]) !!}
-
-								{!! Form::submit('Report this User', ['class' => 'btn btn-danger btn-sm btn-block btn-h1-spacing']) !!}
-
-								{!! Form::close() !!}
-							</div>
+						<div class="col-md-3" align="center">
+							{!! Html::linkRoute('users.show', 'View User Profile', array($user->id), array('class' => 'btn btn-info btn-sm', 'style' => 'width: 60%')) !!}
+							{!! Form::open(['route' => ['users.report', $user->id]]) !!}
+							{!! Form::submit('Report this User', ['class' => 'btn btn-danger btn-sm btn-h1-spacing', 'style' => 'width: 60%']) !!}
+							{!! Form::close() !!}
 						</div>
 					</div>
-					<hr>
+				</div>
 				@endforeach
 			</div>
 		</div>

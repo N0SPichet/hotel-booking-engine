@@ -13,7 +13,7 @@
 			<h1>Rentals</h1>
 		</div>
 
-		<div class="col-md-3 col-md-offset-0">
+		<div class="col-md-3">
 			<h2>Check in Code</h2>
 			<p><small>put checkin code here if it true, you will get granted status</small></p>
 			@if ($errors->any())
@@ -37,37 +37,73 @@
 			{{ Form::close() }}
 		</div>
 
-		<div class="col-md-5 col-md-offset-0">
-			<h2>New rental</h2>
-			<p><small>rental at new state</small></p>
-			<label>Rooms</label>
-			@foreach ($houses as $house)
-				<button class="btn btn-info btn-md btn-block form-spacing-top-8" type="button" data-toggle="collapse" data-target="#{{ $house->id }}" aria-expanded="true">
-					{{ $house->house_title }}
-				</button>
-				<div class="collapse" id="{{ $house->id }}">
-					<div class="card card-block">
-					@foreach ($rentals as $rental)
-						@if ($rental->houses_id == $house->id)
-							@if ($rental->payments->payment_status == NULL  && $rental->host_decision != 'ACCEPT')
-								<a href="{{ route('rentals.show', $rental->id) }}">
-									<p>Rent #ID : {{ $rental->id }}</p>
-									<p>Rented by :{{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</p>
-								</a>
-							@endif
-						@endif
-					@endforeach
+		<div class="col-md-9">
+			<ul class="nav nav-tabs">
+	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu1') ? 'active' : '' }} active" ><a data-toggle="tab" href="#menu1">New Rental <span style="font-size: 14px;" class="badge w3-red">{{ $rental_new }}</span></a></li>
+	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu2') ? 'active' : '' }}"><a data-toggle="tab" href="#menu2">Waiting for Payment <span style="font-size: 14px;" class="badge w3-red">{{ $payment_waiting_badge }}</span></a></li>
+	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu2') ? 'active' : '' }}"><a data-toggle="tab" href="#menu3">Arrive Confirmed <span style="font-size: 14px;" class="badge w3-red">{{ $payment_approved_badge }}</span></a></li>
+	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu3') ? 'active' : '' }}"><a data-toggle="tab" href="#menu4">History</a></li>
+	  		</ul>
+
+	  		<div class="tab-content">
+	    		<div id="menu1" class="tab-pane fade in active">
+	    			<div class="col-md-3">
+		    			<ul class="nav nav-pills margin-top-10">
+		      			@foreach ($houses as $house)
+							<li><a data-toggle="pill" href="#room{{ $house->id }}" style="width: 140px;">{{ $house->house_title }}</a></li>
+						@endforeach
+						</ul>
 					</div>
-				</div>
-			@endforeach
+					<div class="col-md-9">
+						<div class="tab-content margin-top-10">
+							@foreach ($houses as $house)
+							<div id="room{{ $house->id }}" class="tab-pane fade">
+								@foreach ($rentals as $rental)
+		      					@if ($rental->houses_id == $house->id)
+									@if ($rental->payments->payment_status == NULL  && $rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT')
+										<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
+											<p>Rented by :{{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</p>
+											<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
+										</a>
+									@endif
+								@endif
+		    					@endforeach
+		    				</div>
+	    					@endforeach
+	    				</div>
+					</div>
+	    		</div>
+	    		<div id="menu2" class="tab-pane fade">
+	    			<div class="tab-content margin-top-10">
+	    				@foreach ($waiting_payment as $rental)
+		      			<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
+							<p>Rented by :{{ $rental->users->user_fname }} {{ $rental->users->user_lname }}</p>
+							<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
+						</a>
+		      			@endforeach
+	    			</div>
+	    		</div>
+	    		<div id="menu3" class="tab-pane fade">
+	    			<div class="tab-content margin-top-10">
+	    				@foreach ($arriverentals as $rental)
+		      			<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
+							<p>Rented by : {{ $rental->users->user_fname }} {{ $rental->users->user_lname }}
+								@if ($rental->checkin_status == '1') <span class="text-success"><i class="far fa-check-circle"></i> Checkin</span> @endif
+							</p>
+							<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
+						</a>
+		      			@endforeach
+	    			</div>
+	    		</div>
+	    		<div id="menu4" class="tab-pane fade">
+	    			<div class="card">
+	    				<div class="margin-content">
+	    					{!! Html::linkRoute('rentals.rhistories', 'View History', array(), ['class' => 'btn btn-info btn-md', 'target' => '_blank']) !!}
+	    				</div>
+	    			</div>
+	    		</div>
+	  		</div>			
 		</div>
-
-		<div class="col-md-4 col-md-offset-0">
-			<h2>History</h2>
-			<p><small>approved, cancel and rejected rental</small></p>
-			{!! Html::linkRoute('rentals.rhistories', 'View History', array(), ['class' => 'btn btn-info btn-md btn-block', 'target' => '_blank']) !!}
-		</div>
-
 	</div>
 </div>
 @endsection

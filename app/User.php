@@ -29,6 +29,7 @@ class User extends Authenticatable
         'user_description',
         'email', 
         'password',
+        'user_verifications_id',
     ];
 
     /**
@@ -40,15 +41,23 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function diaries(){
+    public function diaries() {
         return $this->hasMany('App\Diary');
     }
 
-    public function houses(){
+    public function houses() {
         return $this->hasMany('App\House');
     }
 
-    public function rentals(){
+    public function rentals() {
         return $this->hasMany('App\Rental');
+    }
+
+    public function reviews() {
+        return $this->hasMany('App\Review');
+    }
+
+    public function user_verifications() {
+        return $this->belongsTo('App\UserVerification');
     }
 }

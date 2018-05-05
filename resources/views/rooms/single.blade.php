@@ -5,134 +5,259 @@
 @section ('content')
 <div class="container">
 	<div class="row">
-			<div class="col-md-8">
-				<h1>Review your settings</h1>
-				<div class="col-md-12">
+		<div class="col-md-8">
+			<h1>Review your settings</h1>
+			<h2 align="center">
+				{{ $house->house_title }}
+				<small >
+					@if ($house->publish == '2')
+					<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>
+					@elseif ($house->publish == '0')
+					<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>
+					@endif
+				</small>
+			</h2>
+			<div class="col-md-12">
+				<h4>Cover Image</h4>
+				<div class="col-md-6">
+					<a id="single_image" href="{{ asset('images/houses/' . $house->cover_image) }}"><img src="{{ asset('images/houses/' . $house->cover_image) }}" class="img-responsive" style="border-radius: 5%"></a>
+				</div>
+				<div class="col-md-6">
 					
-					<h4>Images</h4>
-
+				</div>
+			</div>
+			<div class="col-md-12">
+				<h4>Images</h4>
+				<div class="gallery">
 					@foreach ($images as $image)
 					<div class="col-md-4">
-						<img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="width:100%;">
-						<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position:absolute; top:5px; right: 20px;" class="btn btn-default btn-sm"><span class="glyphicon glyphicon-trash"></span></a>
+						<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+						@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
+						<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
+						@endif
 						<br>
 					</div>
 					@endforeach
 				</div>
-				<div class="col-md-12">
-					<h4>Room</h4>
-					<br>
-					<p> Room Title : {{ $house->house_title }} </p>
-					<p> Room Description : {{ $house->house_description }}</p>
-					<p> About your place (optional) : {{ $house->about_your_place }}</p>
-					<p> What guests can access (optional) : {{ $house->guest_can_access }}</p>
-					<p> Other things to note (optional) : {{ $house->optional_note }}</p>
-					<p> About the neighborhood (optional) : {{ $house->about_neighborhood }} </p>
-					<p> Type of property : {{ $house->house_property }} </p>
-					<p> Guests have : {{ $house->house_guestspace }} </p>
+			</div>
+			<div class="col-md-12">
+				<h4>Room</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						<p> Room Description {!! $house->house_description !!}</p>
+						<hr>
+						<p> About your place (optional) {!! $house->about_your_place !!}</p>
+						<hr>
+						<p> What guests can access (optional) {!! $house->guest_can_access !!}</p>
+						<hr>
+						<p> Other things to note (optional) {!! $house->optional_note !!}</p>
+						<hr>
+						<p> About the neighborhood (optional) {!! $house->about_neighborhood !!} </p>
+						<hr>
+						<p> Type of property : {{ $house->house_property }} </p>
+						<hr>
+						<p> Guests have : {{ $house->house_guestspace }} </p>
+					</div>
+				</div>
 
-					<hr>
-					<h4>Bedroom</h4>
-					<br>
-					<p> How many guests can your place accommodate : {{ $house->house_capacity }} guest </p>
-					<p> How many bedrooms : {{ $house->house_bedrooms }} room </p>
-					<p> How many beds : {{ $house->house_beds }} bed </p>
+				<h4>Bedroom</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						<p> How many guests can your place accommodate : {{ $house->house_capacity }} guest </p>
+						<p> How many bedrooms : {{ $house->house_bedrooms }} room </p>
+						<p> How many beds : {{ $house->house_beds }} bed </p>
+					</div>
+				</div>
 
-					<hr>
-					<h4>Bathroom</h4>
-					<br>
-					<p> How many bathrooms : {{ $house->house_bathroom }} room </p>
-					<p> Is the bathroom private :  
-						@if ($house->house_bathroomprivate == 1)
-							Yes
-						@else if ($house->house_bathroomprivate != 1)
-							No
-						@endif
-					</p>
+				<h4>Bathroom</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						<p> How many bathrooms : {{ $house->house_bathroom }} room </p>
+						<p> Is the bathroom private :  
+							@if ($house->house_bathroomprivate == 1)
+								Yes
+							@elseif ($house->house_bathroomprivate != 1)
+								No
+							@endif
+						</p>
+					</div>
+				</div>
 
-					<hr>
-					<h4>Address</h4>
-					<br>
-					<p> {{ $house->house_address }} {{ $house->addresscities->city_name }} {{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }} </p>
-					<p>Postcode {{ $house->house_postcode }} </p>
+				<h4>Address</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						<p> {{ $house->house_address }} {{ $house->addresscities->city_name }} {{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }} </p>
+						<p>Postcode {{ $house->house_postcode }} </p>
+					</div>
+						<div id="map-canvas"></div>
 					
-					<hr>
-					<h4>Amenities</h4>
-					<br>
-					@foreach ($house->houseamenities as $houseamenity)
-						<p>{{ $houseamenity->amenityname }}</p>
-					@endforeach
-
-					<hr>
-					<h4>Shared space</h4>
-					<br>
-					@foreach ($house->housespaces as $housespace)
-						<p>{{ $housespace->spacename }}</p>
-					@endforeach
-
-					<hr>
-					<h4>Your House Rules</h4>
-					<br>
-					@foreach ($house->houserules as $houserule)
-						<p>{{ $houserule->houserule_name }}</p>
-					@endforeach
-					<br>
-					<p> {{ $house->optional_rules }}</p>
-
-					<hr>
-					<h4>Availability</h4>
-					<br>
-					<p>Advance notice: {{$house->guestarrives->notice }}</p>
-					@if ($house->guestarrives->checkin_to == 'Flexible')
-					<p>Check-in: Anytime after {{ $house->guestarrives->checkin_from }}</p>
-					@else
-					<p>Check-in: {{ $house->guestarrives->checkin_from }} - {{ $house->guestarrives->checkin_to }}</p>
-					@endif
-
-					<hr>
-					<h4>Pricing</h4>
-					<br>
-					<p>Base price: ฿{{ $house->houseprices->price }}/night</p>
-					<p>Weekly discount: {{ $house->houseprices->weekly_discount }}%</p>
-					<p>Monthly discount: {{ $house->houseprices->monthly_discount }}%</p>
-
 				</div>
-			</div>
 
-			<div class="col-md-4">
-				<div class="well">
-					<div class="dl-horizontal">
-						<label> Created by : </label>
-						<p> {{ $house->users->user_fname }} {{ $house->users->user_lname }} </p>
-						<label> Rent Count :</label>
-						<p> {{ $rentcount }}</p>
-						<label> Created at : </label>
-						<p> {{ date("jS F, Y", strtotime($house->created_at)) }} </p>
-						<label>Last Update : </label>
-						<p> {{ date("jS F, Y", strtotime($house->updated_at)) }} </p>
+				<h4>Amenities</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						@foreach ($house->houseamenities as $houseamenity)
+							<p>{{ $houseamenity->amenityname }}</p>
+						@endforeach
 					</div>
-					@if ($house->users_id == Auth::user()->id)
-					<div class="row">
-						<div class="col-sm-6">
-							{!! Html::linkRoute('rooms.edit', 'Edit', array($house->id), array('class' => 'btn btn-primary btn-block btn-h1-spacing')) !!}
-						</div>
-						<div class="col-sm-6">
-							{!! Form::open(['route' => ['rooms.destroy', $house->id], 'method' => 'DELETE']) !!}
+				</div>
 
+				<h4>Shared space</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						@foreach ($house->housespaces as $housespace)
+							<p>{{ $housespace->spacename }}</p>
+						@endforeach
+					</div>
+				</div>
+
+				<h4>Your House Rules</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						@foreach ($house->houserules as $houserule)
+							<p>{{ $houserule->houserule_name }}</p>
+						@endforeach
+						@if ($house->optional_rules)
+						<br>
+						<p> {{ $house->optional_rules }}</p>
+						@endif
+					</div>
+				</div>
+
+				<h4>Availability</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						<p>Advance notice: {{$house->guestarrives->notice }}</p>
+						@if ($house->guestarrives->checkin_to == 'Flexible')
+						<p>Check-in: Anytime after {{ $house->guestarrives->checkin_from }}</p>
+						@else
+						<p>Check-in: {{ $house->guestarrives->checkin_from }} - {{ $house->guestarrives->checkin_to }}</p>
+						@endif
+					</div>
+				</div>
+
+				<h4>Pricing</h4>
+				<div class="card">
+					<div style="margin-left: 10px; margin-right: 10px;">
+						<p>Base price: ฿{{ $house->houseprices->price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+						@if ($house->houseprices->food_price)
+						<p>Food included : ฿{{ $house->houseprices->food_price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+						<div class="alert alert-info" role="alert">
+  							@if ($house->foods->breakfast == '1') Breakfast @endif 
+  							@if ($house->foods->lunch == '1') @if($house->foods->lunch == '1' && $house->foods->breakfast == '1')/@endif Lunch @endif
+  							@if ($house->foods->dinner == '1') @if($house->foods->dinner == '1' && $house->foods->lunch == '1')/@endif Dinner @endif
+						</div>
+						@endif
+						<p>Weekly discount: {{ $house->houseprices->weekly_discount }}%</p>
+						<p>Monthly discount: {{ $house->houseprices->monthly_discount }}%</p>
+					</div>
+				</div>
+				</div>
+		</div>
+		<div class="col-md-4">
+			<div class="well">
+				<div class="dl-horizontal">
+					<dt>Created by</dt>
+					<dd>{{ $house->users->user_fname }} {{ $house->users->user_lname }}</dd>
+					<dt>Created at</dt>
+					<dd>{{ date("jS M, Y", strtotime($house->created_at)) }}</dd>
+					<dt>Date modified</dt>
+					<dd>{{ date("jS M, Y", strtotime($house->updated_at)) }}</dd>
+				</div>
+				<div class="margin-content">
+				<p>Link to public <a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
+				</div>
+				@if ($house->users_id == Auth::user()->id)
+				<div class="row">
+					<div class="col-sm-6">
+						{!! Html::linkRoute('rooms.edit', 'Edit', array($house->id), array('class' => 'btn btn-outline-warning btn-block btn-h1-spacing')) !!}
+					</div>
+					<div class="col-sm-6">
+						{!! Form::open(['route' => ['rooms.destroy', $house->id], 'method' => 'DELETE', 'style'=>'display:inline']) !!}
 							{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-block btn-h1-spacing']) !!}
-
-							{!! Form::close() !!}
-						</div>
+						{!! Form::close() !!}
 					</div>
-					@endif
-					<hr>
-					<div class="row">
-						<div class="col-sm-6">
-							{!! Html::linkRoute('rooms.index', 'Back to My Room', array(''), array('class' => 'btn btn btn-link btn-md')) !!}
-						</div>
+				</div>
+				@endif
+				<hr>
+				<div class="row">
+					<div class="col-sm-6">
+						{!! Html::linkRoute('index-myroom', 'Back to My Room', array(Auth::user()->id), array('class' => 'btn btn-outline-secondary')) !!}
 					</div>
 				</div>
 			</div>
+		</div>
 	</div>
 </div>
+@endsection
+
+@section('scripts')
+{!! Html::script('js/select2.min.js') !!}
+	<script type="text/javascript">
+		$('.select2-multi').select2();
+
+		$(document).ready(function() {
+
+			/* This is basic - uses default settings */
+			
+			$("a#single_image").fancybox({
+				'transitionIn'	:	'elastic',
+				'transitionOut'	:	'elastic',
+				'speedIn'		:	200, 
+				'speedOut'		:	200, 
+				'overlayShow'	:	false
+			});
+			
+			/* Using custom settings */
+			
+			$("a#inline").fancybox({
+				'hideOnContentClick': true
+			});
+
+			/* Apply fancybox to multiple items */
+			
+			$("a.group").fancybox({
+				'transitionIn'	:	'elastic',
+				'transitionOut'	:	'elastic',
+				'speedIn'		:	600, 
+				'speedOut'		:	200, 
+				'overlayShow'	:	false
+			});
+		});
+
+		var lat = {{ $map->map_lat }};
+		var lng = {{ $map->map_lng }};
+
+		var map = new google.maps.Map(document.getElementById('map-canvas'), {
+			center:{
+				lat: lat,
+				lng: lng
+			},
+			zoom: 16
+		});
+
+		var marker = new google.maps.Marker({
+			position:{
+				lat: lat,
+				lng: lng
+			},
+			map: map,
+			draggable: true
+		});
+
+		var circle = new google.maps.Circle({
+			position:{
+				lat: lat,
+				lng: lng
+			},
+			strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#0000FF',
+            fillOpacity: 0.3,
+            map: map,
+            center: {lat: lat, lng: lng},
+            radius: Math.sqrt(10) * 60
+		});
+	</script>
 @endsection

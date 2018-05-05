@@ -1,2 +1,3 @@
-	<hr>
-	<p class="text-center">Copyright N0SPichet - All Rights Reserved</p>
+<div class="footer">
+Copyright N0SPichet - All Rights Reserved
+</div>

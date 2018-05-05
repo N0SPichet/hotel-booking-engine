@@ -8,6 +8,10 @@ class House extends Model
 {
     protected $table = 'houses';
 
+    public function apartmentprices() {
+        return $this->belongsTo('App\Apartmentprice');
+    }
+
     public function users() {
     	return $this->belongsTo('App\User');
     }
@@ -30,6 +34,10 @@ class House extends Model
 
     public function housetypes() {
         return $this->belongsTo('App\Housetype');
+    }
+
+    public function roomtypes() {
+        return $this->belongsTo('App\RoomType');
     }
 
     public function guestarrives() {
@@ -56,7 +64,15 @@ class House extends Model
         return $this->belongsToMany('App\Housedetail');
     }
 
+    public function foods() {
+        return  $this->belongsTo('App\Food');
+    }
+
     public function houseprices() {
         return $this->belongsTo('App\Houseprice');
+    }
+
+    public function reviews() {
+        return $this->hasMany('App\Review');
     }
 }

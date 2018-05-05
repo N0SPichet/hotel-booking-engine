@@ -2,21 +2,24 @@
 
 @section('title',"Contact Host")
 
+@section('stylesheets')
+	{{ Html::style('css/parsley.css') }}
+@endsection
+
 @section('content')
 
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Contact {{ $house->users->user_fname }}</h1>
+			<h1 class="title-page">Contact {{ $house->users->user_fname }}</h1>
 			<hr>
 		</div>
 		<div class="col-md-6">
 			<h4>Once you send a message, {{ $house->users->user_fname }} can invite you to book their home.</h4>
 			<p>Make sure you share the following:</p>
 			<ul>
-				<li>Tell {{ $house->users->user_fname }} a little about yourself</li>
+				<li>Tell {{ $house->users->user_fname }} about yourself</li>
 				<li>What brings you to {{ $house->addresscities->city_name }}? Who’s joining you?</li>
-				<li>What do you love about this room? Mention it!</li>
 			</ul>
 		</div>
 			
@@ -32,11 +35,11 @@
 					<div class="col-md-12">
 						<div class="col-md-6">
 							<label for="checkin">Check In</label>
-							<input type="date" name="checkin" class="form-control" required="">
+							<input type="text" name="checkin" class="form-control" required="" id = "checkin">
 						</div>
 						<div class="col-md-6">
 							<label for="checkout">Check Out</label>
-							<input type="date" name="checkout" class="form-control" required="">
+							<input type="text" name="checkout" class="form-control" required=""  id = "checkout">
 						</div>
 					</div>
 				</div>
@@ -69,4 +72,23 @@
 		</div>
 	</div>
 </div>
+@endsection
+
+@section('scripts')
+	<script type="text/javascript">
+
+		$(document).ready(function(){
+      		var checkin=$('input[name="checkin"]'); //our date input has the name "date"
+      		var checkout=$('input[name="checkout"]'); //our date input has the name "date"
+      		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      		var options={
+        	format: 'yyyy-mm-dd',
+        	container: container,
+        	todayHighlight: true,
+        	autoclose: true,
+      	};
+      	checkin.datepicker(options);
+      	checkout.datepicker(options);
+    })
+	</script>
 @endsection

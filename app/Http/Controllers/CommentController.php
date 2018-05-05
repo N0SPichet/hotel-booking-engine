@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Comment;
 use App\Diary;
 use Session;
@@ -110,10 +111,29 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
-        $comment = Comment::find($id);
-        $diary_id = $comment->diary_id;
-        $comment->delete();
-        Session::flash('success', 'Deleted comment');
-        return redirect()->route('diary.single', $diary_id);
+        if (Auth::check()) {
+            $comment = Comment::find($id);
+            if (Auth::user()->email == $comment->email) {
+                $diary_id = $comment->diary_id;
+                $comment->delete();
+                $diary = Diary::find($diary_id);
+                if (Auth::user()->id == $diary->users_id) {
+                    Session::flash('success', 'Comment deleted');
+                    return redirect()->route('diary.single', $diary->id);
+                }
+                elseif (Auth::user()->id != $diary->users_id) {
+                    Session::flash('success', 'Comment deleted');
+                    return redirect()->route('diaries.show', $diary->id);
+                }
+            }
+            else {
+                Session::flash('fail', "This comment is no longer available.");
+                return back();
+            }
+        }
+        else {
+            Session::flash('success', 'You need to login first!');
+            return redirect()->route('login');
+        }
     }
 }

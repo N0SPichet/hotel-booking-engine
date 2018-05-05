@@ -6,6 +6,8 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Auth;
+use App\UserVerification;
 
 class RegisterController extends Controller
 {
@@ -63,9 +65,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $verification = new UserVerification;
+        $verification->save();
         return User::create([
             'user_fname' => $data['user_fname'],
             'user_lname' => $data['user_lname'],
+            'user_verifications_id' => $verification->id,
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);

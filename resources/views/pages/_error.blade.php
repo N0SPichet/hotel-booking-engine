@@ -6,7 +6,7 @@
 
 <div class="container">
 	<div class="row">
-		<div class="panel panel-default">
+		<div class="panel panel-default col">
 			<div class="panel-heading"><h4>Error</h4></div>
 
 			<div class="panel-body">

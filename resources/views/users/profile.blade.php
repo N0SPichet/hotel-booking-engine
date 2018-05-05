@@ -5,12 +5,15 @@
 @section ('content')
 <div class="container">
 	<div class="row">
-		<div class="panel panel-default">
-			<div class="panel-heading"><h1>{{ Auth::user()->user_fname }} Account</h1></div>
-
+		<div class="panel panel-default col">
+			<div class="panel-heading">
+				<h1>{{ Auth::user()->user_fname }} Account @if ($user->user_verifications->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</h1>
+				@if ($user->user_verifications->verify != '1')
+				<p class="text-danger"><a href="{{ route('user.verify') }}" class="btn btn-outline-danger">Verify</a> before become hosting or rent a room.</p>
+				@endif
+			</div>
 			<div class="panel-body">
-				<div class="col-md-8">
-					@foreach($users as $user)
+				<div class="col-md-8 col-sm-8">
 					<dl class="dl-horizontal">
 						<dt>Name</dt>
 						<dd>
@@ -34,78 +37,71 @@
 						<hr>
 						@endif
 
-						@if ($user->user_address != NULL)
 						<dt>Address</dt>
 						<dd>
-							{{ $user->user_address }} {{ $user->user_city }} {{ $user->user_state }}, {{ $user->user_country }}
+							<p>
+							@if ($user->user_address != NULL) {{ $user->user_address }} @endif
+							@if ($user->user_city != NULL) {{ $user->user_city }} @endif
+							@if ($user->user_state != NULL) {{ $user->user_state }}, @endif
+							@if ($user->user_country != NULL) {{ $user->user_country }} @endif</p>
 						</dd>
 						<hr>
-						@endif
 
 						@if ($user->user_description != NULL)
 						<dt>Description</dt>
 						<dd>
-							{{ $user->user_description }}
+							{!! $user->user_description !!}
 						</dd>
 						@endif
 					</dl>
-					@endforeach
 				</div>
 
-				<div class="col-md-4">
-					<div class="row">
-						<div class="col-md-6 col-md-offset-3 col-xs-6 col-xs-offset-3">
-							@if ($user->user_image == null)
-								<div class="text-center">
-									<img src="{{ asset('images/users/blank-profile-picture.png') }}" style="width:150px; height: 150px; float: left; border-radius: 50%; margin-right: 25px;">
-								</div>
-							@else
-								<div class="text-center" style="position: relative; width: 100px; height: 100px; overflow: hidden; border-radius: 50%;">
-									<img src="{{ asset('images/users/' . $user->user_image) }}" style="width: auto; height: 100px;">
-								</div>
-							@endif
+				<div class="col-md-4 col-sm-4" align="center">
+					@if ($user->user_image == null)
+					<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="rounded-circle" style="width:150px; height: 150px; ">
+					@else
+					<img src="{{ asset('images/users/'. $user->id . '/' . $user->user_image) }}" class="rounded-circle" style="width:150px; height: 150px;">
+					@endif
 
-							{!! Form::open(['route' => ['users.updateimage', $user->id], 'files' => true]) !!}
-								{{ Form::label('user_image', 'Profile Photo', array('class' => 'form-spacing-top-8 text-center')) }}
+					{!! Form::open(['route' => ['users.updateimage', $user->id], 'files' => true]) !!}
+						{{ Form::label('user_image', 'Profile Photo', array('class' => 'form-spacing-top-8 text-center')) }}
 							
-								<div class="fileupload fileupload-new text-center" data-provides="fileupload">
-								    <span class="btn btn-primary btn-file">
-								    	<span class="fileupload-new">Select file</span>
-								    	<span class="fileupload-exists">Change</span>
-								    	<input name="user_image" type="file" id="user_image">
-								    </span>
-								    <span class="fileupload-preview"></span>
-								    <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
-								</div>
-							</div>
+						<div class="fileupload fileupload-new text-center" data-provides="fileupload">
+						    <span class="btn btn-primary btn-file">
+						    	<span class="fileupload-new">Select file</span>
+						    	<span class="fileupload-exists">Change</span>
+						    	<input name="user_image" type="file" id="user_image">
+						    </span>
+						    <span class="fileupload-preview"></span>
+						    <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
+						</div>
 
-							<div class="col-md-6 col-md-offset-3 col-xs-6 col-xs-offset-3">
-								{{ Form::submit('Update image', ['class' => 'btn btn-success btn-block btn-h1-spacing']) }}
-							</div>
-					</div>
+						<div style="width: 50%;">
+							{{ Form::submit('Update image', ['class' => 'btn btn-success btn-block']) }}
+						</div>
 					{!! Form::close() !!}
 				</div>
 			</div>
 		</div>
-	</div> <!-- end of header row-->
+	</div>
+	
+	<div class="card">
+		<div class="margin-content">
+			<div class="col-md-3 col-sm-3">
+				{!! Html::linkRoute('users.edit', 'Update Account', array($user->id), array('class' => 'btn btn-info btn-block')) !!}
+			</div>
 
-	<div class="row">
-		<div class="col-md-12 col-md-offset-0">
-			<div class="col-md-3">
-				{!! Html::linkRoute('users.edit', 'Update Account', array($user->id), array('class' => 'btn btn-info btn-h1-spacing btn-block')) !!}
-			</div> <!-- end of col-md-3 -->
+			<div class="col-md-3 col-sm-3">
+				{!! Html::linkRoute('mytrips', 'My Trips', array($user->id), array('class' => 'btn btn-info btn-block')) !!}
+			</div>
 
-			<div class="col-md-3">
-				{!! Html::linkRoute('mytrips', 'My Trips', array($user->id), array('class' => 'btn btn-info btn-h1-spacing btn-block')) !!}
-			</div> <!-- end of col-md-3 -->
+			<div class="col-md-3 col-sm-3">
+				{!! Html::linkRoute('diaries.mydiaries', 'My Diaries', array($user->id), array('class' => 'btn btn-info btn-block')) !!}
+			</div>
 
-			<div class="col-md-3">
-				{!! Html::linkRoute('diaries.mydiaries', 'My Diaries', array($user->id), array('class' => 'btn btn-info btn-h1-spacing btn-block')) !!}
-			</div> <!-- end of col-md-3 -->
-
-			<div class="col-md-3">
-				{!! Html::linkRoute('users.description', 'About My Self', array($user->id), array('class' => 'btn btn-info btn-h1-spacing btn-block')) !!}
-			</div> <!-- end of col-md-3 -->
+			<div class="col-md-3 col-sm-3">
+				{!! Html::linkRoute('users.description', 'About My Self', array($user->id), array('class' => 'btn btn-info btn-block')) !!}
+			</div>
 		</div>
 	</div>
 </div>

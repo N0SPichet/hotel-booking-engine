@@ -2,12 +2,16 @@
 
 @section('title','Contact Us')
 
+@section('stylesheets')
+	{{ Html::style('css/parsley.css') }}
+@endsection
+
 @section('content')
 
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
-			<h1>Contact Us</h1>
+			<h1 class="title-page">Contact Us</h1>
 			<hr>
 
 			<form action="{{ route('postcontact') }}" method="POST">
