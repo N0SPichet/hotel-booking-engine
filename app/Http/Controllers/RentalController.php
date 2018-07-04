@@ -359,7 +359,7 @@ class RentalController extends Controller
             if ($rental) {
                 $house = House::find($rental->houses_id);
                 if ($house->housetypes_id == '1' || $house->housetypes_id == '5') {
-                    if ($rental->users->id == Auth::user()->id || $rental->houses->users->id == Auth::user()->id) {
+                    if (Auth::user()->level == '0' || $rental->users->id == Auth::user()->id || $rental->houses->users->id == Auth::user()->id) {
                         $datetime1 = new DateTime($rental->rental_datein);
                         $datetime2 = new DateTime($rental->rental_dateout);
                         $interval = $datetime1->diff($datetime2);
@@ -392,7 +392,7 @@ class RentalController extends Controller
                     }
                 }
                 else {
-                    if ($rental->users->id == Auth::user()->id || $rental->houses->users->id == Auth::user()->id) {
+                    if (Auth::user()->level == '0' || $rental->users->id == Auth::user()->id || $rental->houses->users->id == Auth::user()->id) {
                         $datetime1 = new DateTime($rental->rental_datein);
                         $datetime2 = new DateTime($rental->rental_dateout);
                         $interval = $datetime1->diff($datetime2);

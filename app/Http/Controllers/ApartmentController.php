@@ -114,6 +114,7 @@ class ApartmentController extends Controller
         if (Auth::check()) {
             $house = new House;
             $house->users_id = Auth::user()->id;
+            $house->publish = 0;
             $house->house_property = $request->house_property;
             $house->house_capacity = $request->house_capacity;
             $house->house_guestspace = $request->house_guestspace;

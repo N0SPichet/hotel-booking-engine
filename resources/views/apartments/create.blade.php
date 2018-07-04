@@ -397,7 +397,7 @@
 
 		$('#country').on('change', function(e){
       		var country_id = e.target.value;
-        	$.get('http://192.168.1.102/blog/public/api/get-state-list?country_id=' + country_id, function(data){
+        	$.get('http://localhost:8000/api/get-state-list?country_id=' + country_id, function(data){
           		$('#state').empty();
           		$.each(data, function(index, stateObj){
             		$('#state').append('<option value="'+stateObj.id+'">'+stateObj.state_name+'</option>')
@@ -407,7 +407,7 @@
 
     	$('#state').on('change', function(e){
       		var state_id = e.target.value;
-        	$.get('http://192.168.1.102/blog/public/api/get-city-list?state_id=' + state_id, function(data){
+        	$.get('http://localhost:8000/api/get-city-list?state_id=' + state_id, function(data){
           		$('#city').empty();
           		$.each(data, function(index, cityObj){
             		$('#city').append('<option value="'+cityObj.id+'">'+cityObj.city_name+'</option>')
