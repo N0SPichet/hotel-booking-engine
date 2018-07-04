@@ -221,11 +221,11 @@ class RentalController extends Controller
                 'endmessage' => $endmessage
             );
 
-            // Mail::send('emails.booking_accepted', $data, function($message) use ($data){
-            //     $message->from('noreply@ltt.com');
-            //     $message->to($data['email']);
-            //     $message->subject($data['subject']);
-            // });
+            Mail::send('emails.booking_accepted', $data, function($message) use ($data){
+                $message->from('noreply@ltt.com');
+                $message->to($data['email']);
+                $message->subject($data['subject']);
+            });
 
             $rental->save();
             Session::flash('success', 'Thank you for accept this request.');
@@ -316,11 +316,11 @@ class RentalController extends Controller
             'detailmessage' => $detailmessage
         );
 
-        // Mail::send('emails.booking_request', $data, function($message) use ($data){
-        //     $message->from('noreply@ltt.com');
-        //     $message->to($data['email']);
-        //     $message->subject($data['subject']);
-        // });
+        Mail::send('emails.booking_request', $data, function($message) use ($data){
+            $message->from('noreply@ltt.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
 
         $premessage = "Dear " . $rental->users->user_fname;
         $detailmessage = $rental->users->user_fname . " " . $rental->users->user_lname . " you was succussfully booking stay date " . date('jS F, Y', strtotime($rental->rental_datein)) . " to " . date('jS F, Y', strtotime($rental->rental_dateout));
@@ -335,11 +335,11 @@ class RentalController extends Controller
             'endmessage' => $endmessage
         );
 
-        // Mail::send('emails.booking_confirm', $data, function($message) use ($data){
-        //     $message->from('noreply@ltt.com');
-        //     $message->to($data['email']);
-        //     $message->subject($data['subject']);
-        // });
+        Mail::send('emails.booking_confirm', $data, function($message) use ($data){
+            $message->from('noreply@ltt.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
 
         Session::flash('success', 'You was succussfully booking, Now wait for host accept your booking and have a payment!');
 
@@ -642,11 +642,11 @@ class RentalController extends Controller
                 'endmessage' => $endmessage
             );
 
-            // Mail::send('emails.payment_confirm', $data, function($message) use ($data){
-            //     $message->from('noreply@ltt.com');
-            //     $message->to($data['email']);
-            //     $message->subject($data['subject']);
-            // });
+            Mail::send('emails.payment_confirm', $data, function($message) use ($data){
+                $message->from('noreply@ltt.com');
+                $message->to($data['email']);
+                $message->subject($data['subject']);
+            });
 
             return redirect()->route('mytrips');
         }
@@ -691,11 +691,11 @@ class RentalController extends Controller
                 'endmessage' => $endmessage
             );
 
-            // Mail::send('emails.payment_approved', $data, function($message) use ($data){
-            //     $message->from('noreply@ltt.com');
-            //     $message->to($data['email']);
-            //     $message->subject($data['subject']);
-            // });
+            Mail::send('emails.payment_approved', $data, function($message) use ($data){
+                $message->from('noreply@ltt.com');
+                $message->to($data['email']);
+                $message->subject($data['subject']);
+            });
 
             Session::flash('success', 'This trip has been approved.');
         }
@@ -765,11 +765,11 @@ class RentalController extends Controller
                 'endmessage' => $endmessage
             );
 
-            // Mail::send('emails.payment_approved', $data, function($message) use ($data){
-            //     $message->from('noreply@ltt.com');
-            //     $message->to($data['email']);
-            //     $message->subject($data['subject']);
-            // });
+            Mail::send('emails.payment_approved', $data, function($message) use ($data){
+                $message->from('noreply@ltt.com');
+                $message->to($data['email']);
+                $message->subject($data['subject']);
+            });
 
             $payment->save();
             Session::flash('success', 'This trip has been rejected.');
