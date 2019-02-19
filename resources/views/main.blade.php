@@ -86,12 +86,12 @@
             {{ Auth::user()->user_fname }}
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{{ route('users.profile') }}"><i class="far fa-user"></i> My Profile</a>
+            <a class="dropdown-item" href="{{ route('users.profile', Auth::user()->id) }}"><i class="far fa-user"></i> My Profile</a>
             <a class="dropdown-item" href="{{ route('diaries.mydiaries') }}"><i class="fas fa-book"></i> My Memories</a>
             <a class="dropdown-item" href="{{ route('summary') }}"><i class="fas fa-chart-line"></i> Summary</a>
             @if (Auth::user()->hasRole('Admin'))
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ route('user.verify-index') }}"><i class="far fa-check-circle"></i> User Verification</a>
+            <a class="dropdown-item" href="{{ route('users.verify-index') }}"><i class="far fa-check-circle"></i> User Verification</a>
             <a class="dropdown-item" href="{{ route('users.index') }}"><i class="fas fa-list-ul"></i> All Users</a>
             <a class="dropdown-item" href="{{ route('rooms.index') }}"><i class="fas fa-list-ul"></i> All Rooms</a>
             <a class="dropdown-item" href="{{ route('rentals.index') }}"><i class="fas fa-list-ul"></i> All Trips</a>

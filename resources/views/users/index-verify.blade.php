@@ -15,11 +15,11 @@
 				<div class="card margin-top-10">
 					<div class="margin-content">
 						<div class="col-md-9">
-							<a href="{{ route('user.verify-show', $user->id) }}" style="text-decoration-line: none;"><p>{{ $user->user_verifications->title }} {{ $user->user_verifications->name}} {{ $user->user_verifications->lastname}}</p></a>
+							<a href="{{ route('users.verify-show', $user->id) }}"><p>{{ $user->user_fname }} - {{ $user->email}}</p></a>
 						</div>
 						<div class="col-md-3" align="center">
-							<a href="{{ route('user.verify-show', $user->id) }}" class="btn btn-primary btn-sm" style="width: 60%">View Detail</a>
-							{!! Form::open(['route' => ['user.verify-reject', $user->id]]) !!}
+							<a href="{{ route('users.verify-show', $user->id) }}" class="btn btn-primary btn-sm" style="width: 60%">View Detail</a>
+							{!! Form::open(['route' => ['users.verify-reject', $user->id]]) !!}
 								<button type="submit" class="btn btn-danger btn-sm margin-top-10" style="width: 60%"><i class="far fa-times-circle"></i> Reject</button>
 							{!! Form::close() !!}
 						</div>

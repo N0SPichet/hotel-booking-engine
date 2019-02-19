@@ -92,17 +92,6 @@ class PagesController extends Controller
         }
     }
 
-    public function userprofile() {
-        if (Auth::check()) {
-            $user = User::where('email', Auth::user()->email)->first();
-            return view('users.profile', compact('user'));
-        }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
-    }
-
     //Diaries
     public function mydiaries()
     {

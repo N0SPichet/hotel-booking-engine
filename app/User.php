@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Role;
+use App\UserVerification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -63,8 +64,8 @@ class User extends Authenticatable
         return $this->hasMany('App\Review');
     }
 
-    public function user_verifications() {
-        return $this->belongsTo('App\UserVerification');
+    public function verification() {
+        return $this->belongsTo(UserVerification::class, 'user_verifications_id');
     }
 
     public function hasRole($role)

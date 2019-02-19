@@ -33,8 +33,9 @@
 
 			{{ Form::label('user_gender', 'Gender') }}
 			<select class="form-control input-md margin-top-10" name="user_gender">
-				<option value="1" {{ $user->user_gender=='Male' ? 'selected'  : '' }}>Male</option>
-				<option value="2" {{ $user->user_gender=='Female' ? 'selected'  : '' }}>Female</option>
+				<option {{ $user->user_gender===null ? 'selected':'' }}>Select Gender</option>
+				<option value="1" {{ $user->user_gender==='1' ? 'selected'  : '' }}>Male</option>
+				<option value="2" {{ $user->user_gender==='2' ? 'selected'  : '' }}>Female</option>
 			</select>
 		</div>
 

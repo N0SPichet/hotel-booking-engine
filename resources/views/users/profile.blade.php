@@ -1,33 +1,27 @@
 @extends ('main')
 
-@section ('title', Auth::user()->user_fname . ' ' . 'Profile')
+@section ('title', $user->user_fname . ' ' . 'Profile')
 
 @section ('content')
 <div class="container">
 	<div class="row">
 		<div class="panel panel-default col">
 			<div class="panel-heading">
-				<h1>{{ Auth::user()->user_fname }} Account @if ($user->user_verifications->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</h1>
-				@if ($user->user_verifications->verify != '1')
-				<p class="text-danger"><a href="{{ route('user.verify') }}" class="btn btn-outline-danger">Verify</a> before become hosting or rent a room.</p>
+				<h1>{{ $user->user_fname }} Account <small>Role:{{$user->roles[0]->name}}</small> @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</h1>
+				@if ($user->verification->verify !== '1')
+				<p class="text-danger"><a href="{{ route('users.verify-user', $user->id) }}" class="btn btn-outline-danger">Verify</a> before become hosting or rent a room.</p>
 				@endif
 			</div>
 			<div class="panel-body">
 				<div class="col-md-8 col-sm-8">
 					<dl class="dl-horizontal">
-						<dt>Role</dt>
-						<dd>
-							@foreach($user->roles as $role)
-							{{ $role->name }}
-							@endforeach
-						</dd>
 						<dt>Name</dt>
 						<dd>
 							{{ $user->user_fname }} {{ $user->user_lname }}
 						</dd>
 						<hr>
 
-						@if ($user->user_tel != NULL)
+						@if ($user->user_tel !== null)
 						<dt>Phone Number</dt>
 						<dd>
 							{{ $user->user_tel }}
@@ -35,11 +29,9 @@
 						<hr>
 						@endif
 
-						@if ($user->user_gender != NULL)
+						@if ($user->user_gender !== null)
 						<dt>Gender</dt>
-						<dd>
-							{{ $user->user_gender }}
-						</dd>
+						<dd id="gender">{{ $user->user_gender }}</dd>
 						<hr>
 						@endif
 
@@ -47,15 +39,15 @@
 						<dt>Address</dt>
 						<dd>
 							<p>
-							@if ($user->user_address != null) {{ $user->user_address }} @endif
-							@if ($user->user_city != null) {{ $user->user_city }} @endif
-							@if ($user->user_state != null) {{ $user->user_state }}, @endif
-							@if ($user->user_country != null) {{ $user->user_country }} @endif</p>
+							@if ($user->user_address !== null) {{ $user->user_address }} @endif
+							@if ($user->user_city !== null) {{ $user->user_city }} @endif
+							@if ($user->user_state !== null) {{ $user->user_state }}, @endif
+							@if ($user->user_country !== null) {{ $user->user_country }} @endif</p>
 						</dd>
 						<hr>
 						@endif
 
-						@if ($user->user_description != NULL)
+						@if ($user->user_description !== null)
 						<dt>Description</dt>
 						<dd>
 							{!! $user->user_description !!}
@@ -113,4 +105,18 @@
 		</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+<script type="text/javascript">
+	$( document ).ready(function() {
+		if($('#gender').text() === '1')
+		{
+			$('#gender').text('Male')
+		}
+		else
+		{
+			$('#gender').text('Female')
+		}
+	});
+</script>
 @endsection

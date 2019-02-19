@@ -7,7 +7,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			<div align="center">
-				<p class="lead">{{ $user->user_fname }} Profile @if ($user->user_verifications->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</p>
+				<p class="lead">{{ $user->user_fname }} Profile @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</p>
 				@if ($user->user_image == null)
 				<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="rounded-circle" style="width:200px; height: 200px; ">
 				@else

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class UserVerification extends Model
@@ -9,6 +10,6 @@ class UserVerification extends Model
     protected $table = 'user_verifications';
 
     public function users() {
-    	return $this->hasMany('App\User');
+    	return $this->hasOne(User::class);
     }
 }

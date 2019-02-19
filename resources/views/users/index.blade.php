@@ -23,7 +23,7 @@
 
 						<div class="col-md-3" align="center">
 							{!! Html::linkRoute('users.show', 'View User Profile', array($user->id), array('class' => 'btn btn-info btn-sm', 'style' => 'width: 60%')) !!}
-							{!! Form::open(['route' => ['users.report', $user->id]]) !!}
+							{!! Form::open(['route' => ['users.block', $user->id]]) !!}
 							{!! Form::submit('Report this User', ['class' => 'btn btn-danger btn-sm btn-h1-spacing', 'style' => 'width: 60%']) !!}
 							{!! Form::close() !!}
 						</div>

@@ -22,22 +22,24 @@ Route::post('/search', 'PagesController@indexSearch')->name('search');
 //Create PagesController Route
 Route::get('/home', 'PagesController@index')->name('home');
 Route::get('diaries/mydiaries', 'PagesController@mydiaries')->name('diaries.mydiaries');
-Route::get('user/profile', 'PagesController@userprofile')->name('users.profile');
 Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
 
 
 //Create resource route for UserController
 Route::resource('users', 'UserController');
-Route::get('user/verification', 'UserController@userverify')->name('user.verify');
-Route::post('user/verification/send_request', 'UserController@userrequestverify')->name('user.requestverify');
-Route::get('user/verification/index', 'UserController@userverify_index')->name('user.verify-index');
-Route::get('user/verification/{id}', 'UserController@userverify_show')->name('user.verify-show');
-Route::post('user/verification/{id}/verify', 'UserController@userverify_approve')->name('user.verify-approve');
-Route::post('user/verification/{id}/reject', 'UserController@userverify_reject')->name('user.verify-reject');
-Route::post('user/{id}/updateimage', 'UserController@updateimage')->name('users.updateimage');
-Route::post('users/{id}/report', 'UserController@ureport')->name('users.report');
-Route::get('users/{id}/description', 'UserController@description')->name('users.description');
+Route::prefix('users')->name('users.')->group(function () {
+	Route::get('{user}/description', 'UserController@description')->name('description');
+	Route::get('{user}/profile', 'UserController@userprofile')->name('profile');
+	Route::get('{user}/verify', 'UserController@verify_user')->name('verify-user');
+	Route::get('verification/index', 'UserController@verify_index')->name('verify-index');
+	Route::get('verification/{user}', 'UserController@verify_show')->name('verify-show');
+	Route::post('{user}/block', 'UserController@block')->name('block');
+	Route::post('{user}/updateimage', 'UserController@updateimage')->name('updateimage');
+	Route::post('verification/send_request', 'UserController@verify_request')->name('verify-request');
+	Route::post('verification/{user}/approve', 'UserController@verify_approve')->name('verify-approve');
+	Route::post('verification/{id}/reject', 'UserController@verify_reject')->name('verify-reject');
+});
 
 //Create resource route for RentalController
 Route::resource('rentals', 'RentalController');

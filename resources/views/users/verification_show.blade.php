@@ -7,18 +7,20 @@
 	<div class="row">
 		<div class="col-md-12">
 			<p class="lead">Verification Details</p>
+			<a href="{{ route('users.verify-index') }}" class="btn btn-info">Back</a>
+			<hr>
 		</div>
 		<div class="col-md-8">
 			<div class="card">
 				<div class="margin-content">
 					<div class="col-md-12">
 						<label><i class="fas fa-user"></i> Full name</label>
-						@if ( $user->user_verifications->title != NULL && $user->user_verifications->name != NULL && $user->user_verifications->lastname != NULL)
+						@if ( $user->verification->title != NULL && $user->verification->name != NULL && $user->verification->lastname != NULL)
 						<div class="alert alert-success" role="alert">
 						@else
 						<div class="alert alert-danger" role="alert" style="height: 50px;">
 						@endif
-						<p>{{ $user->user_verifications->title }} {{ $user->user_verifications->name }} {{ $user->user_verifications->lastname }}</p>
+						<p>{{ $user->verification->title }} {{ $user->verification->name }} {{ $user->verification->lastname }}</p>
 						</div>
 
 						<label>Gender</label>
@@ -55,8 +57,12 @@
 						<label>Confident Document</label>
 					</div>
 					<div class="col-md-12">
-						<p><a href="{{ asset('images/verification/id_card/' . $user->id . '/'.$user->user_verifications->id_card) }}" target="_blank"><span class="text-primary">ID Card</span></a></p>
-						<p><a href="{{ asset('images/verification/census_registration/' . $user->id.'/'. $user->user_verifications->census_registration) }}" target="_blank"><span class="text-primary">Census Registration</span></a></p>
+						@if($user->verification->id_card)
+						<p><a href="{{ asset('images/verifications/' . $user->id . '/'.$user->verification->id_card) }}" target="_blank"><span class="text-primary">ID Card</span></a></p>
+						@endif
+						@if($user->verification->census_registration)
+						<p><a href="{{ asset('images/verifications/' . $user->id.'/'. $user->verification->census_registration) }}" target="_blank"><span class="text-primary">Census Registration</span></a></p>
+						@endif
 					</div>
 				</div>
 			</div>
@@ -65,18 +71,18 @@
 		<div class="col-md-4">
 			<div class="well" align="center">
 				@if (Auth::check())
-					@if (Auth::user()->level == '0')
+					@if (Auth::user()->hasRole('Admin'))
 						<p class="text-primary">Admin Decision</p>
-						@if ($user->user_verifications->verify != '1' && $user->user_verifications->verify != '2')
-						{!! Form::open(['route' => ['user.verify-approve', $user->id]]) !!}
+						@if ($user->verification->verify != '1' && $user->verification->verify != '2')
+						{!! Form::open(['route' => ['users.verify-approve', $user->id]]) !!}
 							<button type="submit" class="btn btn-primary btn-sm" style="width: 60%"><i class="far fa-check-circle"></i> Verify</button>
 						{!! Form::close() !!}
-						{!! Form::open(['route' => ['user.verify-reject', $user->id]]) !!}
+						{!! Form::open(['route' => ['users.verify-reject', $user->id]]) !!}
 							<button type="submit" class="btn btn-danger btn-sm margin-top-10" style="width: 60%"><i class="far fa-times-circle"></i> Reject</button>
 						{!! Form::close() !!}
-						@elseif ($user->user_verifications->verify == '1')
+						@elseif ($user->verification->verify == '1')
 							<p class="text-success"><i class="fas fa-check"></i> Confirm</p>
-						@elseif ($user->user_verifications->verify == '2')
+						@elseif ($user->verification->verify == '2')
 							<p class="text-danger"><i class="fas fa-check"></i> Reject</p>
 						@endif
 					@endif
