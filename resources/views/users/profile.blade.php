@@ -15,6 +15,12 @@
 			<div class="panel-body">
 				<div class="col-md-8 col-sm-8">
 					<dl class="dl-horizontal">
+						<dt>Role</dt>
+						<dd>
+							@foreach($user->roles as $role)
+							{{ $role->name }}
+							@endforeach
+						</dd>
 						<dt>Name</dt>
 						<dd>
 							{{ $user->user_fname }} {{ $user->user_lname }}
@@ -37,15 +43,17 @@
 						<hr>
 						@endif
 
+						@if($user->user_address !== null || $user->user_city !== null || $user->user_state !== null || $user->user_country !== null)
 						<dt>Address</dt>
 						<dd>
 							<p>
-							@if ($user->user_address != NULL) {{ $user->user_address }} @endif
-							@if ($user->user_city != NULL) {{ $user->user_city }} @endif
-							@if ($user->user_state != NULL) {{ $user->user_state }}, @endif
-							@if ($user->user_country != NULL) {{ $user->user_country }} @endif</p>
+							@if ($user->user_address != null) {{ $user->user_address }} @endif
+							@if ($user->user_city != null) {{ $user->user_city }} @endif
+							@if ($user->user_state != null) {{ $user->user_state }}, @endif
+							@if ($user->user_country != null) {{ $user->user_country }} @endif</p>
 						</dd>
 						<hr>
+						@endif
 
 						@if ($user->user_description != NULL)
 						<dt>Description</dt>
