@@ -1,7 +1,13 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\Houseamenity;
+use App\Models\Housedetail;
+use App\Models\Houserule;
+use App\Models\Housespace;
+use App\Models\Housetype;
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 
 class House extends Model
@@ -13,7 +19,7 @@ class House extends Model
     }
 
     public function users() {
-    	return $this->belongsTo('App\User');
+    	return $this->belongsTo(User::class);
     }
 
     public function rentals() {
@@ -32,10 +38,6 @@ class House extends Model
     	return $this->belongsTo('App\Addressstate');
     }
 
-    public function housetypes() {
-        return $this->belongsTo('App\Housetype');
-    }
-
     public function roomtypes() {
         return $this->belongsTo('App\RoomType');
     }
@@ -49,19 +51,23 @@ class House extends Model
     }
 
     public function houseamenities() {
-        return $this->belongsToMany('App\Houseamenity');
-    }
-
-    public function housespaces() {
-        return $this->belongsToMany('App\Housespace');
-    }
-
-    public function houserules() {
-        return $this->belongsToMany('App\Houserule');
+        return $this->belongsToMany(Houseamenity::class);
     }
 
     public function housedetails() {
-        return $this->belongsToMany('App\Housedetail');
+        return $this->belongsToMany(Housedetail::class);
+    }
+
+    public function houserules() {
+        return $this->belongsToMany(Houserule::class);
+    }
+
+    public function housespaces() {
+        return $this->belongsToMany(Housespace::class);
+    }
+
+    public function housetypes() {
+        return $this->belongsTo(Housetype::class);
     }
 
     public function foods() {

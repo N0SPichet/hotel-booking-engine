@@ -2,37 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Address;
+use App\Food;
+use App\Guestarrive;
+use App\Himage;
+use App\Houseprice;
+use App\Map;
+use App\Models\District;
+use App\Models\House;
+use App\Models\Houseamenity;
+use App\Models\Housedetail;
+use App\Models\Houserule;
+use App\Models\Housespace;
+use App\Models\Housetype;
+use App\Models\Province;
+use App\Models\SubDistrict;
+use App\Payment;
+use App\Rental;
+use App\Review;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\House;
-use App\Map;
-use App\Address;
-use App\Addresscity;
-use App\Addressstate;
-use App\Addresscountry;
-use App\Housetype;
-use App\Houseamenity;
-use App\Housespace;
-use App\Guestarrive;
-use App\Houserule;
-use App\Housedetail;
-use File;
-use App\Food;
-use App\Houseprice;
-use App\Rental;
-use App\Payment;
-use App\Himage;
-use App\Review;
 use Image;
-use Storage;
-use Session;
 use Purifier;
+use Session;
+use Storage;
 
 class RoomController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('crole:Admin')->except('index', 'show');
     }
 
     /**
@@ -42,23 +43,17 @@ class RoomController extends Controller
      */
     public function index()
     {
-        // $states = Addressstate::where("addresscountry_id", '1')->get();
-        // foreach ($states as $key => $state) {
-        //     echo $state->id . '<br>';
-        // }
         $houses = House::orderBy('id')->paginate(10);
         return view('rooms.index')->with('houses', $houses);
     }
 
-    public function indexmyroom($id) {
-        if ($id == Auth::user()->id) {
+    public function index_myroom(User $user) {
+        if (Auth::user()->id === $user->id) {
             $houses = House::where('users_id', $id)->where('housetypes_id','!=','1')->where('housetypes_id','!=','5')->orderBy('id')->paginate(10);
             return view('rooms.index-myroom')->with('houses', $houses);
         }
-        else {
-            Session::flash('fail', "Request not found, You don't have permission to see this files!");
-            return back();
-        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     public function getStateList(Request $request)
@@ -82,21 +77,15 @@ class RoomController extends Controller
      */
     public function create()
     {
-        if (Auth::check()) {
-            $get_states = route('get_states');
-            $get_cities = route('get_cities');
-            $htypes = Housetype::where('type_name', '!=', 'Apartment')->where('type_name', '!=', 'Hotel')->get();
-            $countries = Addresscountry::all();
-            $houseamenities = Houseamenity::all();
-            $housespaces = Housespace::all();
-            $houserules = Houserule::all();
-            $housedetails = Housedetail::all();
-            return view('rooms.create')->with('htypes', $htypes)->with('countries', $countries)->with('houseamenities', $houseamenities)->with('housespaces', $housespaces)->with('houserules', $houserules)->with('housedetails', $housedetails)->with('get_states', $get_states)->with('get_cities', $get_cities);
-        }
-        else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
-        }
+        $htypes = Housetype::where('type_name', '!=', 'Apartment')->where('type_name', '!=', 'Hotel')->get();
+        $provinces = Province::all();
+        $districts = District::where('province_id', $provinces[0]->id)->get();
+        $sub_districts = SubDistrict::where('district_id', $districts[0]->id)->get();
+        $houseamenities = Houseamenity::all();
+        $housespaces = Housespace::all();
+        $houserules = Houserule::all();
+        $housedetails = Housedetail::all();
+        return view('rooms.create')->with('htypes', $htypes)->with('sub_districts', $sub_districts)->with('districts', $districts)->with('provinces', $provinces)->with('houseamenities', $houseamenities)->with('housespaces', $housespaces)->with('houserules', $houserules)->with('housedetails', $housedetails);
     }
 
     /**
@@ -187,72 +176,68 @@ class RoomController extends Controller
                 $food->lunch = '1';
             }
             else {
-                 $food->lunch = '0';
-            }
-            if ($request->food_dinner == '1') {
-                $food->dinner = '1';
-            }
-            else {
-                $food->dinner = '0';
-            }
-            $food->save();
-            $house->foods_id = $food->id;
-
-            $house->save();
-
-            $map->houses_id = $house->id;
-            $map->save();
-            if ($request->hasFile('image_names')) {
-                foreach ($request->image_names as $image_name) {
-                    $images = new Himage;
-                    $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
-                    $location = public_path('images/houses/'.$filename);
-                    Image::make($image_name)->resize(1440, 1080)->save($location);
-
-                    $images->houses_id = $house->id;
-                    $images->image_name = $filename;
-                    $images->save();
-                }
-            }
-            $house = House::find($house->id);
-            $cover_image = Himage::where('houses_id', $house->id)->first();
-            if ($cover_image) {
-                $house->cover_image = $cover_image->image_name;
-            }
-            $house->save();
-
-            $house->houseamenities()->sync($request->houseamenities, false);
-            $house->housespaces()->sync($request->housespaces, false);
-            $house->houserules()->sync($request->houserules, false);
-            $house->housedetails()->sync($request->housedetails, false);
-
-            Session::flash('success', 'This house was succussfully saved!');
-            return redirect()->route('rooms.single', $house->id);
+               $food->lunch = '0';
+           }
+           if ($request->food_dinner == '1') {
+            $food->dinner = '1';
         }
         else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
+            $food->dinner = '0';
         }
-    }
+        $food->save();
+        $house->foods_id = $food->id;
 
-    public function single($id){
-        $house = House::find($id);
-        if ($house) {
-            if ($house->housetypes_id != '1') {
-                if ($house->housetypes_id != '5') {
-                    if (Auth::user()->level == '0' || Auth::user()->id == $house->users_id) {
-                        $rentcount = Rental::where('houses_id', $house->id)->count();
-                        $images = Himage::where('houses_id', $id)->get();
-                        $map = Map::where('houses_id', $house->id)->first();
-                        return view('rooms.single')->with('house', $house)->with('rentcount', $rentcount)->with('images', $images)->with('map', $map);
-                    }
-                    else {
-                        Session::flash('fail', 'This room is no longer available.');
-                        return back();
-                    }
+        $house->save();
+
+        $map->houses_id = $house->id;
+        $map->save();
+        if ($request->hasFile('image_names')) {
+            foreach ($request->image_names as $image_name) {
+                $images = new Himage;
+                $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
+                $location = public_path('images/houses/'.$filename);
+                Image::make($image_name)->resize(1440, 1080)->save($location);
+
+                $images->houses_id = $house->id;
+                $images->image_name = $filename;
+                $images->save();
+            }
+        }
+        $house = House::find($house->id);
+        $cover_image = Himage::where('houses_id', $house->id)->first();
+        if ($cover_image) {
+            $house->cover_image = $cover_image->image_name;
+        }
+        $house->save();
+
+        $house->houseamenities()->sync($request->houseamenities, false);
+        $house->housespaces()->sync($request->housespaces, false);
+        $house->houserules()->sync($request->houserules, false);
+        $house->housedetails()->sync($request->housedetails, false);
+
+        Session::flash('success', 'This house was succussfully saved!');
+        return redirect()->route('rooms.single', $house->id);
+    }
+    else {
+        Session::flash('fail', "You need to login first.");
+        return redirect()->route('login');
+    }
+}
+
+public function single($id){
+    $house = House::find($id);
+    if ($house) {
+        if ($house->housetypes_id != '1') {
+            if ($house->housetypes_id != '5') {
+                if (Auth::user()->level == '0' || Auth::user()->id == $house->users_id) {
+                    $rentcount = Rental::where('houses_id', $house->id)->count();
+                    $images = Himage::where('houses_id', $id)->get();
+                    $map = Map::where('houses_id', $house->id)->first();
+                    return view('rooms.single')->with('house', $house)->with('rentcount', $rentcount)->with('images', $images)->with('map', $map);
                 }
                 else {
-                    return redirect()->route('apartments.single', $id);
+                    Session::flash('fail', 'This room is no longer available.');
+                    return back();
                 }
             }
             else {
@@ -260,10 +245,14 @@ class RoomController extends Controller
             }
         }
         else {
-            Session::flash('fail', 'This room is no longer available.');
-            return back();
+            return redirect()->route('apartments.single', $id);
         }
     }
+    else {
+        Session::flash('fail', 'This room is no longer available.');
+        return back();
+    }
+}
 
     /**
      * Display the specified resource.
@@ -446,66 +435,66 @@ class RoomController extends Controller
             $food->lunch = '1';
         }
         else {
-             $food->lunch = '0';
-        }
-        if ($request->food_dinner == '1') {
-            $food->dinner = '1';
-        }
-        else {
-            $food->dinner = '0';
-        }
-
-        $houseprice->welcome_offer = $request->welcome_offer;
-        $houseprice->weekly_discount = $request->weekly_discount;
-        $houseprice->monthly_discount = $request->monthly_discount;
-        if ($request->hasFile('image_names')) {
-            foreach ($request->image_names as $image_name) {
-                $image = new Himage;
-                $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
-                $location = public_path('images/houses/'.$filename);
-                Image::make($image_name)->resize(1440, 1080)->save($location);
-                $image->houses_id = $house->id;
-                $image->image_name = $filename;
-                $image->save();
-            }
-        }
-        $guestarrive->save();
-        $houseprice->save();
-        $food->save();
-        $house->save();
-
-        if (isset($request->houseamenities)) {
-            $house->houseamenities()->sync($request->houseamenities);
-        }
-        else {
-            $house->houseamenities()->sync(array());
-        }
-
-        if (isset($request->housespaces)) {
-            $house->housespaces()->sync($request->housespaces);
-        }
-        else {
-            $house->housespaces()->sync(array());
-        }
-
-        if (isset($request->houserules)) {
-            $house->houserules()->sync($request->houserules);
-        }
-        else {
-            $house->houserules()->sync(array());
-        }
-
-        if (isset($request->housedetails)) {
-            $house->housedetails()->sync($request->housedetails);
-        }
-        else {
-            $house->housedetails()->sync(array());
-        }
-
-        Session::flash('success', 'This house was succussfully updated!');
-
-        return redirect()->route('rooms.single', $house->id);
+           $food->lunch = '0';
+       }
+       if ($request->food_dinner == '1') {
+        $food->dinner = '1';
     }
+    else {
+        $food->dinner = '0';
+    }
+
+    $houseprice->welcome_offer = $request->welcome_offer;
+    $houseprice->weekly_discount = $request->weekly_discount;
+    $houseprice->monthly_discount = $request->monthly_discount;
+    if ($request->hasFile('image_names')) {
+        foreach ($request->image_names as $image_name) {
+            $image = new Himage;
+            $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
+            $location = public_path('images/houses/'.$filename);
+            Image::make($image_name)->resize(1440, 1080)->save($location);
+            $image->houses_id = $house->id;
+            $image->image_name = $filename;
+            $image->save();
+        }
+    }
+    $guestarrive->save();
+    $houseprice->save();
+    $food->save();
+    $house->save();
+
+    if (isset($request->houseamenities)) {
+        $house->houseamenities()->sync($request->houseamenities);
+    }
+    else {
+        $house->houseamenities()->sync(array());
+    }
+
+    if (isset($request->housespaces)) {
+        $house->housespaces()->sync($request->housespaces);
+    }
+    else {
+        $house->housespaces()->sync(array());
+    }
+
+    if (isset($request->houserules)) {
+        $house->houserules()->sync($request->houserules);
+    }
+    else {
+        $house->houserules()->sync(array());
+    }
+
+    if (isset($request->housedetails)) {
+        $house->housedetails()->sync($request->housedetails);
+    }
+    else {
+        $house->housedetails()->sync(array());
+    }
+
+    Session::flash('success', 'This house was succussfully updated!');
+
+    return redirect()->route('rooms.single', $house->id);
+}
 
     /**
      * Remove the specified resource from storage.

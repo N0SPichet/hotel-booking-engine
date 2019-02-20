@@ -6,6 +6,11 @@
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
+			<p class="lead">User Details</p>
+			<a href="{{ route('users.index') }}" class="btn btn-info">Back</a>
+			<hr>
+		</div>
+		<div class="col-md-12">
 			<div align="center">
 				<p class="lead">{{ $user->user_fname }} Profile @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</p>
 				@if ($user->user_image == null)
@@ -28,11 +33,13 @@
 				<dt>Gender</dt>
 				<dd>{{ $user->user_gender }}</dd>
 
-				<dt>State / Province</dt>
-				<dd>{{ $user->user_state }}</dd>
+				@if($user->district_id !== null || $user->province_id !== null)
+				<dt>District</dt>
+				<dd>{{ $user->district->name }}</dd>
 
-				<dt>Country</dt>
-				<dd>{{ $user->user_country }}</dd>
+				<dt>Province</dt>
+				<dd>{{ $user->province->name }}</dd>
+				@endif
 
 				<dt><a href="{{ route('users.description', $user->id) }}" class="btn btn-outline-info">Description</a></dt>
 				<dd>{!! $user->user_description !!}</dd>

@@ -15,7 +15,7 @@
 				<div class="margin-content">
 					<div class="col-md-12">
 						<label><i class="fas fa-user"></i> Full name</label>
-						@if ( $user->verification->title != NULL && $user->verification->name != NULL && $user->verification->lastname != NULL)
+						@if ( $user->verification->title != null && $user->verification->name != null && $user->verification->lastname != null)
 						<div class="alert alert-success" role="alert">
 						@else
 						<div class="alert alert-danger" role="alert" style="height: 50px;">
@@ -24,16 +24,16 @@
 						</div>
 
 						<label>Gender</label>
-						@if ( $user->user_gender != NULL)
+						@if ( $user->user_gender != null)
 						<div class="alert alert-success" role="alert">
 						@else
 						<div class="alert alert-danger" role="alert" style="height: 50px;">
 						@endif
-						<p>{{ $user->user_gender }}</p>
+						<p id="gender">{{ $user->user_gender }}</p>
 						</div>
 
 						<label><i class="far fa-calendar-alt"></i> Join Date</label>
-						@if ( $user->created_at != NULL)
+						@if ( $user->created_at != null)
 						<div class="alert alert-success" role="alert">
 						@else
 						<div class="alert alert-danger" role="alert" style="height: 50px;">
@@ -42,16 +42,16 @@
 						</div>
 
 						<label>Address</label>
-						@if ( $user->user_address != NULL && $user->user_city != NULL && $user->user_state != NULL &&$user->user_country != NULL )
+						@if ( $user->user_address != null && $user->sub_district_id != null && $user->district_id != null &&$user->province_id != null )
 						<div class="alert alert-success" role="alert">
 						@else
 						<div class="alert alert-danger" role="alert" style="height: 50px;">
 						@endif
 						<p>
-							@if ($user->user_address != NULL) <span class="text-success"> {{ $user->user_address }} @else <span class="text-danger">null @endif </span>
-							@if ($user->user_city != NULL) <span class="text-success"> {{ $user->user_city }} @else <span class="text-danger">null @endif </span>
-							@if ($user->user_state != NULL) <span class="text-success"> {{ $user->user_state }}, @else <span class="text-danger">null @endif </span>
-							@if ($user->user_country != NULL) <span class="text-success"> {{ $user->user_country }} @else <span class="text-danger">null @endif </span>
+							@if ($user->user_address != null) <span class="text-success"> {{ $user->user_address }} @else <span class="text-danger">no-info @endif </span>
+							@if ($user->sub_district_id != null) <span class="text-success"> {{ $user->sub_district->name }} @else <span class="text-danger">no-info @endif </span>
+							@if ($user->district_id != null) <span class="text-success"> {{ $user->district->name }}, @else <span class="text-danger">no-info @endif </span>
+							@if ($user->province_id != null) <span class="text-success"> {{ $user->province->name }} @else <span class="text-danger">no-info @endif </span>
 						</p>
 						</div>
 						<label>Confident Document</label>
@@ -78,7 +78,7 @@
 							<button type="submit" class="btn btn-primary btn-sm" style="width: 60%"><i class="far fa-check-circle"></i> Verify</button>
 						{!! Form::close() !!}
 						{!! Form::open(['route' => ['users.verify-reject', $user->id]]) !!}
-							<button type="submit" class="btn btn-danger btn-sm margin-top-10" style="width: 60%"><i class="far fa-times-circle"></i> Reject</button>
+							<button type="submit" class="btn btn-danger btn-sm m-t-10" style="width: 60%"><i class="far fa-times-circle"></i> Reject</button>
 						{!! Form::close() !!}
 						@elseif ($user->verification->verify == '1')
 							<p class="text-success"><i class="fas fa-check"></i> Confirm</p>
@@ -94,36 +94,5 @@
 @endsection
 
 @section('scripts')
-	<script type="text/javascript">
-
-		$(document).ready(function() {
-
-			/* This is basic - uses default settings */
-			
-			$("a#single_image").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	200, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-			
-			/* Using custom settings */
-			
-			$("a#inline").fancybox({
-				'hideOnContentClick': true
-			});
-
-			/* Apply fancybox to multiple items */
-			
-			$("a.group").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	600, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-			
-		});
-	</script>
+<script type="text/javascript" src="{{ asset('js/main.js') }}" defer></script>
 @endsection

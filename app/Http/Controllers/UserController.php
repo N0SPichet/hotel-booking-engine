@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\District;
+use App\Models\House;
+use App\Models\Province;
+use App\Models\SubDistrict;
+use App\Models\UserVerification;
+use App\User;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\User;
-use App\UserVerification;
-use App\House;
-use App\Addresscountry;
-use App\Addressstate;
-use App\Addresscity;
-use File;
 use Image;
-use Storage;
-use Session;
 use Purifier;
+use Session;
+use Storage;
 
 class UserController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('crole:Admin')->except('edit', 'update', 'userprofile', 'verify_show', 'verify_request', 'verify_show');
+        $this->middleware('crole:Admin')->except('edit', 'update', 'userprofile', 'updateimage', 'description', 'verify_show', 'verify_request', 'verify_show');
     }
 
     /**
@@ -33,27 +33,6 @@ class UserController extends Controller
     {
         $users = User::all();
         return view('users.index', compact('users'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -83,15 +62,19 @@ class UserController extends Controller
     public function edit(User $user)
     {
         if (Auth::user()->id === $user->id) {
-            $cities = Addresscity::all();
-            $countries = Addresscountry::all();
-            $states = Addressstate::all();
-            return view('users.edit')->with('cities', $cities)->with('user', $user)->with('countries', $countries)->with('states', $states);
+            $provinces = Province::all();
+            $districts = District::where('province_id', $provinces[0]->id)->get();
+            $sub_districts = SubDistrict::where('district_id', $districts[0]->id)->get();
+            if ($user->province_id !== null) {
+                $districts = District::where('province_id', $user->province_id)->get();
+            }
+            if ($user->district_id !== null) {
+                $sub_districts = SubDistrict::where('district_id', $user->district_id)->get();
+            }
+            return view('users.edit')->with('sub_districts', $sub_districts)->with('districts', $districts)->with('provinces', $provinces)->with('user', $user);
         }
-        else {
-            Session::flash('fail', 'Request not found, url invalid!');
-            return back();
-        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     /**
@@ -101,20 +84,36 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(User $user, Request $request)
     {
         if (Auth::user()->id === $user->id) {
-            $user['user_gender'] = $request->user_gender;
+            if ($request->user_gender !== 0) {
+                $user['user_gender'] = $request->user_gender;
+            }
+            if ($request->user_gender === 0) {
+                $user['user_gender'] = null;
+            }
+            if ($request->province_id !== 0) {
+                $user['province_id'] = $request->province_id;
+            }
+            if ($request->district_id !== 0) {
+                $user['district_id'] = $request->district_id;
+            }
+            if ($request->sub_district_id !== 0) {
+                $user['sub_district_id'] = $request->sub_district_id;
+            }
+            unset($request['user_gender']);
+            unset($request['province_id']);
+            unset($request['district_id']);
+            unset($request['sub_district_id']);
             $request['user_description'] = Purifier::clean($request->input('user_description'));
             $user->update($request->all());
             Session::flash('success', 'Profile updated successfully.');
             $user->save();
             return redirect()->route('users.profile', $user->id);
         }
-        else {
-            Session::flash('fail', 'Request not found, url invalid!');
-            return back();
-        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     /**

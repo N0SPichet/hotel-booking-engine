@@ -85,9 +85,11 @@ Route::get('hosts/introduction-hosting-apartment', 'PagesController@introapartme
 
 //Create resource route for RoomController
 Route::resource('rooms', 'RoomController');
+Route::prefix('rooms')->name('rooms.')->group(function() {
+	Route::get('my-room/{user}', 'RoomController@index_myroom')->name('index-myroom');
+});
 Route::get('api/get-state-list','RoomController@getStateList')->name('get_states');
 Route::get('api/get-city-list','RoomController@getCityList')->name('get_cities');
-Route::get('rooms/my-room/{id}', 'RoomController@indexmyroom')->name('index-myroom');
 Route::get('room/{id}', 'RoomController@single')->name('rooms.single');
 Route::get('room/{id}/delete/image', 'RoomController@detroyimage')->name('rooms.detroyimage');
 

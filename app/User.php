@@ -2,8 +2,12 @@
 
 namespace App;
 
-use App\Role;
-use App\UserVerification;
+use App\Models\District;
+use App\Models\House;
+use App\Models\Province;
+use App\Models\Role;
+use App\Models\SubDistrict;
+use App\Models\UserVerification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -43,17 +47,30 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function roles()
+    public function hasRole($role)
     {
-        return $this->belongsToMany('App\Role', 'user_role', 'user_id', 'role_id');
+        if ($this->roles()->where('name', $role)->first()) {
+            return true;
+        }
+        return false;
     }
 
     public function diaries() {
         return $this->hasMany('App\Diary');
     }
 
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+
     public function houses() {
-        return $this->hasMany('App\House');
+        return $this->hasMany(House::class);
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
     }
 
     public function rentals() {
@@ -64,15 +81,17 @@ class User extends Authenticatable
         return $this->hasMany('App\Review');
     }
 
-    public function verification() {
-        return $this->belongsTo(UserVerification::class, 'user_verifications_id');
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
     }
 
-    public function hasRole($role)
+    public function sub_district()
     {
-        if ($this->roles()->where('name', $role)->first()) {
-            return true;
-        }
-        return false;
+        return $this->belongsTo(SubDistrict::class);
+    }
+
+    public function verification() {
+        return $this->belongsTo(UserVerification::class, 'user_verifications_id');
     }
 }

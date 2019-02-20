@@ -15,7 +15,7 @@
 					<div class="margin-content">
 						<div class="col-md-9">
 							<a href="{{ route('users.show', $user->id) }}" style="text-decoration-line: none; ">
-							<p><b>Level</b> {{ $user->level=='0' ? 'Admin' : 'User' }}</p>
+							<p><b>Level</b> <span class="text-danger">{{ $user->hasRole('Admin') ? 'Admin' : 'User' }}</span></p>
 							<p>{{ $user->user_fname }} {{ $user->user_lname }}</p>
 							<p><b>Email</b> {{ $user->email }}</p>
 							</a>

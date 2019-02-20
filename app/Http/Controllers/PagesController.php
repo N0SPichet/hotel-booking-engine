@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use App\House;
 use App\Address;
 use App\Addresscity;
-use App\Addressstate;
 use App\Addresscountry;
-use DateTime;
-use App\Diary;
+use App\Addressstate;
 use App\Category;
-use Mail;
-use App\Rental;
-use App\Payment;
-use App\User;
+use App\Diary;
 use App\Himage;
+use App\Models\House;
+use App\Payment;
+use App\Rental;
+use App\User;
 use Carbon;
+use DateTime;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Mail;
 use Session;
 
 class PagesController extends Controller

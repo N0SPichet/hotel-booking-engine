@@ -32,7 +32,7 @@
 			</div>
 			<div class="col-md-12 col-sm-12">
 				<h4>Your listing</h4>
-				<a href="{{ route('index-myroom', Auth::user()->id) }}" class="btn btn-lg btn-info margin-top-10" style="width: 100px;">Room</a>
+				<a href="{{ route('rooms.index-myroom', Auth::user()->id) }}" class="btn btn-lg btn-info margin-top-10" style="width: 100px;">Room</a>
 			</div>
 		</div>
 	</div>

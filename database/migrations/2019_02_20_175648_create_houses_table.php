@@ -42,14 +42,17 @@ class CreateHousesTable extends Migration
             $table->integer('housetypes_id')->unsigned();
             $table->foreign('housetypes_id')->references('id')->on('housetypes')->onDelete('cascade');
             
-            $table->integer('addresscities_id')->unsigned();
-            $table->foreign('addresscities_id')->references('id')->on('addresscities')->onDelete('cascade');
+            $table->integer('sub_district_id')->unsigned();
+            $table->foreign('sub_district_id')->references('id')->on('sub_districts')
+                            ->onUpdate('cascade')->onDelete('cascade');
             
-            $table->integer('addressstates_id')->unsigned();
-            $table->foreign('addressstates_id')->references('id')->on('addressstates')->onDelete('cascade');
+            $table->integer('district_id')->unsigned();
+            $table->foreign('district_id')->references('id')->on('districts')
+                            ->onUpdate('cascade')->onDelete('cascade');
             
-            $table->integer('addresscountries_id')->unsigned();
-            $table->foreign('addresscountries_id')->references('id')->on('addresscountries')->onDelete('cascade');
+            $table->integer('province_id')->unsigned();
+            $table->foreign('province_id')->references('id')->on('provinces')
+                ->onUpdate('cascade')->onDelete('cascade');
             
             $table->integer('guestarrives_id')->unsigned();
             $table->foreign('guestarrives_id')->references('id')->on('guestarrives')->onDelete('cascade');

@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\House;
 use Illuminate\Database\Eloquent\Model;
 
 class Houseamenity extends Model
@@ -9,6 +10,6 @@ class Houseamenity extends Model
     protected $table = 'houseamenities';
 
     public function houses(){
-        return $this->belongsToMany('App\House');
+        return $this->belongsToMany(House::class);
     }
 }

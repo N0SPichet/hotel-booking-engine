@@ -1,8 +1,8 @@
 <?php
 
-use App\Role;
+use App\Models\Role;
+use App\Models\UserVerification;
 use App\User;
-use App\UserVerification;
 use Illuminate\Database\Seeder;
 
 class UserTableSeeder extends Seeder

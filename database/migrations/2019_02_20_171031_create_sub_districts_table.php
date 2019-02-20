@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAddresscountriesTable extends Migration
+class CreateSubDistrictsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,12 @@ class CreateAddresscountriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('addresscountries', function (Blueprint $table) {
+        Schema::create('sub_districts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('country_name');
+            $table->string('name');
+            $table->integer('district_id')->unsigned();
+            $table->foreign('district_id')->references('id')->on('districts')
+                            ->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -27,6 +30,6 @@ class CreateAddresscountriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addresscountries');
+        Schema::dropIfExists('sub_districts');
     }
 }

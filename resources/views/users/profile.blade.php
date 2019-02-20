@@ -29,25 +29,25 @@
 						<hr>
 						@endif
 
-						@if ($user->user_gender !== null)
+						@if ($user->user_gender != null)
 						<dt>Gender</dt>
 						<dd id="gender">{{ $user->user_gender }}</dd>
 						<hr>
 						@endif
 
-						@if($user->user_address !== null || $user->user_city !== null || $user->user_state !== null || $user->user_country !== null)
+						@if($user->user_address !== null || $user->sub_district_id !== null || $user->district_id !== null || $user->province_id !== null)
 						<dt>Address</dt>
 						<dd>
 							<p>
 							@if ($user->user_address !== null) {{ $user->user_address }} @endif
-							@if ($user->user_city !== null) {{ $user->user_city }} @endif
-							@if ($user->user_state !== null) {{ $user->user_state }}, @endif
-							@if ($user->user_country !== null) {{ $user->user_country }} @endif</p>
+							@if ($user->sub_district->name !== null) {{ $user->sub_district->name }} @endif
+							@if ($user->district->name !== null) {{ $user->district->name }}, @endif
+							@if ($user->province->name !== null) {{ $user->province->name }} @endif</p>
 						</dd>
 						<hr>
 						@endif
 
-						@if ($user->user_description !== null)
+						@if ($user->user_description != null)
 						<dt>Description</dt>
 						<dd>
 							{!! $user->user_description !!}
@@ -107,16 +107,5 @@
 </div>
 @endsection
 @section('scripts')
-<script type="text/javascript">
-	$( document ).ready(function() {
-		if($('#gender').text() === '1')
-		{
-			$('#gender').text('Male')
-		}
-		else
-		{
-			$('#gender').text('Female')
-		}
-	});
-</script>
+<script type="text/javascript" src="{{ asset('js/main.js') }}" defer></script>
 @endsection

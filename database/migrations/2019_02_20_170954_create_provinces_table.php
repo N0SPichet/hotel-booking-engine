@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAddressstatesTable extends Migration
+class CreateProvincesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,10 @@ class CreateAddressstatesTable extends Migration
      */
     public function up()
     {
-        Schema::create('addressstates', function (Blueprint $table) {
+        Schema::create('provinces', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('state_name');
+            $table->string('name');
             $table->timestamps();
-            $table->integer('addresscountry_id')->unsigned();
-            $table->foreign('addresscountry_id')->references('id')->on('addresscountries');
         });
     }
 
@@ -29,6 +27,6 @@ class CreateAddressstatesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addressstates');
+        Schema::dropIfExists('provinces');
     }
 }

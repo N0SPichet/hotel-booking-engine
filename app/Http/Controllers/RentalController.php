@@ -2,22 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Diary;
+use App\Himage;
+use App\Houserule;
+use App\Map;
+use App\Models\House;
+use App\Payment;
+use App\Rental;
+use App\Review;
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Diary;
-use App\Map;
-use App\Rental;
-use App\Payment;
-use App\House;
-use App\Houserule;
-use App\Himage;
-use App\Review;
 use Image;
 use Mail;
 use Session;
-use Carbon\Carbon;
-use DateTime;
 
 class RentalController extends Controller
 {
