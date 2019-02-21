@@ -2,7 +2,7 @@
 @section ('title', 'Room | Hosting')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
-{!! Html::style('css/select2.min.css') !!}
+{{-- {!! Html::style('css/select2.min.css') !!} --}}
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
 <script>
 	tinymce.init({ 
@@ -13,7 +13,7 @@
 @endsection
 @section ('content')
 <div class="container rooms">
-	<div class="row">
+	<div class="row m-t-10">
 		@if ($errors->any())
 		<div class="alert alert-danger">
 			<ul>
@@ -23,7 +23,7 @@
 			</ul>
 		</div>
 		@endif
-		<div class="col-2 create">
+		<div class="col-md-2 float-left create">
 			<ul class="nav flex-column">
 				<li class="nav-item">
 					<a class="active" data-toggle="tab" href="#menu1">Basic info</a>
@@ -48,7 +48,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="col-9">
+		<div class="col-md-9">
 			<div class="tab-content">
 				<div id="menu1" class="tab-pane fade active show in">
 					<div class="col-md-10 col-md-offset-1 m-t-10">
@@ -137,9 +137,9 @@
 							@endforeach
 						</select>
 						{{ Form::label('house_address', '* Street Address', ['class' => 'm-t-10']) }}
-						{{ Form::text('house_address', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
+						{{ Form::text('house_address', null, array('class' => 'form-control m-t-10')) }}
 						{{ Form::label('house_postcode', '* ZIP Code', ['class' => 'm-t-10']) }}
-						{{ Form::text('house_postcode', null, array('class' => 'form-control m-t-10', 'id' => 'postal_code', 'required' => '')) }}
+						{{ Form::text('house_postcode', null, array('class' => 'form-control m-t-10', 'id' => 'postal_code')) }}
 						<label class="m-t-10">Map <small>you can move marker if it's not point to correct position</small></label>
 						<input type="text" id="searchmap" class="form-control">
 						<div id="map-canvas" class="m-t-10"></div>
@@ -178,7 +178,7 @@
 						{{ Form::text('house_title', null, array('class' => 'form-control', 'required' => '')) }}
 						<h2>Description</h2>
 						{{ Form::label('house_description', '* Short description of your house', ['class' => 'm-t-10']) }}
-						{{ Form::textarea('house_description', null, array('class' => 'form-control m-t-10', 'required' => '', 'rows' => '5')) }}
+						{{ Form::textarea('house_description', null, array('class' => 'form-control m-t-10', 'rows' => '5')) }}
 						{{ Form::label('about_your_place', 'About your place (optional)', ['class' => 'm-t-10']) }}
 						{{ Form::textarea('about_your_place', null, ['class' => 'form-control m-t-10', 'rows' => '5']) }}
 						{{ Form::label('guest_can_access', 'What guests can access (optional)', ['class' => 'm-t-10']) }}
@@ -334,7 +334,6 @@
 </div>
 @endsection
 @section('scripts')
-{!! Html::script('js/select2.min.js') !!}
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#province_id').on('change', function() {
@@ -409,8 +408,6 @@
 				}
 			});
 		});
-	
-		$('.select2-multi').select2();
 
 		var map = new google.maps.Map(document.getElementById('map-canvas'), {
 			center:{
@@ -453,6 +450,5 @@
 			$('#lng').val(lng);
 		});
 	});
-	
 </script>
 @endsection

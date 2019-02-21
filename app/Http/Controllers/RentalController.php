@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Diary;
-use App\Himage;
-use App\Houserule;
-use App\Map;
+use App\Models\Himage;
 use App\Models\House;
+use App\Models\Houserule;
+use App\Models\Map;
 use App\Payment;
 use App\Rental;
 use App\Review;

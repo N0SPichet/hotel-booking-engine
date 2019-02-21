@@ -15,7 +15,7 @@ class CreateHousesTable extends Migration
     {
         Schema::create('houses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('publish')->nullable();
+            $table->enum('publish', ['0', '1', '2', '3'])->default(0);
             $table->string('house_title', 100)->nullable();
             $table->integer('house_capacity')->nullable();
             $table->string('house_property', 50)->nullable();

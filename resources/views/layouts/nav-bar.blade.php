@@ -20,6 +20,17 @@
 					</ul>
 				</li>
 				<li><a href="{{ route('mytrips') }}">Trips</a></li>
+				@if (Auth::user()->hasRole('Admin'))
+				<li>
+					<a href="#">Admin Section <i class="material-icons">keyboard_arrow_down</i></a>
+					<ul class="hav-sub-nav">
+						<li><a href="{{ route('users.verify-index') }}">User Verifications</a></li>
+						<li><a href="{{ route('rooms.index') }}">All Rooms</a></li>
+						<li><a href="{{ route('users.index') }}">All Users</a></li>
+						<li><a href="{{ route('rentals.index') }}">All Trips</a></li>
+					</ul>
+				</li>
+				@endif
 				<li>
 					<a href="#">{{ Auth::user()->user_fname }} Account <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">

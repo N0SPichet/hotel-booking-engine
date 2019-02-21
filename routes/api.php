@@ -28,3 +28,7 @@ Route::prefix('address')->name('api.')->group(function() {
 	Route::get('postal/{subdistrict}', 'Api\AddressController@getPostalCode')->name('get.postalcode');
 	Route::get('searchPostal/{postalcode}', 'Api\AddressController@searchPostalCode')->name('search.postalcode');
 });
+
+Route::prefix('rooms')->name('api.rooms.')->group(function() {
+	Route::get('owner/{house}/publish', 'Api\RoomController@togglePublish')->name('publish');
+});

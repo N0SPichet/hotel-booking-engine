@@ -15,30 +15,44 @@
 @endsection
 
 @section ('content')
-<div class="container">
-	<div class="row">
+<div class="container rooms">
+	<div class="row m-t-10">
 		@if ($errors->any())
-			<div class="alert alert-danger">
-			    <ul>
-			        @foreach ($errors->all() as $error)
-			            <li>{{ $error }}</li>
-			        @endforeach
-			    </ul>
-			</div>
+		<div class="alert alert-danger">
+		    <ul>
+		        @foreach ($errors->all() as $error)
+		            <li>{{ $error }}</li>
+		        @endforeach
+		    </ul>
+		</div>
 		@endif
-		<div class="col-md-12">
-			<ul class="nav nav-tabs">
-		    	<li class="active" ><a data-toggle="tab" href="#menu1">Basic info</a></li>
-		    	<li class=" "><a data-toggle="tab" href="#menu2">Address</a></li>
-		    	<li class=" "><a data-toggle="tab" href="#menu3">Amenities and Space</a></li>
-		    	<li class=" "><a data-toggle="tab" href="#menu4">Title and Description</a></li>
-		    	<li class=" "><a data-toggle="tab" href="#menu5">Images</a></li>
-		    	<li class=" "><a data-toggle="tab" href="#menu6">Rules</a></li>
-		    	<li class=" "><a data-toggle="tab" href="#menu7">Pricing</a></li>
-		  	</ul>
+		<div class="col-md-2 float-left create">
+			<ul class="nav flex-column">
+				<li class="nav-item">
+					<a class="active" data-toggle="tab" href="#menu1">Basic info</a>
+				</li>
+				<li class="nav-item">
+					<a data-toggle="tab" href="#menu2">Address</a>
+				</li>
+				<li class="nav-item">
+					<a data-toggle="tab" href="#menu3">Amenities and Space</a>
+				</li>
+				<li class="nav-item">
+					<a data-toggle="tab" href="#menu4">Title and Description</a>
+				</li>
+				<li class="nav-item">
+					<a data-toggle="tab" href="#menu5">Images</a>
+				</li>
+				<li class="nav-item">
+					<a data-toggle="tab" href="#menu6">Rules</a>
+				</li>
+				<li class="nav-item">
+					<a data-toggle="tab" href="#menu7">Pricing</a>
+				</li>
+			</ul>
 		</div>
 		
-		<div class="col-md-10">
+		<div class="col-md-8 float-left">
 			<div class="tab-content">
 		    	<div id="menu1" class="tab-pane fade in active">
 		    		<div class="col-md-10 col-md-offset-1 margin-top-10">
@@ -322,15 +336,8 @@
 		    	</div>
 		    </div>
 		</div>
-	    <div class="col-md-2">
-			<div align="left">
-				{{ Form::label('publish', 'Set this room to Public or Private?', ['class' => 'margin-top-10']) }}
-				<select name="publish" class="form-control margin-top-10" style="width: 100%;">
-						<option value="2" {{ $house->publish == '2' ? 'selected' : '' }}>Public</option>
-						<option value="0" {{ $house->publish == '0' ? 'selected' : '' }}>Private</option>
-				</select>
-			</div>
-	    	{{ Form::submit('Save Change', array('class' => 'btn btn-success btn-lg form-spacing-top pull-right')) }}
+	    <div class="col-md-2 float-left">
+	    	{{ Form::submit('Save Change', array('class' => 'btn btn-success m-t-10 pull-right')) }}
 			{!! Form::close() !!}
 	    </div>
 	</div> 

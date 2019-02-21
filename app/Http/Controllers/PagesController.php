@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Address;
-use App\Addresscity;
-use App\Addresscountry;
-use App\Addressstate;
 use App\Category;
 use App\Diary;
-use App\Himage;
+use App\Models\Himage;
 use App\Models\House;
 use App\Payment;
 use App\Rental;
@@ -24,15 +20,13 @@ use Session;
 
 class PagesController extends Controller
 {
+    /*publish flag 0 private, 1 public, 2 trash, 3 permanant delete*/
+    
     public function index() {
-        $houses = House::where('publish', '2')->inRandomOrder()->paginate(10);
+        $houses = House::where('publish', '1')->inRandomOrder()->paginate(10);
         $images = Himage::all();
         return view('pages.home')->with('houses', $houses)->with('images', $images);
     }
-
-    // public function index() {
-    //     return view('pages.home_new');
-    // }
 
     public function indexSearch(Request $request) {
         if ($request->search) {

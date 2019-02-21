@@ -4,8 +4,8 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
-		<div class="card col-12 m-t-10">
+	<div class="row m-t-10">
+		<div class="card col-12">
 			<div class="card-body">
 				<div class="card-title">
 					<h1>{{ $user->user_fname }} Account <small>Role:{{$user->roles[0]->name}}</small> @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</h1>

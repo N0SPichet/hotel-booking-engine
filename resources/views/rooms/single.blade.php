@@ -4,33 +4,32 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
-		<div class="col-md-8">
+	<div class="row m-t-10">
+		<div class="col-md-8 float-left">
 			<h1>Review your settings</h1>
-			<h2 align="center">
-				{{ $house->house_title }}
-				<small >
-					@if ($house->publish == '2')
+			<h2 align="center">{{ $house->house_title }}
+				<small id="showPublish">
+					@if ($house->publish == '1')
 					<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>
 					@elseif ($house->publish == '0')
 					<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>
 					@endif
 				</small>
 			</h2>
-			<div class="col-md-12">
+			<div class="col-md-12 clear-both">
 				<h4>Cover Image</h4>
-				<div class="col-md-6">
+				<div class="col-md-6 float-left">
 					<a id="single_image" href="{{ asset('images/houses/' . $house->cover_image) }}"><img src="{{ asset('images/houses/' . $house->cover_image) }}" class="img-responsive" style="border-radius: 5%"></a>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6 float-left">
 					
 				</div>
 			</div>
-			<div class="col-md-12">
+			<div class="col-md-12 clear-both">
 				<h4>Images</h4>
 				<div class="gallery">
 					@foreach ($images as $image)
-					<div class="col-md-4">
+					<div class="col-md-4 float-left">
 						<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
 						@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
 						<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
@@ -86,7 +85,7 @@
 				<h4>Address</h4>
 				<div class="card">
 					<div style="margin-left: 10px; margin-right: 10px;">
-						<p> {{ $house->house_address }} {{ $house->addresscities->city_name }} {{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }} </p>
+						<p> {{ $house->house_address }} {{ $house->sub_district->name }} {{ $house->district->name }}, {{ $house->province->name }} </p>
 						<p>Postcode {{ $house->house_postcode }} </p>
 					</div>
 						<div id="map-canvas"></div>
@@ -97,7 +96,7 @@
 				<div class="card">
 					<div style="margin-left: 10px; margin-right: 10px;">
 						@foreach ($house->houseamenities as $houseamenity)
-							<p>{{ $houseamenity->amenityname }}</p>
+							<p>{{ $houseamenity->name }}</p>
 						@endforeach
 					</div>
 				</div>
@@ -106,7 +105,7 @@
 				<div class="card">
 					<div style="margin-left: 10px; margin-right: 10px;">
 						@foreach ($house->housespaces as $housespace)
-							<p>{{ $housespace->spacename }}</p>
+							<p>{{ $housespace->name }}</p>
 						@endforeach
 					</div>
 				</div>
@@ -115,7 +114,7 @@
 				<div class="card">
 					<div style="margin-left: 10px; margin-right: 10px;">
 						@foreach ($house->houserules as $houserule)
-							<p>{{ $houserule->houserule_name }}</p>
+							<p>{{ $houserule->name }}</p>
 						@endforeach
 						@if ($house->optional_rules)
 						<br>
@@ -154,7 +153,7 @@
 				</div>
 				</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 float-left">
 			<div class="well">
 				<div class="dl-horizontal">
 					<dt>Created by</dt>
@@ -169,10 +168,13 @@
 				</div>
 				@if ($house->users_id == Auth::user()->id)
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-sm-4 float-left">
+						<a id="publish" class="btn btn-outline-info btn-block btn-h1-spacing">Publish</a>
+					</div>
+					<div class="col-sm-4 float-left">
 						{!! Html::linkRoute('rooms.edit', 'Edit', array($house->id), array('class' => 'btn btn-outline-warning btn-block btn-h1-spacing')) !!}
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-4 float-left">
 						{!! Form::open(['route' => ['rooms.destroy', $house->id], 'method' => 'DELETE', 'style'=>'display:inline']) !!}
 							{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-block btn-h1-spacing']) !!}
 						{!! Form::close() !!}
@@ -181,8 +183,8 @@
 				@endif
 				<hr>
 				<div class="row">
-					<div class="col-sm-6">
-						{!! Html::linkRoute('index-myroom', 'Back to My Room', array(Auth::user()->id), array('class' => 'btn btn-outline-secondary')) !!}
+					<div class="col-sm-6 float-left">
+						{!! Html::linkRoute('rooms.index-myroom', 'Back to My Room', array(Auth::user()->id), array('class' => 'btn btn-outline-secondary')) !!}
 					</div>
 				</div>
 			</div>
@@ -192,14 +194,9 @@
 @endsection
 
 @section('scripts')
-{!! Html::script('js/select2.min.js') !!}
 	<script type="text/javascript">
-		$('.select2-multi').select2();
-
 		$(document).ready(function() {
-
 			/* This is basic - uses default settings */
-			
 			$("a#single_image").fancybox({
 				'transitionIn'	:	'elastic',
 				'transitionOut'	:	'elastic',
@@ -207,21 +204,33 @@
 				'speedOut'		:	200, 
 				'overlayShow'	:	false
 			});
-			
 			/* Using custom settings */
-			
 			$("a#inline").fancybox({
 				'hideOnContentClick': true
 			});
-
 			/* Apply fancybox to multiple items */
-			
 			$("a.group").fancybox({
 				'transitionIn'	:	'elastic',
 				'transitionOut'	:	'elastic',
 				'speedIn'		:	600, 
 				'speedOut'		:	200, 
 				'overlayShow'	:	false
+			});
+
+			$('#publish').on('click', function() {
+				$.ajax({
+					type: 'get',
+					url: '{{ route('api.rooms.publish', $house->id) }}',
+					data: {},
+					success: function(response) {
+						if (response.data == 1) {
+							$('#showPublish').html('<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>')
+						}
+						else if(response.data == 0) {
+							$('#showPublish').html('<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>')
+						}
+					}
+				});
 			});
 		});
 

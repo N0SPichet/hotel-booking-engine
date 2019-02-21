@@ -80,23 +80,25 @@ Route::get('comments/{id}/delete', 'CommentController@delete')->name('comments.d
 Route::resource('houseamenities', 'HouseamenityController', ['except' => ['create']]);
 
 //Create route for hosts
-Route::get('hosts/introduction-hosting-room', 'PagesController@introroom')->name('hosts.introroom');
-Route::get('hosts/introduction-hosting-apartment', 'PagesController@introapartment')->name('hosts.introapartment');
+Route::prefix('hosts')->name('hosts.')->group(function() {
+	Route::get('introduction-hosting-room', 'PagesController@introroom')->name('introroom');
+	Route::get('introduction-hosting-apartment', 'PagesController@introapartment')->name('introapartment');
+});
 
 //Create resource route for RoomController
 Route::resource('rooms', 'RoomController');
 Route::prefix('rooms')->name('rooms.')->group(function() {
 	Route::get('my-room/{user}', 'RoomController@index_myroom')->name('index-myroom');
+	Route::get('owner/{house}', 'RoomController@owner')->name('owner');
+	Route::get('image/{image}/delete', 'RoomController@detroyimage')->name('detroyimage');
 });
-Route::get('api/get-state-list','RoomController@getStateList')->name('get_states');
-Route::get('api/get-city-list','RoomController@getCityList')->name('get_cities');
-Route::get('room/{id}', 'RoomController@single')->name('rooms.single');
-Route::get('room/{id}/delete/image', 'RoomController@detroyimage')->name('rooms.detroyimage');
 
 //Create resource route for ApartmentController
 Route::resource('apartments', 'ApartmentController');
-Route::get('apartments/my-apartment/{id}', 'ApartmentController@indexmyapartment')->name('index-myapartment');
-Route::get('apartment/{id}', 'ApartmentController@single')->name('apartments.single');
+Route::prefix('apartments')->name('apartments.')->group(function() {
+	Route::get('my-apartment/{user}', 'ApartmentController@index_myapartment')->name('index-myapartment');
+	Route::get('owner/{house}', 'ApartmentController@owner')->name('owner');
+});
 Route::get('apartment/{id}/delete/image', 'ApartmentController@detroyimage')->name('apartments.detroyimage');
 
 //create resource route for ReviewController

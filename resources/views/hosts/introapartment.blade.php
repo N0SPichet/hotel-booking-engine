@@ -8,11 +8,11 @@
 		<div class="row">
 			<h2 class="title-page">Introduction to Hosting Apartment</h2>
 
-			<div class="col-md-12 col-sm-12">
-				<div class="col-md-10 col-sm-10">
+			<div class="col-md-12">
+				<div class="col-md-10 float-left">
 					<p>สวัสดี {{ Auth::user()->user_fname }} </p>
 				</div>
-				<div class="col-md-2 col-sm-2">
+				<div class="col-md-2 float-left">
 					<a href="{{ route('apartments.create') }}" class="btn btn-danger margin-top-10 poll-right">Create Apartment</a>
 				</div>
 				<p>ในส่วนนี้เหมาะกับผู้ใช้เช่าขนาดใหญ่ ที่มีห้องประเภทหอพัก อพาร์ทเม้น</p>
@@ -26,9 +26,9 @@
 				<br><br>
 				<p>เราหวังว่าท่านจะมีความสุข และสามารถต้อนรับผู้เช่าบ้านที่กำลังจะมาถึงได้เป็นอย่างดี เพื่อจะได้เพิ่มยอดผู้เข้าพักในห้องพักท่านของท่านได้</p>
 			</div>
-			<div class="col-md-12 col-sm-12">
+			<div class="col-md-12">
 				<h4>Your listing</h4>
-				<a href="{{ route('index-myapartment', Auth::user()->id) }}" class="btn btn-lg btn-info margin-top-10" style="width: 200px;">Apartment</a>
+				<a href="{{ route('apartments.index-myapartment', Auth::user()->id) }}" class="btn btn-lg btn-info margin-top-10" style="width: 200px;">Apartment</a>
 			</div>
 		</div>
 	</div>

@@ -2,11 +2,16 @@
 
 namespace App\Models;
 
+use App\Models\District;
+use App\Models\Food;
+use App\Models\Himage;
 use App\Models\Houseamenity;
 use App\Models\Housedetail;
 use App\Models\Houserule;
 use App\Models\Housespace;
 use App\Models\Housetype;
+use App\Models\Province;
+use App\Models\SubDistrict;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,6 +23,11 @@ class House extends Model
         return $this->belongsTo('App\Apartmentprice');
     }
 
+    public function district()
+    {
+        return $this->belongsTo(District::class);
+    }
+
     public function users() {
     	return $this->belongsTo(User::class);
     }
@@ -26,28 +36,12 @@ class House extends Model
         return $this->belongsTo('App\Rental');
     }
 
-    public function addresscities() {
-    	return $this->belongsTo('App\Addresscity');
-    }
-
-    public function addresscountries() {
-    	return $this->belongsTo('App\Addresscountry');
-    }
-
-    public function addressstates() {
-    	return $this->belongsTo('App\Addressstate');
-    }
-
-    public function roomtypes() {
-        return $this->belongsTo('App\RoomType');
-    }
-
     public function guestarrives() {
         return $this->belongsTo('App\Guestarrive');
     }
 
     public function images() {
-        return $this->hasMany('App\Himage');
+        return $this->hasMany(Himage::class);
     }
 
     public function houseamenities() {
@@ -71,14 +65,24 @@ class House extends Model
     }
 
     public function foods() {
-        return  $this->belongsTo('App\Food');
+        return  $this->belongsTo(Food::class);
     }
 
     public function houseprices() {
         return $this->belongsTo('App\Houseprice');
     }
 
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
+
     public function reviews() {
         return $this->hasMany('App\Review');
+    }
+
+    public function sub_district()
+    {
+        return $this->belongsTo(SubDistrict::class);
     }
 }

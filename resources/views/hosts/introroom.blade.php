@@ -8,8 +8,8 @@
 		<div class="row">
 			<h2 class="title-page">Introduction to Hosting Room</h2>
 
-			<div class="col-m12">
-				<div class="col-10 float-left">
+			<div class="col-md-12">
+				<div class="col-md-10 float-left">
 					<p>สวัสดี {{ Auth::user()->user_fname }}</p>
 				</div>
 				<div class="col-2 float-left">

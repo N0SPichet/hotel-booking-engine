@@ -4,12 +4,11 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default col">
-                <div class="panel-heading">User Verification</div>
-                <div class="panel-body">
-                    <!-- <p style="color: red;">all information must be true</p> -->
+    <div class="row m-t-10">
+        <div class="col-md-8 float-left" style="margin: auto">
+            <div class="card col">
+                <div class="card-title">User Verification</div>
+                <div class="card-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('users.verify-request') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                        

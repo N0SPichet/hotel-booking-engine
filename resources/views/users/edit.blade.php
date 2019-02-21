@@ -15,10 +15,10 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		{!! Form::model($user, ['route' => ['users.update', $user->id], 'method' => 'PUT']) !!}
 			{{ csrf_field() }}		
-		<div class="col-md-6 col-lg-6">
+		<div class="col-md-6 float-left">
 			{{ Form::label('user_fname', 'Name', array('class' => 'm-t-10')) }}
 			{{ Form::text('user_fname', null, ['class' => 'form-control input-md']) }}
 
@@ -68,7 +68,7 @@
 			</select>
 		</div>
 
-		<div class="col-md-6 col-lg-6">
+		<div class="col-md-6 float-left">
 			{{ Form::label('user_gender', 'Gender', array('class' => 'm-t-10')) }}
 			<select class="form-control input-md" name="user_gender">
 				<option value="0" {{ $user->user_gender===null ? 'selected':'' }}>Select Gender</option>
@@ -81,12 +81,12 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
-			<div class="col-sm-6 col-md-6">
+		<div class="col-md-12 center">
+			<div class="col-sm-6 col-md-6 float-left">
 				{!! Html::linkRoute('users.profile', 'Back to My Account', array($user->id), array('class' => 'btn btn-info btn-block btn-h1-spacing')) !!}
 			</div>
 
-			<div class="col-sm-6 col-md-6">
+			<div class="col-sm-6 col-md-6 float-left">
 				{{ Form::submit('Update', ['class' => 'btn btn-success btn-block btn-h1-spacing']) }}
 			</div>
 		</div>

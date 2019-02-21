@@ -4,7 +4,7 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-8">
 			<h1>Review your settings</h1>
 			<h2 align="center">
@@ -141,7 +141,7 @@
 				<h4>Address</h4>
 				<div class="card">
 					<div class="margin-content">
-						<p> {{ $house->house_address }} {{ $house->addresscities->city_name }} {{ $house->addressstates->state_name }}, {{ $house->addresscountries->country_name }} </p>
+						<p> {{ $house->house_address }} {{ $house->sub_district->name }} {{ $house->district->name }}, {{ $house->province->name }} </p>
 						<p>Postcode {{ $house->house_postcode }} </p>
 					</div>
 						<div id="map-canvas"></div>
@@ -227,10 +227,13 @@
 				</div>
 				@if ($house->users_id == Auth::user()->id)
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-sm-4 float-left">
+						<a id="publish" class="btn btn-outline-info btn-block btn-h1-spacing">Publish</a>
+					</div>
+					<div class="col-sm-4 float-left">
 						{!! Html::linkRoute('apartments.edit', 'Edit', array($house->id), array('class' => 'btn btn-outline-warning btn-block btn-h1-spacing')) !!}
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-4 float-left">
 						{!! Form::open(['route' => ['apartments.destroy', $house->id], 'method' => 'DELETE']) !!}
 							{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-block btn-h1-spacing']) !!}
 							{!! Form::close() !!}
@@ -240,7 +243,7 @@
 				<hr>
 				<div class="row">
 					<div class="col-sm-6">
-						{!! Html::linkRoute('index-myapartment', 'Back to My Room', array(Auth::user()->id), array('class' => 'btn btn-outline-secondary')) !!}
+						{!! Html::linkRoute('apartments.index-myapartment', 'Back to My Room', array(Auth::user()->id), array('class' => 'btn btn-outline-secondary')) !!}
 					</div>
 				</div>
 			</div>
@@ -281,7 +284,22 @@
 				'speedOut'		:	200, 
 				'overlayShow'	:	false
 			});
-			
+
+			$('#publish').on('click', function() {
+				$.ajax({
+					type: 'get',
+					url: '{{ route('api.rooms.publish', $house->id) }}',
+					data: {},
+					success: function(response) {
+						if (response.data == 1) {
+							$('#showPublish').html('<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>')
+						}
+						else if(response.data == 0) {
+							$('#showPublish').html('<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>')
+						}
+					}
+				});
+			});
 		});
 
 		var lat = {{ $map->map_lat }};
