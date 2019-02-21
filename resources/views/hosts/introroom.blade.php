@@ -8,11 +8,11 @@
 		<div class="row">
 			<h2 class="title-page">Introduction to Hosting Room</h2>
 
-			<div class="col-md-12 col-sm-12">
-				<div class="col-md-10 col-sm-10">
+			<div class="col-m12">
+				<div class="col-10 float-left">
 					<p>สวัสดี {{ Auth::user()->user_fname }}</p>
 				</div>
-				<div class="col-md-2 col-sm-2">
+				<div class="col-2 float-left">
 					<a href="{{ route('rooms.create') }}" class="btn btn-danger margin-top-10 pull-right">Create Room</a>
 				</div>
 				<p>ในส่วนนี้เหมาะกับผู้ให้เช่าขนาดเล็ก อาจจะเป็นห้องพักในคอนโด หรือห้องว่างในบ้านตัวเอง</p>
@@ -30,7 +30,7 @@
 				<br><br>
 				<p>เราหวังว่าท่านจะมีความสุข และสามารถต้อนรับผู้เช่าบ้านที่กำลังจะมาถึงได้เป็นอย่างดี เพื่อจะได้เพิ่มยอดผู้เข้าพักในห้องพักท่านของท่านได้</p>
 			</div>
-			<div class="col-md-12 col-sm-12">
+			<div class="col-12">
 				<h4>Your listing</h4>
 				<a href="{{ route('rooms.index-myroom', Auth::user()->id) }}" class="btn btn-lg btn-info margin-top-10" style="width: 100px;">Room</a>
 			</div>

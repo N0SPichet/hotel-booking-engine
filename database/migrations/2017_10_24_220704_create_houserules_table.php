@@ -15,7 +15,7 @@ class CreateHouserulesTable extends Migration
     {
         Schema::create('houserules', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('rule', 100)->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }

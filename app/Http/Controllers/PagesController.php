@@ -25,46 +25,6 @@ use Session;
 class PagesController extends Controller
 {
     public function index() {
-        // $tomorrow = Carbon::tomorrow();
-        // $rentals_in = Rental::where('rental_datein', '<=', $tomorrow)->get();
-        // foreach ($rentals_in as $rental) {
-        //     if ($rental->payments->payment_status == NULL) {
-        //         $rental->payments->payment_status = 'Out of Date';
-        //         if ($rental->houses->housetypes_id == '1') {
-        //             $house = House::find($rental->houses->id);
-        //             $house->no_rooms = $house->no_rooms + $rental->no_rooms;
-        //             $house->save();
-        //         }
-        //         $rental->rental_checkroom = '1';
-        //         $rental->payments->save();
-        //         $rental->save();
-        //     }
-        //     if ($rental->host_decision != 'ACCEPT') {
-        //         $rental->host_decision = 'EARLY';
-        //         $rental->rental_checkroom = '1';
-        //         $rental->save();
-        //     }
-        // }
-        // $rentals_out = Rental::where('rental_dateout', '<=', $tomorrow)->get();
-        // foreach ($rentals_out as $rental) {
-        //     if ($rental->rental_checkroom == '0') {
-        //         if ($rental->checkin_status == '1') {
-        //             if ($rental->houses->housetypes_id == '1') {
-        //                 $house = House::find($rental->houses->id);
-        //                 $house->no_rooms = $house->no_rooms + $rental->no_rooms;
-        //                 $house->save();
-        //             }
-        //             $rental->rental_checkroom = '1';
-        //             $rental->save();
-        //         }
-        //         if ($rental->host_decision == NULL && $rental->checkin_status == NULL){
-        //             $rental->host_decision = 'REJECT';
-        //             $rental->rental_checkroom = '1';
-        //             $rental->save();
-        //         }
-        //     }
-        // }
-
         $houses = House::where('publish', '2')->inRandomOrder()->paginate(10);
         $images = Himage::all();
         return view('pages.home')->with('houses', $houses)->with('images', $images);

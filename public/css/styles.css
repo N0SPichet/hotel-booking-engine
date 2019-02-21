@@ -1,98 +1,160 @@
+@import url('https://fonts.googleapis.com/css?family=Quicksand');
+
 body {
-    font-family: Roboto, sans-serif;
-    padding-top: 0px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0;
+}
+
+.clear-both:after {
+    clear: both;
+    display: block;
+    content: "";
+}
+
+header {
+    background-color: #BCDEFA;
+}
+
+.wrapper {
+    width: 100%;
+    max-width: 1140px;
+    padding: 0 10px;
+    margin: 0 auto;
+}
+
+h1.logo {
+    background-image: url(../images/components/logo.png);
+    background-size: 80px auto;
+    background-repeat: no-repeat;
+    text-indent: -10000px;
+    float: left;
+    height: 80px;
+    width: 180px;
+    margin: 0;
+}
+
+header nav {
+    float: right;
+}
+
+header nav h2 {
+    text-indent: -10000px;
+    margin: 0;
+    height: 0;
+}
+
+header nav ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+header nav ul li {
+    background-color: #BCDEFA;
+    float: left;
+    position: relative;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    display: inline-block;
+    line-height: 80px;
+    padding: 0px 20px;
+}
+
+header nav ul li a:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+header nav ul li a:focus ~ ul.hav-sub-nav {
+    max-height: 400px;
+    -webkit-transition: max-height 0.4 ease-in;
+    -moz-transition: max-height 0.4 ease-in;
+    transition: max-height 0.4 ease-in;
+}
+
+header nav li.dropdown-divider {
+    margin: 0;
+    padding: 1px;
+}
+
+ul.hav-sub-nav {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    border-radius: 0 0 5px 5px;
+    box-shadow: 5px 10px 18px #888888;
+}
+
+header nav li:hover ul.hav-sub-nav {
+    display: block;
+}
+
+ul.hav-sub-nav li {
+    background-color: #BCDEFA;
+    float: none;
+    padding: 2px;
+}
+
+ul.hav-sub-nav li:last-of-type {
+    border-radius: 0 0 5px 5px;
+}
+
+ul.hav-sub-nav li a {
+    line-height: 40px;
+    padding: 0 20px;
+    width: 180px;
+}
+
+ul.hav-sub-nav li a:hover {
+    text-decoration: underline;
+}
+
+header nav i.material-icons {
+    position: relative;
+    top: 5px;
 }
 
 form {
     width: 100%;
 }
 
-.footer {
-    clear: both;
-    position: relative;
-    height: 100px;
-    width: 100%;
-    margin-top: 0px;
-    padding: 50px 0;
-    color: #000;
-    text-align: center;
+label {
+    font-size: 16px;
+    font-family: sans-serif;
+    font-weight: normal;
 }
 
+a {
+    font-weight: bold;
+    color: #000;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.footer {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px 0;
+    color: #000;
+    text-align: center;
+    background-color: #BCDEFA;
+}
 
 }
 .footer a {
-    color: #fff;
     text-decoration: underline;
 }
 
-/*navbar*/
-.navbar {
-    background-color: #160DE2;
-}
-.navbar-brand {
-    color: #FFFFFF;
-}
-.navbar-brand a:hover {
-    color: #F0F0F0;
-}
-.navbar .navbar-collapse .navbar-nav .nav-link {
-    color: #FFFFFF;
-    width: max-content;
+.footer p {
+    margin: 0;
 }
 
-/*.navbar .navbar-nav li a {
-     color: #000000;
-}
-*/
-.navbar-link-spacing {
-    margin-right: 2px;
-    margin-left: 2px;
-}
-.navbar .navbar-nav li a:hover,
-.navbar .navbar-nav li a:focus {
-    border-radius: 10%;
-    background-color: #819FF7;
-}
-.navbar .navbar-nav .active a {
-    color: #dc3545;
-    border-radius: 10%;
-    background-color: #819FF7;
-}
-
-/*.navbar .navbar-nav .open a, .navbar .navbar-nav .open a:hover, .navbar .navbar-nav .open a:focus {
-     color: #000000;
-     background-color: #FFFFFF;
-}
-*/
-
-/*.navbar .navbar-nav .dropdown a:hover .caret, .navbar .navbar-nav .dropdown a:focus .caret {
-     border-top-color: #dc3545;
-     border-bottom-color: #dc3545;
-}
-*/
-
-/*.navbar .navbar-nav .open a .caret, .navbar .navbar-nav .open a:hover .caret, .navbar .navbar-nav .open a:focus .caret {
-     border-top-color: #dc3545;
-     border-bottom-color: #dc3545;
-}
-*/
-
-/* mobile version */
-
-/*.navbar .navbar-toggle {
-     border-color: #dc3545;
-}
-*/
-
-/*.navbar .navbar-toggle:hover, .navbar .navbar-toggle:focus {
-     background-color: #dc3545;
-}
-*/
-
-/*.navbar .navbar-toggle .icon-bar {
-     background-color: #dc3545;
-}
-*/
 .home_gallery img {
     transition: 0.5s;
 }
@@ -293,18 +355,7 @@ form {
 .show {
     display: block;
 }
-.clearfix {
-    zoom: 1;
-}
-.clearfix:before,
-.clearfix:after {
-    display: table;
-    content: "";
-    line-height: 0;
-}
-.clearfix:after {
-    clear: both;
-}
+
 .hide-text {
     font: 0/0 a;
     color: transparent;
@@ -446,4 +497,22 @@ form {
 #map-canvas {
     width: 100%;
     height: 300px;
+}
+
+.rooms {
+
+}
+
+.rooms .create {
+    font-size: 18px;
+    padding: 10px;
+}
+
+.rooms .create li {
+    border-bottom: 1px solid #ccc;
+    margin-block-end: 12px;
+}
+
+.rooms .create li .active:before {
+    content: "* ";
 }

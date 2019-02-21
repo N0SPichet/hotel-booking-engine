@@ -11,7 +11,7 @@
 
 			<div class="panel-body">
 				@foreach ($users as $user)
-				<div class="card margin-top-10">
+				<div class="card m-t-10">
 					<div class="margin-content">
 						<div class="col-md-9">
 							<a href="{{ route('users.show', $user->id) }}" style="text-decoration-line: none; ">
