@@ -14,7 +14,10 @@ class RoomTypeTableSeeder extends Seeder
     {
         for ($i = 1; $i <= 5; $i++) { 
         	$type = new Housetype;
-        	$type->name = "type ".$i;
+            $type->name = "type ".$i;
+            if ($i == 2 || $i == 3) {
+                $type->name = "type ".$i." apartment";
+            }
         	$type->save();
         }
     }

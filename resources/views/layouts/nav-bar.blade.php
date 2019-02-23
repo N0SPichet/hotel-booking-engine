@@ -25,9 +25,9 @@
 					<a href="#">Admin Section <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
 						<li><a href="{{ route('users.verify-index') }}">User Verifications</a></li>
-						<li><a href="{{ route('rooms.index') }}">All Rooms</a></li>
-						<li><a href="{{ route('users.index') }}">All Users</a></li>
-						<li><a href="{{ route('rentals.index') }}">All Trips</a></li>
+						<li><a href="{{ route('rooms.index') }}">Rooms</a></li>
+						<li><a href="{{ route('users.index') }}">Users</a></li>
+						<li><a href="{{ route('rentals.index') }}">Trips</a></li>
 					</ul>
 				</li>
 				@endif

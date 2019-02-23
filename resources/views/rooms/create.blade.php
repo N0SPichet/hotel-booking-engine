@@ -48,7 +48,7 @@
 				</li>
 			</ul>
 		</div>
-		<div class="col-md-9">
+		<div class="col-md-9 float-left">
 			<div class="tab-content">
 				<div id="menu1" class="tab-pane fade active show in">
 					<div class="col-md-10 col-md-offset-1 m-t-10">
@@ -326,7 +326,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-1">
+		<div class="col-1 float-left">
 			{{ Form::submit('Save Change', array('class' => 'btn btn-success form-spacing-top pull-right')) }}
 			{!! Form::close() !!}
 		</div>
@@ -334,6 +334,7 @@
 </div>
 @endsection
 @section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#province_id').on('change', function() {

@@ -21,7 +21,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('crole:Admin')->except('edit', 'update', 'userprofile', 'updateimage', 'description', 'verify_show', 'verify_request', 'verify_show');
+        $this->middleware('crole:Admin')->except('edit', 'update', 'userprofile', 'updateimage', 'description', 'verify_user', 'verify_show', 'verify_request', 'verify_show');
     }
 
     /**

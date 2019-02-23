@@ -16,11 +16,11 @@ class RoomController extends Controller
      */
     public function togglePublish(House $house)
     {
-        if ($house->publish == 1) {
-            $house->publish = 0;
+        if ($house->publish == '1') {
+            $house->publish = '0';
         }
-        elseif ($house->publish == 0) {
-            $house->publish = 1;
+        elseif ($house->publish == '0') {
+            $house->publish = '1';
         }
         $house->save();
         return response()->json([

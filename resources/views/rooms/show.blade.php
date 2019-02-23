@@ -7,9 +7,9 @@
 @endsection
 
 @section ('content')
-<div class="container">
+<div class="container rooms">
 	<div class="row m-t-10">
-		<h2><img src="{{ asset('images/houses/house.png')}}" style="width: 35px; margin-bottom: 10px;"> Room : {{ $house->house_title }} <small>{{ $house->house_guestspace }} space</small></h2>
+		<h2><img src="{{ asset('images/houses/house.png')}}" style="width: 35px; margin-bottom: 10px;"> Room : {{ $house->house_title }} <small class="text-danger">{{ $house->house_guestspace }} space</small></h2>
 	</div>
 	<div class="row">
 		<div class="card col-md-12">
@@ -88,8 +88,8 @@
 				<div class="card margin-content">
 					<div class="gallery">
 						@foreach ($images as $image)
-						<div class="col-md-4 float-left">
-							<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+						<div class="col-md-4 float-left margin-content">
+							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
 							<br>
 						</div>
 						@endforeach
@@ -110,7 +110,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6 float-left">
+		<div class="col-md-6 float-left show">
 			<ul class="nav nav-tabs">
 	    		<li class="active" ><a data-toggle="tab" href="#menu1">Details</a></li>
 	    		<li class=""><a data-toggle="tab" href="#menu2">Reviews</a></li>
@@ -124,10 +124,10 @@
 						<img src="https://www.shareicon.net/data/128x128/2016/02/24/724310_tool_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_bathroom }} bathroom
 					</p>
 					<div class="panel panel-success">
-					    <div class="panel-heading">
-					        <h3 class="panel-title">There are {{ $house->no_rooms }} {{ $house->no_rooms > 1 ? 'rooms':'room' }} available</h3>
+					    <div class="card-heading">
+					        <h3 class="card-title">There are {{ $house->no_rooms }} {{ $house->no_rooms > 1 ? 'rooms':'room' }} available</h3>
 					    </div>
-					    <div class="panel-body">
+					    <div class="card-body">
 					        <p>Room Price: ฿{{ $house->houseprices->price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
 							@if ($house->houseprices->food_price)
 							<p>Food included : ฿{{ $house->houseprices->food_price }}/Day/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
@@ -141,7 +141,6 @@
 					</div>
 					<h4>About place</h4>
 					<div class="m-t-10">
-						<!-- <div class="w3-card-4"></div> -->
 						<div class="card">
 							<div class="margin-content">
 								@if ( $house->about_your_place != null)
@@ -208,7 +207,10 @@
 									@foreach ($house->houserules as $houserule)
 									<li>{{ $houserule->name }}</li>
 									@endforeach
-									
+									@if ($house->optional_rules)
+									<br>
+									<p> {{ $house->optional_rules }}</p>
+									@endif
 									<hr>
 									<p>You must also acknowledge</p>
 									@foreach ($house->housedetails as $housedetail)

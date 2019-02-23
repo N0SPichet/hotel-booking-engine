@@ -96,6 +96,7 @@
 </div>
 @endsection
 @section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#province_id').on('change', function() {

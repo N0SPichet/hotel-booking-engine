@@ -5,15 +5,15 @@
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
-		<div class="col-md-8">
+		<div class="col-md-8 float-left">
 			<h1>Review your settings</h1>
 			<h2 align="center">
 				{{ $house->house_title }}
-				<small >
-					@if ($house->publish == '2')
-					<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>
+				<small id="showPublish">
+					@if ($house->publish == '1')
+					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Published</span>
 					@elseif ($house->publish == '0')
-					<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>
+					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>
 					@endif
 				</small>
 			</h2>
@@ -21,24 +21,24 @@
 				<div class="row">
 					<h4>Cover Image</h4>
 				</div>
-				<div class="col-md-6">
-					<a id="single_image" href="{{ asset('images/houses/' . $house->cover_image) }}"><img src="{{ asset('images/houses/' . $house->cover_image) }}" class="img-responsive" style="border-radius: 5%"></a>
+				<div class="col-md-6 float-left">
+					<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}" class="img-responsive" style="border-radius: 2%"></a>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-6 float-left">
 					
 				</div>
 			</div>
-			<div class="col-md-12">
-				<div class="row">
+			<div class="col-md-12 clear-both">
+				<div class="row float-left">
 					<h4>Images</h4>
 					<div class="gallery">
 						<h4>Overview</h4>
 						@foreach ($images as $image)
 						@if ($image->room_type == NULL)
-						<div class="col-md-4">
-							<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+						<div class="col-md-4 float-left margin-content">
+							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
 							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
+							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 							@endif
 							<br>
 						</div>
@@ -46,15 +46,15 @@
 						@endforeach
 					</div>
 				</div>
-				<div class="row">
+				<div class="row float-left">
 					<div class="gallery">
 						<h4>Single Room (Standard)</h4>
 						@foreach ($images as $image)
 						@if ($image->room_type == '1')
-						<div class="col-md-4">
-							<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+						<div class="col-md-4 float-left margin-content">
+							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
 							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
+							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 							@endif
 							<br>
 						</div>
@@ -62,15 +62,15 @@
 						@endforeach
 					</div>
 				</div>
-				<div class="row">
+				<div class="row float-left">
 					<div class="gallery">
 						<h4>Deluxe Single Room</h4>
 						@foreach ($images as $image)
 						@if ($image->room_type == '2')
-						<div class="col-md-4">
-							<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+						<div class="col-md-4 float-left margin-content">
+							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
 							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
+							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 							@endif
 							<br>
 						</div>
@@ -78,15 +78,15 @@
 						@endforeach
 					</div>
 				</div>
-				<div class="row">
+				<div class="row float-left">
 					<div class="gallery">
 						<h4>Double Room (Standard)</h4>
 						@foreach ($images as $image)
 						@if ($image->room_type == '3')
-						<div class="col-md-4">
-							<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+						<div class="col-md-4 float-left margin-content">
+							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
 							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
+							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 							@endif
 							<br>
 						</div>
@@ -151,8 +151,8 @@
 				<h4>Amenities</h4>
 				<div class="card">
 					<div class="margin-content">
-						@foreach ($house->houseamenities as $houseamenity)
-							<p>{{ $houseamenity->amenityname }}</p>
+						@foreach ($house->houseamenities as $amenity)
+							<p>{{ $amenity->name }}</p>
 						@endforeach
 					</div>
 				</div>
@@ -160,8 +160,8 @@
 				<h4>Shared space</h4>
 				<div class="card">
 					<div class="margin-content">
-						@foreach ($house->housespaces as $housespace)
-							<p>{{ $housespace->spacename }}</p>
+						@foreach ($house->housespaces as $space)
+							<p>{{ $space->name }}</p>
 						@endforeach
 					</div>
 				</div>
@@ -169,8 +169,8 @@
 				<h4>Your House Rules</h4>
 				<div class="card">
 					<div class="margin-content">
-						@foreach ($house->houserules as $houserule)
-							<p>{{ $houserule->houserule_name }}</p>
+						@foreach ($house->houserules as $rule)
+							<p>{{ $rule->name }}</p>
 						@endforeach
 						@if ($house->optional_rules)
 						<br>
@@ -212,7 +212,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 float-left">
 			<div class="well">
 			<div class="dl-horizontal">
 					<dt>Created by</dt>
@@ -242,7 +242,7 @@
 				@endif
 				<hr>
 				<div class="row">
-					<div class="col-sm-6">
+					<div class="col-sm-6 float-left">
 						{!! Html::linkRoute('apartments.index-myapartment', 'Back to My Room', array(Auth::user()->id), array('class' => 'btn btn-outline-secondary')) !!}
 					</div>
 				</div>

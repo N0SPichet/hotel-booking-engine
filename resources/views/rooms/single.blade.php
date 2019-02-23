@@ -10,16 +10,16 @@
 			<h2 align="center">{{ $house->house_title }}
 				<small id="showPublish">
 					@if ($house->publish == '1')
-					<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>
+					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Published</span>
 					@elseif ($house->publish == '0')
-					<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>
+					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>
 					@endif
 				</small>
 			</h2>
 			<div class="col-md-12 clear-both">
 				<h4>Cover Image</h4>
 				<div class="col-md-6 float-left">
-					<a id="single_image" href="{{ asset('images/houses/' . $house->cover_image) }}"><img src="{{ asset('images/houses/' . $house->cover_image) }}" class="img-responsive" style="border-radius: 5%"></a>
+					<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}" class="img-responsive" style="border-radius: 2%"></a>
 				</div>
 				<div class="col-md-6 float-left">
 					
@@ -29,10 +29,10 @@
 				<h4>Images</h4>
 				<div class="gallery">
 					@foreach ($images as $image)
-					<div class="col-md-4 float-left">
-						<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+					<div class="col-md-4 float-left margin-content">
+						<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
 						@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-						<a href="{{ route('rooms.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
+						<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 						@endif
 						<br>
 					</div>
@@ -142,9 +142,21 @@
 						@if ($house->houseprices->food_price)
 						<p>Food included : ฿{{ $house->houseprices->food_price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
 						<div class="alert alert-info" role="alert">
-  							@if ($house->foods->breakfast == '1') Breakfast @endif 
-  							@if ($house->foods->lunch == '1') @if($house->foods->lunch == '1' && $house->foods->breakfast == '1')/@endif Lunch @endif
-  							@if ($house->foods->dinner == '1') @if($house->foods->dinner == '1' && $house->foods->lunch == '1')/@endif Dinner @endif
+  							@if ($house->foods->breakfast == '1')Breakfast
+	  							@if ($house->foods->lunch == '1')/ Lunch
+	  								@if ($house->foods->dinner == '1')/ Dinner
+	  								@endif
+	  							@else
+	  								@if ($house->foods->dinner == '1')/ Dinner
+	  								@endif
+	  							@endif
+	  						@elseif ($house->foods->lunch == '1')Lunch
+	  							@if ($house->foods->dinner == '1')/ Dinner
+	  							@endif
+	  						@else
+  								@if ($house->foods->dinner == '1')Dinner
+  								@endif
+  							@endif
 						</div>
 						@endif
 						<p>Weekly discount: {{ $house->houseprices->weekly_discount }}%</p>
@@ -164,7 +176,7 @@
 					<dd>{{ date("jS M, Y", strtotime($house->updated_at)) }}</dd>
 				</div>
 				<div class="margin-content">
-				<p>Link to public <a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
+				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
 				</div>
 				@if ($house->users_id == Auth::user()->id)
 				<div class="row">
@@ -224,10 +236,10 @@
 					data: {},
 					success: function(response) {
 						if (response.data == 1) {
-							$('#showPublish').html('<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>')
+							$('#showPublish').html('<span class="text-success m-t-20"><i class="fas fa-eye"></i> Published</span>')
 						}
 						else if(response.data == 0) {
-							$('#showPublish').html('<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>')
+							$('#showPublish').html('<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>')
 						}
 					}
 				});

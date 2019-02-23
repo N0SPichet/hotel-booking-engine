@@ -4,7 +4,6 @@
 
 @section('stylesheets')
 	{{ Html::style('css/parsley.css') }}
-	{!! Html::style('css/select2.min.css') !!}
 	<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
   	<script>
   		tinymce.init({ 
@@ -59,7 +58,16 @@
 		    			{!! Form::model($house, ['route' => ['rooms.update', $house->id], 'files' => true, 'method' => 'PUT']) !!}
 
 						{{ Form::label('housetypes_id', 'What type of property is this?') }}
-						{{ Form::select('housetypes_id', $types, null, ['class' => 'form-control']) }}
+						<select id="housetypes_id" class="form-control m-t-10" name="housetypes_id">
+							<option value="0">Select Types</option>
+							@foreach ($types as $type)
+							@if($house->housetypes_id !== null)
+							<option value="{{ $type->id }}" {{ $type->id==$house->housetypes_id? 'selected':'' }}>{{ $type->name }}</option>
+							@else
+							<option value="{{ $type->id }}" {{ $type->id==1? 'selected':'' }}>{{ $type->name }}</option>
+							@endif
+							@endforeach
+						</select>
 						<hr>
 						{{ Form::label('house_guestspace', '* What will guests have?', ['class' => 'm-t-10']) }}
 						<select class="form-control m-t-10" name="house_guestspace">
@@ -99,29 +107,70 @@
 		    	<div id="menu2" class="tab-pane fade">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('province_id', 'Provinces', array('class' => 'm-t-10')) }}
-						{{ Form::select('province_id', $provinces, null, ['class' => 'form-control m-t-10']) }}
-							
-						{{ Form::label('house_address', 'Street Address') }}
-						{{ Form::text('house_address', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
+						<select id="province_id" class="form-control m-t-10" name="province_id">
+							<option value="0">Select Provinces</option>
+							@foreach ($provinces as $province)
+							@if($house->province_id !== null)
+							<option value="{{ $province->id }}" {{ $province->id===$house->province_id? 'selected':'' }}>{{ $province->name }}</option>
+							@else
+							<option value="{{ $province->id }}" {{ $province->id===1? 'selected':'' }}>{{ $province->name }}</option>
+							@endif
+							@endforeach
+						</select>
 
 						{{ Form::label('district_id', 'Districts') }}
-						{{ Form::select('district_id', $districts, null, ['class' => 'form-control m-t-10']) }}
+						<select id="district_id" class="form-control m-t-10" name="district_id">
+							<option value="0">Select Districts</option>
+							@foreach ($districts as $district)
+							@if($house->district_id !== null)
+							<option value="{{ $district->id }}" {{ $district->id===$house->district_id? 'selected':'' }}>{{ $district->name }}</option>
+							@else
+							<option value="{{ $district->id }}" {{ $district->id===1? 'selected':'' }}>{{ $district->name }}</option>
+							@endif
+							@endforeach
+						</select>
 
 						{{ Form::label('sub_district_id', 'Sub Districts') }}
-						{{ Form::select('sub_district_id', $sub_districts, null, ['class' => 'form-control m-t-10']) }}
+						<select id="sub_district_id" class="form-control m-t-10" name="sub_district_id">
+							<option value="0">Select Sub Districts</option>
+							@foreach ($sub_districts as $sub_district)
+							@if($house->sub_district_id !== null)
+							<option value="{{ $sub_district->id }}" {{ $sub_district->id===$house->sub_district_id? 'selected':'' }}>{{ $sub_district->name }}</option>
+							@else
+							<option value="{{ $sub_district->id }}" {{ $sub_district->id===1? 'selected':'' }}>{{ $sub_district->name }}</option>
+							@endif
+							@endforeach
+						</select>
 
 						{{ Form::label('house_postcode', 'ZIP Code') }}
 						{{ Form::text('house_postcode', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
+
+						{{ Form::label('house_address', 'Street Address') }}
+						{{ Form::text('house_address', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
 		    		</div>
 		    	</div>
 
 		    	<div id="menu3" class="tab-pane fade">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('houseamenities', 'What amenities do you offer?', ['class' => 'm-t-10']) }}
-						{{ Form::select('houseamenities[]', $amenities, null, ['class' => 'form-control select2-multi m-t-10', 'multiple' => 'multiple', 'style' => 'width: 100%;']) }}
+		    			<div class="row ">
+							@foreach ($amenities as $amenity)
+							<div class="col-md-6" >
+								{{ Form::checkbox('houseamenities[]', $amenity->id, null, ['class' => 'field', 'multiple' => 'multiple', 'id' => "amenity$amenity->id"]) }}
+								{{ Form::label('amenity' . $amenity->id, $amenity->amenityname) }}
+							</div>
+							@endforeach
+						</div>
 
 						{{ Form::label('housespaces', 'What spaces can guests use?', ['class' => 'm-t-10']) }}
-						{{ Form::select('housespaces[]', $spaces, null, ['class' => 'form-control select2-multi m-t-10', 'multiple' => 'multiple', 'style' => 'width: 100%;']) }}
+						<div class="row">
+							@foreach ($spaces as $space)
+							<div class="col-md-6 float-left">
+								{{ Form::checkbox('housespaces[]', $space->id, null, ['class' => 'field', 'multiple' => 'multiple', 'id' => "space$space->id"]) }}
+								{{ Form::label('space' . $space->id, $space->spacename) }}
+							</div>
+							@endforeach
+						</div>
 		    		</div>
 		    	</div>
 
@@ -152,11 +201,14 @@
 		    			{{ Form::label('cover_image', 'Cover Images') }}
 						<div class="row">
 							@foreach ($houseimages as $index => $image)
-							<div class="col-md-4">
+							<div class="col-md-4 margin-content">
 								<div class="form-check">
 				  				<input class="form-check-input" type="radio" name="cover_image" id="{{ $index }}" value="{{ $image->image_name }}" {{ $image->image_name == $house->cover_image ? 'checked'  : '' }}>
 					  			<label class="form-check-label" for="{{ $index }}">
-					    			<img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="width: 100%;">
+					  				@if($house->cover_image == $image->image_name)
+					  				<span class="use_as_home_thum">Home</span>
+					  				@endif
+					    			<img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive">
 					  			</label>
 								</div>
 							</div>
@@ -170,14 +222,27 @@
 
 		    	<div id="menu6" class="tab-pane fade">
 		    		<div class="col-md-10 float-left m-t-10">
-		    			<div class="form-inline">
 		    			{{ Form::label('houserules', 'Rules') }}
-						{{ Form::select('houserules[]', $rules, null, ['class' => 'form-control select2-multi m-t-10', 'multiple' => 'multiple', 'style' => 'width: 100%;']) }}
+						<div class="row">
+							@foreach ($rules as $rule)
+							<div class="col-md-6 float-left">
+								{{ Form::checkbox('houserules[]', $rule->id, null, ['class' => 'field', 'multiple' => 'multiple', 'id' => "rules$rule->id"]) }}
+								{{ Form::label('rules' . $rule->id, $rule->name) }}
+							</div>
+							@endforeach
 						</div>
 
-						<div class="form-inline">
+						{{ Form::label('optional_rules', 'Rules (Optional)', ['class' => 'm-t-10']) }}
+						{{ Form::text('optional_rules', null, ['class' => 'form-control m-t-10']) }}
+
 						{{ Form::label('housedetails', 'Details guests must know about your home', ['class' => 'm-t-10']) }}
-						{{ Form::select('housedetails[]', $details, null, ['class' => 'form-control select2-multi m-t-10', 'multiple' => 'multiple', 'style' => 'width: 100%;'] ) }}
+						<div class="row">
+							@foreach ($details as $detail)
+							<div class="col-md-6 float-left">
+								{{ Form::checkbox('housedetails[]', $detail->id, null, ['class' => 'field', 'multiple' => 'multiple', 'id' => "details$detail->id"]) }}
+								{{ Form::label('details' . $detail->id, $detail->name) }}
+							</div>
+							@endforeach
 						</div>
 		    		</div>
 		    	</div>
@@ -254,17 +319,17 @@
 		    </div>
 		</div>
 		<div class="col-md-2 float-left">
-			{{ Form::submit('Save Change', array('class' => 'btn btn-success m-t-10 pull-right')) }}
+			{{ Form::submit('Save Change', array('class' => 'btn btn-warning m-t-10 pull-right')) }}
 			{!! Form::close() !!}
+			<a class="btn btn-success m-t-10 pull-right" href="{{ route('rooms.owner', $house->id) }}">Back</a>
 		</div>
 	</div> 
 </div>
 @endsection
 
 @section('scripts')
-{!! Html::script('js/select2.min.js') !!}
+{!! Html::script('js/parsley.min.js') !!}
 <script type="text/javascript">
-	$('.select2-multi').select2();
 	$(document).ready(function() {
 		$('#province_id').on('change', function() {
 			var p_id = $(this).val();

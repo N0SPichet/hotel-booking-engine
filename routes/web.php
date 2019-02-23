@@ -98,8 +98,8 @@ Route::resource('apartments', 'ApartmentController');
 Route::prefix('apartments')->name('apartments.')->group(function() {
 	Route::get('my-apartment/{user}', 'ApartmentController@index_myapartment')->name('index-myapartment');
 	Route::get('owner/{house}', 'ApartmentController@owner')->name('owner');
+	Route::get('image/{image}/delete', 'ApartmentController@detroyimage')->name('detroyimage');
 });
-Route::get('apartment/{id}/delete/image', 'ApartmentController@detroyimage')->name('apartments.detroyimage');
 
 //create resource route for ReviewController
 Route::resource('reviews', 'ReviewController');

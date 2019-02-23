@@ -17,7 +17,7 @@ class CheckRole
     public function handle($request, Closure $next, $role)
     {
         if (!$role === Auth::user()->hasRole($role)) {
-            return response('Unauthorized access.');
+            return response('Admin Section: Unauthorized access.');
         }
         return $next($request);
     }

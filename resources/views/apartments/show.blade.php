@@ -9,7 +9,7 @@
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
-		<h2><img src="{{ asset('images/houses/apartment.png')}}" style="width: 35px; margin-bottom: 10px;"> Room : {{ $house->house_title }} <small>{{ $house->house_guestspace }} space</small></h2>
+		<h2><img src="{{ asset('images/houses/apartment.png')}}" style="width: 35px; margin-bottom: 10px;"> Room : {{ $house->house_title }} <small class="text-danger">{{ $house->house_guestspace }} space</small></h2>
 	</div>
 	<div class="row">
 		<div class="card col-md-12" align="center">
@@ -97,7 +97,7 @@
 					<div class="gallery">
 						@foreach ($images as $image)
 						<div class="col-md-4 float-left">
-							<a id="single_image" href="{{ asset('images/houses/' . $image->image_name) }}"><img src="{{ asset('images/houses/' . $image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
+							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
 							<br>
 						</div>
 						@endforeach
@@ -186,7 +186,10 @@
 									@foreach ($house->houserules as $houserule)
 									<li>{{ $houserule->name }}</li>
 									@endforeach
-									
+									@if ($house->optional_rules)
+									<br>
+									<p> {{ $house->optional_rules }}</p>
+									@endif
 									<hr>
 									<p>You must also acknowledge</p>
 									@foreach ($house->housedetails as $housedetail)

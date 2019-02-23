@@ -13,7 +13,7 @@
 					<p>สวัสดี {{ Auth::user()->user_fname }}</p>
 				</div>
 				<div class="col-2 float-left">
-					<a href="{{ route('rooms.create') }}" class="btn btn-danger margin-top-10 pull-right">Create Room</a>
+					<a href="{{ route('rooms.create') }}" class="btn btn-danger m-t-10 pull-right">Create Room</a>
 				</div>
 				<p>ในส่วนนี้เหมาะกับผู้ให้เช่าขนาดเล็ก อาจจะเป็นห้องพักในคอนโด หรือห้องว่างในบ้านตัวเอง</p>
 				<p>ประเภทของห้องพักที่แนะนำได้แก่</p>
@@ -32,7 +32,7 @@
 			</div>
 			<div class="col-12">
 				<h4>Your listing</h4>
-				<a href="{{ route('rooms.index-myroom', Auth::user()->id) }}" class="btn btn-lg btn-info margin-top-10" style="width: 100px;">Room</a>
+				<a href="{{ route('rooms.index-myroom', Auth::user()->id) }}" class="btn btn-lg btn-info m-t-10" style="width: 100px;">Room</a>
 			</div>
 		</div>
 	</div>

@@ -2,15 +2,18 @@
 
 namespace App\Models;
 
+use App\Models\Apartmentprice;
 use App\Models\District;
 use App\Models\Food;
 use App\Models\Himage;
 use App\Models\Houseamenity;
 use App\Models\Housedetail;
+use App\Models\Houseprice;
 use App\Models\Houserule;
 use App\Models\Housespace;
 use App\Models\Housetype;
 use App\Models\Province;
+use App\Models\Review;
 use App\Models\SubDistrict;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +23,7 @@ class House extends Model
     protected $table = 'houses';
 
     public function apartmentprices() {
-        return $this->belongsTo('App\Apartmentprice');
+        return $this->belongsTo(Apartmentprice::class);
     }
 
     public function district()
@@ -69,7 +72,7 @@ class House extends Model
     }
 
     public function houseprices() {
-        return $this->belongsTo('App\Houseprice');
+        return $this->belongsTo(Houseprice::class);
     }
 
     public function province()
@@ -78,7 +81,7 @@ class House extends Model
     }
 
     public function reviews() {
-        return $this->hasMany('App\Review');
+        return $this->hasMany(Review::class);
     }
 
     public function sub_district()

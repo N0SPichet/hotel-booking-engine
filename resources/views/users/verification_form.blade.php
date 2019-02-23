@@ -112,3 +112,6 @@
 </div>
 
 @endsection
+@section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
+@endsection

@@ -27,7 +27,6 @@
     {{-- form --}}
     <script src="{{ asset('js/app.js') }}" defer></script>
     <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" defer></script>
-    {!! Html::script('js/parsley.min.js') !!}
     {{-- bootstrap --}}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

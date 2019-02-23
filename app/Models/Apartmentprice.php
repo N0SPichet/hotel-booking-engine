@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\House;
 use Illuminate\Database\Eloquent\Model;
 
 class Apartmentprice extends Model
@@ -9,6 +10,6 @@ class Apartmentprice extends Model
     protected $table = 'apartmentprices';
 
     public function houses(){
-    	return $this->hasMany('App\House');
+    	return $this->hasMany(House::class);
     }
 }

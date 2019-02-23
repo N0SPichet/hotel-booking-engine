@@ -6,16 +6,17 @@
 
 <div class="container">
 	<div class="row m-t-10">
+		@if (session('alert'))
+		    <div class="alert alert-success">
+		        {{ session('alert') }}
+		    </div>
+		@endif
 		<div class="card col">
 			<div class="card-title"><h1>Your Rooms</h1></div>
-			@if (session('alert'))
-			    <div class="alert alert-success">
-			        {{ session('alert') }}
-			    </div>
-			@endif
 			<div class="card-body">
+				@if($houses->count())
 				@foreach($houses as $house)
-				<div class="row">
+				<div class="row m-t-10">
 					<div class="col-md-12">
 						<div class="col-md-10 float-left">
 							<a href="{{ route('rooms.owner', $house->id) }}" style="text-decoration-line: none;">
@@ -34,6 +35,10 @@
 					</div>
 				</div>
 				@endforeach
+				@else
+				<p>Create new one</p>
+				<a href="{{ route('rooms.create') }}" class="btn btn-danger m-t-10 pull-right">Create Room</a>
+				@endif
 			</div>
 		</div>
 		<div class="text-center">
