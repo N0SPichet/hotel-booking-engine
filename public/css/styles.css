@@ -501,6 +501,7 @@ img.img-responsive {
 }
 
 .rentals .rental_info li {
+    margin: auto 5px;
     margin-block-end: 12px;
 }
 

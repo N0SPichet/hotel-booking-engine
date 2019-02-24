@@ -17,7 +17,6 @@ use DateTime;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Image;
 use Mail;
 use Session;
@@ -31,7 +30,7 @@ class RentalController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('crole:Admin')->except('create', 'show', 'store', 'edit', 'update', 'destroy', 'mytrip', 'rentmyrooms', 'rentals_agreement', 'accept_rentalrequest', 'reject_rentalrequest', 'renthistories', 'checkcode');
+        $this->middleware('crole:Admin')->except('create', 'show', 'store', 'edit', 'update', 'destroy', 'mytrip', 'rentmyrooms', 'rentals_agreement', 'accept_rentalrequest', 'reject_rentalrequest', 'renthistories', 'checkcode', 'not_reviews');
     }
 
     private function getTypeId($request)
@@ -74,7 +73,8 @@ class RentalController extends Controller
     }
 
     public function mytrip($userId)
-    {   $user = User::findOrFail($userId);
+    {   
+        $user = User::findOrFail($userId);
         if (Auth::user()->id == $user->id) {
             $rentals = Rental::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(5);
             $reviews = Review::where('user_id', $user->id)->get();
@@ -85,6 +85,25 @@ class RentalController extends Controller
             $rentals_not_review = Rental::whereNotIn('id', $rentals_id)->where('user_id', $user->id)->where('checkin_status', '1')->get();
             $data = array(
                 'review_count' => $rentals_not_review->count()
+            );
+            return view('rentals.mytrip')->with('rentals', $rentals)->with($data);
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
+    }
+
+    public function not_reviews($userId)
+    {
+        $user = User::findOrFail($userId);
+        if (Auth::user()->id == $user->id) {
+            $myReviews = Review::where('user_id', Auth::user()->id)->get();
+            $rentals_id = array();
+            foreach ($myReviews as $key => $review) {
+                array_push($rentals_id, $review->rental_id);
+            }
+            $rentals = Rental::whereNotIn('id', $rentals_id)->where('user_id', Auth::user()->id)->where('checkin_status', '1')->paginate(5);
+            $data = array(
+                'review_count' => $rentals->count()
             );
             return view('rentals.mytrip')->with('rentals', $rentals)->with($data);
         }
@@ -108,7 +127,7 @@ class RentalController extends Controller
             'datein' => 'required',
             'dateout' => 'required'
         ));
-
+        $have_customer = '0';
         $datein = $request->datein;
         $dateout = $request->dateout;
         $house = House::find($request->id);
@@ -126,72 +145,68 @@ class RentalController extends Controller
                 })->orderBy('created_at', 'desc')->get();
                 foreach ($rentals as $rental) {
                     if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
-                        // echo $rental->rental_datein ." => ". $rental->rental_dateout. "<br>";
                         if ($datein > $rental->rental_datein) {
-                            if ($datein >= $rental->rental_dateout && $dateout > $rental->rental_dateout) {
-                                // echo " OK" . "<br><br>";
+                            // echo "in after<br>";
+                            if ($datein >= $rental->rental_dateout) {
+                                // echo "in after out<br>";
                                 if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
-                                    if ($rental->no_rooms != $request->room) {
-                                    
-                                    }
-                                    else {
-                                        Session::flash('fail', 'We have a customer in this day. Please choose other day!A' . $rental->id);
-                                        return back();
-                                    }
+                                    $have_customer = '0';
+                                }
+                                else {
+                                    $have_customer = '1';
                                 }
                             }
                             else {
-                                // echo " FAIL" . "<br><br>";
-                                Session::flash('fail', 'We have a customer in this day. Please choose other day!B' . $rental->id);
-                                return back();
+                                // echo "in before out";
+                                $have_customer = '1';
                             }
                         }
                         elseif ($datein == $rental->rental_datein) {
-                            // echo " FAIL" . "<br><br>";
+                            // echo "in same<br>";
                             if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
                                 if ($rental->no_rooms != $request->room) {
-                                    
+                                    $have_customer = '0';
                                 }
                                 else {
-                                    Session::flash('fail', 'We have a customer in this day. Please choose other room number!C' . $rental->id);
-                                    return back();
+                                    $have_customer = '1';
                                 }
                             }
                             else {
-                                Session::flash('fail', 'We have a customer in this day. Please choose other day!D' . $rental->id);
-                                return back();
+                                $have_customer = '1';
                             }
                         }
                         elseif ($datein < $rental->rental_datein) {
+                            // echo "in before<br>";
                             if ($dateout <= $rental->rental_datein) {
-                                // echo " OK" . "<br><br>";
+                                // echo "out before in";
                                 if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
-                                    if ($rental->no_rooms != $request->room) {
-
-                                    }
-                                    else {
-
-                                    }
+                                    $have_customer = '0';
+                                }
+                                else {
+                                    $have_customer = '1';
                                 }
                             }
                             elseif ($dateout > $rental->rental_datein) {
-                                // echo " FAIL" . "<br><br>";
-                                Session::flash('fail', 'We have a customer in this day. Please choose other day!F' . $rental->id);
-                                return back();
+                                // echo "out after out";
+                                $have_customer = '1';
                             }
                         }
                     }
                 }
-                $data = array(
-                    'id' => $house->id,
-                    'types' => 'room',
-                    'datein' => $datein,
-                    'dateout' => $dateout,
-                    'guest' => $guest,
-                    'food' => $food,
-                    'no_rooms' => $room
-                );
-                return view('rentals.agreement')->with($data)->with('house', $house);
+                if ($have_customer == '0') {
+                    $data = array(
+                        'id' => $house->id,
+                        'types' => 'room',
+                        'datein' => $datein,
+                        'dateout' => $dateout,
+                        'guest' => $guest,
+                        'food' => $food,
+                        'no_rooms' => $room
+                    );
+                    return view('rentals.agreement')->with($data)->with('house', $house);
+                }
+                Session::flash('fail', 'We have a customer in this day. Please choose other day!');
+                return back();
             }
             else {
                 $no_type_single = '0';
@@ -823,18 +838,8 @@ class RentalController extends Controller
                 $query->where('host_decision', NULL)->where('rental_checkroom', '!=', '1');
             })->count();
 
-            $p_id = array();
-            foreach ($rentals as $key => $rental) {
-                $p_id[$key] = $rental->payment_id;
-            }
-
-            $payment_waiting = Payment::whereIn('id', $p_id)->where(function ($query) {
-                $query->where('payment_status', 'Waiting');
-            })->count();
-
             $data = array(
                 'rental_new' => $rental_new,
-                'payment_waiting' => $payment_waiting,
                 'payment_waiting_badge' => $payment_waiting_badge,
                 'payment_approved_badge' => $payment_approved_badge
             );
@@ -927,31 +932,4 @@ class RentalController extends Controller
             return view('pages._error')->with('error_m', $error_m);
         }
     }
-
-    public function not_reviews()
-    {
-        if (Auth::check()) {
-            $review_id = Review::where('user_id', Auth::user()->id)->get();
-            $re_id = array();
-            foreach ($review_id as $key => $review) {
-                $re_id[$key] = $review->rental_id;
-            }
-            $rentals = Rental::whereNotIn('id', $re_id)->where(function ($query) {
-                $query->where('users_id', Auth::user()->id)->where('checkin_status', '1');
-            })->paginate(5);
-            $review_count = 0;
-            foreach ($rentals as $key => $rental) {
-                $review_count = $key+1;
-            }
-            $data = array(
-                'review_count' => $review_count
-            );
-            return view('rentals.mytrip')->with('rentals', $rentals)->with($data);
-        }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
-    }
-
 }

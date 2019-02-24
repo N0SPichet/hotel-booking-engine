@@ -15,7 +15,7 @@
 		<div class="col-md-12">
 			<h4>
 				<a class="btn btn-outline-dark btn-md" href="{{ route('rentals.mytrips', Auth::user()->id) }}">Show All</a>
-				<a class="btn btn-outline-dark btn-md" href="{{ route('mytrips.reviews') }}">Pending reviews <span class="badge badge-danger">{{ $review_count }}</span></a>
+				<a class="btn btn-outline-dark btn-md" href="{{ route('rentals.notreviews', Auth::user()->id) }}">Pending reviews <span class="badge badge-danger">{{ $review_count }}</span></a>
 			</h4>
 		</div>
 	</div>

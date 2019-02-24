@@ -15,16 +15,13 @@ Auth::routes();
 
 //Create Home Route
 Route::get('/', 'PagesController@index');
+Route::get('/home', 'PagesController@index')->name('home');
 Route::post('/search', 'PagesController@indexSearch')->name('search');
-// Route::get('autocomplete', 'PagesController@index');
-// Route::get('searchajax', ['as'=>'searchajax','uses'=>'PagesController@searchResponse']);
 
 //Create PagesController Route
-Route::get('/home', 'PagesController@index')->name('home');
 Route::get('diaries/mydiaries', 'PagesController@mydiaries')->name('diaries.mydiaries');
 Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
-
 
 //Create resource route for UserController
 Route::resource('users', 'UserController');
@@ -45,18 +42,17 @@ Route::prefix('users')->name('users.')->group(function () {
 Route::resource('rentals', 'RentalController');
 Route::prefix('rentals')->name('rentals.')->group(function() {
 	Route::post('agreement', 'RentalController@rentals_agreement')->name('agreement');
-	Route::get('trips/{users}', 'RentalController@mytrip')->name('mytrips');
-	Route::get('trips/{users}/rentmyrooms', 'RentalController@rentmyrooms')->name('rentmyrooms');
+	Route::get('trips/{user}', 'RentalController@mytrip')->name('mytrips');
+	Route::get('trips/{user}/not_review', 'RentalController@not_reviews')->name('notreviews');
+	Route::get('trips/{user}/rentmyrooms', 'RentalController@rentmyrooms')->name('rentmyrooms');
 	Route::post('{rental}/accept-rentalrequest', 'RentalController@accept_rentalrequest')->name('accept-rentalrequest');
 	Route::post('{rental}/reject-rentalrequest', 'RentalController@reject_rentalrequest')->name('reject-rentalrequest');
 	Route::post('{rental}/approve', 'RentalController@rental_approve')->name('approve');
 	Route::post('{rental}/cancel', 'RentalController@rental_cancel')->name('cancel');
 	Route::post('{rental}/reject', 'RentalController@rental_reject')->name('reject');
 	Route::post('checkin/check', 'RentalController@checkcode')->name('checkin.code');
-	Route::get('trips/{users}/rentmyrooms/histories', 'RentalController@renthistories')->name('renthistories');
+	Route::get('trips/{user}/rentmyrooms/histories', 'RentalController@renthistories')->name('renthistories');
 });
-
-Route::get('trip/mytrips/not_review', 'RentalController@not_reviews')->name('mytrips.reviews');
 
 //Create resource route for DiaryController
 Route::resource('diaries', 'DiaryController');
@@ -88,20 +84,20 @@ Route::prefix('hosts')->name('hosts.')->group(function() {
 	Route::get('introduction-hosting-apartment', 'PagesController@introapartment')->name('introapartment');
 });
 
-//Create resource route for RoomController
-Route::resource('rooms', 'RoomController');
-Route::prefix('rooms')->name('rooms.')->group(function() {
-	Route::get('my-room/{user}', 'RoomController@index_myroom')->name('index-myroom');
-	Route::get('owner/{house}', 'RoomController@owner')->name('owner');
-	Route::get('image/{image}/delete', 'RoomController@detroyimage')->name('detroyimage');
-});
-
 //Create resource route for ApartmentController
 Route::resource('apartments', 'ApartmentController');
 Route::prefix('apartments')->name('apartments.')->group(function() {
 	Route::get('my-apartment/{user}', 'ApartmentController@index_myapartment')->name('index-myapartment');
 	Route::get('owner/{house}', 'ApartmentController@owner')->name('owner');
 	Route::get('image/{image}/delete', 'ApartmentController@detroyimage')->name('detroyimage');
+});
+
+//Create resource route for RoomController
+Route::resource('rooms', 'RoomController');
+Route::prefix('rooms')->name('rooms.')->group(function() {
+	Route::get('my-room/{user}', 'RoomController@index_myroom')->name('index-myroom');
+	Route::get('owner/{house}', 'RoomController@owner')->name('owner');
+	Route::get('image/{image}/delete', 'RoomController@detroyimage')->name('detroyimage');
 });
 
 //create resource route for ReviewController

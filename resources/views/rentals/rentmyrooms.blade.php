@@ -39,22 +39,22 @@
 
 		<div class="col-md-9">
 			<ul class="nav nav-tabs rental_info">
-	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu1') ? 'active' : '' }} active" ><a data-toggle="tab" href="#menu1">New Rental <span style="font-size: 14px;" class="badge w3-red">{{ $rental_new }}</span></a></li>
-	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu2') ? 'active' : '' }}"><a data-toggle="tab" href="#menu2">Waiting for Payment <span style="font-size: 14px;" class="badge w3-red">{{ $payment_waiting_badge }}</span></a></li>
-	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu2') ? 'active' : '' }}"><a data-toggle="tab" href="#menu3">Arrive Confirmed <span style="font-size: 14px;" class="badge w3-red">{{ $payment_approved_badge }}</span></a></li>
-	    		<li class="{{ Request::is('/rentals/myroom/rentmyrooms#menu3') ? 'active' : '' }}"><a data-toggle="tab" href="#menu4">History</a></li>
+	    		<li><a data-toggle="tab" href="#menu1">New Rental <span class="badge badge-danger">{{ $rental_new }}</span></a></li>
+	    		<li><a data-toggle="tab" href="#menu2">Waiting for Payment <span class="badge badge-danger">{{ $payment_waiting_badge }}</span></a></li>
+	    		<li><a data-toggle="tab" href="#menu3">Arrive Confirmed <span class="badge badge-danger">{{ $payment_approved_badge }}</span></a></li>
+	    		<li><a data-toggle="tab" href="#menu4">History</a></li>
 	  		</ul>
 
 	  		<div class="tab-content">
 	    		<div id="menu1" class="tab-pane fade show in active">
-	    			<div class="col-md-3">
+	    			<div class="col-md-3 float-left">
 		    			<ul class="nav nav-pills m-t-10">
 		      			@foreach ($houses as $house)
 							<li><a data-toggle="pill" href="#room{{ $house->id }}" style="width: 140px;">{{ $house->house_title }}</a></li>
 						@endforeach
 						</ul>
 					</div>
-					<div class="col-md-9">
+					<div class="col-md-9 float-left">
 						<div class="tab-content m-t-10">
 							@foreach ($houses as $house)
 							<div id="room{{ $house->id }}" class="tab-pane fade">

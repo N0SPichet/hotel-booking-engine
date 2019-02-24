@@ -7,6 +7,7 @@ use App\Models\Diary;
 use App\Models\Himage;
 use App\Models\House;
 use App\Models\Payment;
+use App\Models\Province;
 use App\Models\Rental;
 use App\User;
 use Carbon;
@@ -30,20 +31,18 @@ class PagesController extends Controller
 
     public function indexSearch(Request $request) {
         if ($request->search) {
-            $state = Addressstate::where('state_name', 'like', '%'.$request->search.'%')->first();
-            if ($state != NULL) {
-                $houses = House::where('publish', '1')->where('addressstates_id', $state->id)->paginate(10);
-                $images = Himage::all();
+            $province = Province::where('name', 'like', '%'.$request->search.'%')->first();
+            if (!is_null($province)) {
+                $houses = House::where('publish', '1')->where('province_id', $province->id)->paginate(10);
+                $houses_id = array();
+                foreach ($houses as $key => $house) {
+                    array_push($houses_id, $house->id);
+                }
+                $images = Himage::whereIn('houses_id', $houses_id)->get();
+                return view('pages.home')->with('houses', $houses)->with('images', $images);
             }
-            else {
-                $houses = NULL;
-                $images = NULL;
-            }
-            return view('pages.home')->with('houses', $houses)->with('images', $images);
         }
-        else {
-            return redirect()->route('home');
-        }
+        return redirect()->route('home');
     }
 
     //Diaries
@@ -99,7 +98,7 @@ class PagesController extends Controller
             $rental_id = Rental::whereIn('houses_id', $h_id)->get();
             $p_id = array();
             foreach ($rental_id as $key => $rental) {
-                $p_id[$key] = $rental->payments_id;
+                $p_id[$key] = $rental->payment_id;
             }
 
             $payment_approved = Payment::whereIn('id', $p_id)->where(function ($query) {
@@ -124,7 +123,7 @@ class PagesController extends Controller
             })->get();
             $p_id = array();
             foreach ($rentals_id as $key => $rental) {
-                $p_id[$key] = $rental->payments_id;
+                $p_id[$key] = $rental->payment_id;
             }
 
             $approved = Payment::whereIn('id', $p_id)->where(function ($query) {
