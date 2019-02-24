@@ -1,9 +1,6 @@
 @extends ('main')
-
 @section ('title', 'Administrator | Rooms')
-
 @section ('content')
-
 <div class="container">
 	<div class="row col m-t-10">
 		<div class="card col">
@@ -14,6 +11,7 @@
 			    </div>
 			@endif
 			<div class="card-body">
+				@if($houses->count())
 				@foreach($houses as $house)
 					<div class="card">
 						<div class="margin-content">
@@ -40,6 +38,9 @@
 						</div>
 					</div>
 				@endforeach
+				@else
+				<h4>No result</h4>
+				@endif
 			</div>
 		</div>
 		<div class="text-center">

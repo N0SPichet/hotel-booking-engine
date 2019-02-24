@@ -43,17 +43,20 @@ Route::prefix('users')->name('users.')->group(function () {
 
 //Create resource route for RentalController
 Route::resource('rentals', 'RentalController');
-Route::post('rentals/agreement', 'RentalController@rentals_agreement')->name('rentals.agreement');
-Route::post('rentals/{id}/acceptnew', 'RentalController@acceptnew')->name('rentals.acceptnew');
-Route::post('rentals/{id}/rejectnew', 'RentalController@rejectnew')->name('rentals.rejectnew');
-Route::get('trip/mytrips', 'RentalController@mytrip')->name('mytrips');
+Route::prefix('rentals')->name('rentals.')->group(function() {
+	Route::post('agreement', 'RentalController@rentals_agreement')->name('agreement');
+	Route::get('trips/{users}', 'RentalController@mytrip')->name('mytrips');
+	Route::get('trips/{users}/rentmyrooms', 'RentalController@rentmyrooms')->name('rentmyrooms');
+	Route::post('{rental}/accept-rentalrequest', 'RentalController@accept_rentalrequest')->name('accept-rentalrequest');
+	Route::post('{rental}/reject-rentalrequest', 'RentalController@reject_rentalrequest')->name('reject-rentalrequest');
+	Route::post('{rental}/approve', 'RentalController@rental_approve')->name('approve');
+	Route::post('{rental}/cancel', 'RentalController@rental_cancel')->name('cancel');
+	Route::post('{rental}/reject', 'RentalController@rental_reject')->name('reject');
+	Route::post('checkin/check', 'RentalController@checkcode')->name('checkin.code');
+	Route::get('trips/{users}/rentmyrooms/histories', 'RentalController@renthistories')->name('renthistories');
+});
+
 Route::get('trip/mytrips/not_review', 'RentalController@not_reviews')->name('mytrips.reviews');
-Route::get('rentals/myroom/rentmyrooms', 'RentalController@rmyrooms')->name('rentals.rmyrooms');
-Route::get('rentals/myroom/histories', 'RentalController@rhistories')->name('rentals.rhistories');
-Route::post('checkin/code/check', 'RentalController@checkcode')->name('checkin.code');
-Route::post('rentals/{id}/approve', 'RentalController@rapproved')->name('rentals.approve');
-Route::post('mytrips/{id}/cancel', 'RentalController@rcancel')->name('rental.rentalcancel');
-Route::post('rentals/{id}/reject', 'RentalController@rejecttrip')->name('rentals.reject');
 
 //Create resource route for DiaryController
 Route::resource('diaries', 'DiaryController');

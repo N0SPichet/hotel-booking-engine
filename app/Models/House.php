@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Models\Apartmentprice;
 use App\Models\District;
 use App\Models\Food;
+use App\Models\Guestarrive;
 use App\Models\Himage;
+use App\Models\House;
 use App\Models\Houseamenity;
 use App\Models\Housedetail;
 use App\Models\Houseprice;
@@ -22,8 +24,41 @@ class House extends Model
 {
     protected $table = 'houses';
 
-    public function apartmentprices() {
+    private $select_types_global = ['type 2 apartment', 'type 3 apartment'];
+
+    public function apartmentprices()
+    {
         return $this->belongsTo(Apartmentprice::class);
+    }
+
+    private function getTypeId($request)
+    {
+        $select_types = $this->select_types_global;
+        if ($request == 'room') {
+            $types = Housetype::whereNotIn('name', $select_types)->get();
+        }
+        else {
+            $types = Housetype::whereIn('name', $select_types)->get();
+        }
+        $types_id = array();
+        foreach ($types as $key => $type) {
+            array_push($types_id, $type->id);
+        }
+        return $types_id;
+    }
+
+    public function checkType($houseId)
+    {
+        $types_id = $this->getTypeId('room');
+        $houses = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+        if (!is_null($houseId)) {
+            return true;
+        }
+        else {
+            $types_id = $this->getTypeId('apartment');
+            $houses = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            return false;
+        }
     }
 
     public function district()
@@ -40,7 +75,7 @@ class House extends Model
     }
 
     public function guestarrives() {
-        return $this->belongsTo('App\Guestarrive');
+        return $this->belongsTo(Guestarrive::class);
     }
 
     public function images() {

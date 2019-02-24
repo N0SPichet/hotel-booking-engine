@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
+use App\Models\Diary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Comment;
-use App\Diary;
 use Session;
 
 class CommentController extends Controller

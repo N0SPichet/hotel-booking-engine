@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use App\Models\Diary;
 use Illuminate\Database\Eloquent\Model;
 
 class Tag extends Model
@@ -9,6 +10,6 @@ class Tag extends Model
     protected $table = 'tags';
 
     public function diaries(){
-        return $this->belongsToMany('App\Diary');
+        return $this->belongsToMany(Diary::class);
     }
 }

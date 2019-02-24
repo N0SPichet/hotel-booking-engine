@@ -3,88 +3,85 @@
 @section ('title', 'Room Detail | Payment')
 
 @section('stylesheets')
-	{{ Html::style('css/parsley.css') }}
+{{ Html::style('css/parsley.css') }}
 @endsection
 
 @section ('content')
 <div class="container">
-	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+	<div class="row m-t-10">
+		<div class="col-md-6 float-left" style="margin: auto">
 			<div class="lead">Booking summary</div>
 			<div class="panel panel-default">
 				<div class="panel-body">
 					<p style="font-size: 18px;"> <b>{{ $rental->houses->house_title }}</b> for <b> {{ $days }} {{ $days > 1 ? "Nights" : "Night" }}</b> </p>
 					<hr>
 					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
-						</div>
+						<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
 					</div>
 					<div class="row">
 						@if ($rental->no_type_single > 0)
-						<div class="col-md-12 col-md-offset-0">
+						<div class="col-md-12">
 							<span>Single Room (Standard) ฿{{ $rental->houses->apartmentprices->single_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
-							<span class="pull-right"> ฿{{ $rental->houses->apartmentprices->single_price*$days }} </span>
+							<span class="float-right"> ฿{{ $rental->houses->apartmentprices->single_price*$days }} </span>
 							<p>
 								<span> {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'rooms' : 'room' }}</span>
-								<span class="pull-right">{{ $rental->no_type_single }}</span>
+								<span class="float-right">{{ $rental->no_type_single }}</span>
 							</p>
 						</div>
 						@endif
 						@if ($rental->no_type_deluxe_single > 0)
-						<div class="col-md-12 col-md-offset-0">
+						<div class="col-md-12">
 							<span>Deluxe Single Room ฿{{ $rental->houses->apartmentprices->deluxe_single_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
-							<span class="pull-right"> ฿{{ $rental->houses->apartmentprices->deluxe_single_price*$days }} </span>
+							<span class="float-right"> ฿{{ $rental->houses->apartmentprices->deluxe_single_price*$days }} </span>
 							<p>
 								<span> {{ $rental->no_type_deluxe_single }} {{ $rental->no_type_deluxe_single > 1 ? 'rooms' : 'room' }}</span>
-								<span class="pull-right">{{ $rental->no_type_deluxe_single }}</span>
+								<span class="float-right">{{ $rental->no_type_deluxe_single }}</span>
 							</p>
 						</div>
 						@endif
 						@if ($rental->no_type_double_room > 0 )
-						<div class="col-md-12 col-md-offset-0">
+						<div class="col-md-12">
 							<span>Double Room (Standard) ฿{{ $rental->houses->apartmentprices->double_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
-							<span class="pull-right"> ฿{{ $rental->houses->apartmentprices->double_price*$days }} </span>
+							<span class="float-right"> ฿{{ $rental->houses->apartmentprices->double_price*$days }} </span>
 							<p>
 								<span> {{ $rental->no_type_double_room }} {{ $rental->no_type_double_room > 1 ? 'rooms' : 'room' }}</span>
-								<span class="pull-right">{{ $rental->no_type_double_room }}</span>
+								<span class="float-right">{{ $rental->no_type_double_room }}</span>
 							</p>
 						</div>
 						@endif
 					</div>
 					@if ($discount > 0)
 					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
+						<div class="col-md-12">
 							<span>Discount </span>
-							<span class="pull-right"> {{$rental->discount}} % </span>
+							<span class="float-right"> {{$rental->discount}} % </span>
 						</div>
 					</div>
 					@endif
 					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
+						<div class="col-md-12">
 							<span>Service fee</span>
-							<span class="pull-right"> ฿{{ $fee }} </span>
+							<span class="float-right"> ฿{{ $fee }} </span>
 						</div>
 					</div>
 					<hr>
 					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
+						<div class="col-md-12">
 							<span>Total (Thai Baht)</span>
-							<span class="pull-right"> ฿{{ $total_price }} </span>
+							<span class="float-right"> ฿{{ $total_price }} </span>
 						</div>
 					</div>
-
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+		<div class="col-md-6 float-left" style="margin: auto">
 			<div class="lead">Payment detail</div>
 			
 			<div class="row">
-				<div class="col-md-4 col-sm-4">
+				<div class="col-md-4 float-left">
 					<button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#KBank" aria-expanded="true">
 					    KASIKORN Bank
 					</button>
@@ -97,7 +94,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4">
+				<div class="col-md-4 float-left">
 					<button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#KrungsriBank" aria-expanded="true">
 					    Krungsri Bank
 					</button>
@@ -110,7 +107,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4">
+				<div class="col-md-4 float-left">
 					<button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#SCBBank" aria-expanded="true">
 					    SCB
 					</button>
@@ -191,4 +188,7 @@
 		</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 @endsection

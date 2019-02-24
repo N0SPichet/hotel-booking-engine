@@ -5,6 +5,7 @@ namespace App;
 use App\Models\District;
 use App\Models\House;
 use App\Models\Province;
+use App\Models\Review;
 use App\Models\Role;
 use App\Models\SubDistrict;
 use App\Models\UserVerification;
@@ -78,7 +79,7 @@ class User extends Authenticatable
     }
 
     public function reviews() {
-        return $this->hasMany('App\Review');
+        return $this->hasMany(Review::class);
     }
 
     public function roles()

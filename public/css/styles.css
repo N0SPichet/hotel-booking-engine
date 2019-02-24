@@ -137,6 +137,11 @@ a:hover {
     text-decoration: none;
 }
 
+.float-right {
+    position: absolute;
+    right: 15px;
+}
+
 .footer {
     margin-top: 20px;
     width: 100%;
@@ -494,6 +499,11 @@ img.img-responsive {
 .rooms .create li .active:before {
     content: "* ";
 }
+
+.rentals .rental_info li {
+    margin-block-end: 12px;
+}
+
 span.use_as_home_thum {
     position: absolute;
     top: 8px;

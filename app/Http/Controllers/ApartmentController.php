@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Guestarrive;
 use App\Models\Apartmentprice;
 use App\Models\District;
 use App\Models\Food;
+use App\Models\Guestarrive;
 use App\Models\Himage;
 use App\Models\House;
 use App\Models\Houseamenity;
@@ -15,11 +15,11 @@ use App\Models\Houserule;
 use App\Models\Housespace;
 use App\Models\Housetype;
 use App\Models\Map;
+use App\Models\Payment;
 use App\Models\Province;
+use App\Models\Rental;
 use App\Models\Review;
 use App\Models\SubDistrict;
-use App\Payment;
-use App\Rental;
 use App\User;
 use File;
 use Illuminate\Http\Request;
@@ -37,7 +37,7 @@ class ApartmentController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
-        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myapartment', 'owner');
+        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myapartment', 'owner', 'detroyimage');
     }
 
     private function getTypeId($request)
@@ -75,12 +75,9 @@ class ApartmentController extends Controller
      */
     public function index()
     {
-        $select_types = $this->select_types_global;
-            $types = Housetype::whereNotIn('name', $select_types)->get();
-            $types_id = array();
-            foreach ($types as $key => $type) {
-                array_push($types_id, $type->id);
-            }
+        $types_id = $this->getTypeId('apartment');
+        $houses = House::whereIn('housetypes_id', $types_id)->orderBy('id')->paginate(10);
+        return view('apartments.index')->with('houses', $houses);
     }
 
     public function index_myapartment(User $user) {
@@ -310,9 +307,18 @@ class ApartmentController extends Controller
                 $map = Map::where('houses_id', $house->id)->first();
                 return view('apartments.single')->with('house', $house)->with('images', $images)->with('map', $map);
             }
+            Session::flash('fail', 'Unauthorized access.');
+            return back();
         }
-        Session::flash('fail', 'Unauthorized access.');
-        return back();
+        else {
+            $types_id = $this->getTypeId('room');
+            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            if (!is_null($house)) {
+                return redirect()->route('rooms.owner', $houseId);
+            }
+            Session::flash('fail', 'Unauthorized access.');
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -338,9 +344,18 @@ class ApartmentController extends Controller
                 $map = Map::where('houses_id', $house->id)->first();
                 return view('apartments.show')->with('house', $house)->with('images', $images)->with('avg', $avg)->with('map', $map);
             }
+            Session::flash('fail', 'This room is no longer available.');
+            return back();
         }
-        Session::flash('fail', 'This room is no longer available.');
-        return back();
+        else {
+            $types_id = $this->getTypeId('room');
+            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            if (!is_null($house)) {
+                return redirect()->route('rooms.owner', $houseId);
+            }
+            Session::flash('fail', 'Unauthorized access.');
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -349,16 +364,11 @@ class ApartmentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(House $apartment)
+    public function edit($houseId)
     {
-        $house = $apartment;
-        if ($house->housetypes_id != '2') {
-            if ($house->housetypes_id != '3') {
-                return redirect()->route('rooms.edit', $house->id);
-            }
-            return redirect()->route('rooms.edit', $house->id);
-        }
-        else {
+        $types_id = $this->getTypeId('apartment');
+        $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+        if (!is_null($house)) {
             if (Auth::user()->id == $house->users->id) {
                 $types = $this->getType('apartment');
                 $provinces = Province::all();
@@ -379,6 +389,15 @@ class ApartmentController extends Controller
             }
             Session::flash('fail', 'Unauthorized access.');
             return back();
+        }
+        else {
+            $types_id = $this->getTypeId('room');
+            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            if (!is_null($house)) {
+                return redirect()->route('rooms.edit', $house->id);
+            }
+            Session::flash('fail', 'Unauthorized access.');
+            return redirect()->route('home');
         }
     }
 

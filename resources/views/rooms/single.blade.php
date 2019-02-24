@@ -178,7 +178,7 @@
 				<div class="margin-content">
 				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
 				</div>
-				@if ($house->users_id == Auth::user()->id)
+				@if (Auth::user()->id == $house->users_id || Auth::user()->hasRole('Admin'))
 				<div class="row">
 					<div class="col-sm-4 float-left">
 						<a id="publish" class="btn btn-outline-info btn-block btn-h1-spacing">Publish</a>

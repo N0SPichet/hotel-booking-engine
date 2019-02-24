@@ -92,7 +92,7 @@
 				</div>
 
 				<div class="col-md-3 col-sm-3 float-left">
-					{!! Html::linkRoute('mytrips', 'My Trips', array($user->id), array('class' => 'btn btn-info btn-block')) !!}
+					{!! Html::linkRoute('rentals.mytrips', 'My Trips', array($user->id), array('class' => 'btn btn-info btn-block')) !!}
 				</div>
 
 				<div class="col-md-3 col-sm-3 float-left">

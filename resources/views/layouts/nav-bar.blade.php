@@ -16,15 +16,16 @@
 					<ul class="hav-sub-nav">
 						<li><a href="{{ route('hosts.introroom') }}">Room</a></li>
 						<li><a href="{{ route('hosts.introapartment') }}">Apartment</a></li>
-						<li><a href="{{ route('rentals.rmyrooms') }}">Manage</a></li>
+						<li><a href="{{ route('rentals.rentmyrooms', Auth::user()->id) }}">Manage</a></li>
 					</ul>
 				</li>
-				<li><a href="{{ route('mytrips') }}">Trips</a></li>
+				<li><a href="{{ route('rentals.mytrips', Auth::user()->id) }}">Trips</a></li>
 				@if (Auth::user()->hasRole('Admin'))
 				<li>
 					<a href="#">Admin Section <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
 						<li><a href="{{ route('users.verify-index') }}">User Verifications</a></li>
+						<li><a href="{{ route('apartments.index') }}">Apartments</a></li>
 						<li><a href="{{ route('rooms.index') }}">Rooms</a></li>
 						<li><a href="{{ route('users.index') }}">Users</a></li>
 						<li><a href="{{ route('rentals.index') }}">Trips</a></li>

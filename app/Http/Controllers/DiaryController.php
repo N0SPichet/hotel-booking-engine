@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Diary;
-use App\Comment;
-use App\Category;
-use App\Tag;
-use App\DiaryImage;
-use App\Rental;
+use App\Models\Category;
+use App\Models\Comment;
+use App\Models\Diary;
+use App\Models\DiaryImage;
+use App\Models\Rental;
+use App\Models\Tag;
 use App\Subscribe;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
 use File;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Image;
-use Storage;
-use Session;
 use Purifier;
+use Session;
+use Storage;
 
 class DiaryController extends Controller
 {

@@ -21,7 +21,7 @@ class UserController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('crole:Admin')->except('edit', 'update', 'userprofile', 'updateimage', 'description', 'verify_user', 'verify_show', 'verify_request', 'verify_show');
+        $this->middleware('crole:Admin')->except('show', 'edit', 'update', 'userprofile', 'updateimage', 'description', 'verify_user', 'verify_show', 'verify_request', 'verify_show');
     }
 
     /**
@@ -43,7 +43,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if ($user) {
+        if (!is_null($user)) {
             $houses = House::where('users_id', $user->id)->get();
             return view('users.show')->with('user', $user)->with('houses', $houses);
         }

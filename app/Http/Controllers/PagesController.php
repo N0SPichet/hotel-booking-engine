@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Category;
-use App\Diary;
+use App\Models\Category;
+use App\Models\Diary;
 use App\Models\Himage;
 use App\Models\House;
-use App\Payment;
-use App\Rental;
+use App\Models\Payment;
+use App\Models\Rental;
 use App\User;
 use Carbon;
 use DateTime;

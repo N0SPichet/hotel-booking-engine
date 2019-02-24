@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Guestarrive;
 use App\Models\District;
 use App\Models\Food;
+use App\Models\Guestarrive;
 use App\Models\Himage;
 use App\Models\House;
 use App\Models\Houseamenity;
@@ -14,11 +14,11 @@ use App\Models\Houserule;
 use App\Models\Housespace;
 use App\Models\Housetype;
 use App\Models\Map;
+use App\Models\Payment;
 use App\Models\Province;
+use App\Models\Rental;
 use App\Models\Review;
 use App\Models\SubDistrict;
-use App\Payment;
-use App\Rental;
 use App\User;
 use File;
 use Illuminate\Http\Request;
@@ -36,7 +36,7 @@ class RoomController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
-        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myroom', 'owner');
+        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myroom', 'owner', 'detroyimage');
     }
 
     private function getTypeId($request)
@@ -74,7 +74,8 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $houses = House::orderBy('id')->paginate(10);
+        $types_id = $this->getTypeId('room');
+        $houses = House::whereIn('housetypes_id', $types_id)->orderBy('id')->paginate(10);
         return view('rooms.index')->with('houses', $houses);
     }
 
@@ -250,7 +251,15 @@ class RoomController extends Controller
             Session::flash('fail', 'Unauthorized access.');
             return back();
         }
-        return redirect()->route('apartments.owner', $houseId);
+        else {
+            $types_id = $this->getTypeId('apartment');
+            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            if (!is_null($house)) {
+                return redirect()->route('apartments.owner', $houseId);
+            }
+            Session::flash('fail', 'Unauthorized access.');
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -279,7 +288,15 @@ class RoomController extends Controller
             Session::flash('fail', 'This room is no longer available.');
             return back();
         }
-        return redirect()->route('apartments.show', $houseId);
+        else {
+            $types_id = $this->getTypeId('apartment');
+            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            if (!is_null($house)) {
+                return redirect()->route('apartments.show', $houseId);
+            }
+            Session::flash('fail', 'Unauthorized access.');
+            return redirect()->route('home');
+        }
     }
 
     /**
@@ -288,16 +305,11 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(House $room)
+    public function edit($houseId)
     {
-        $house = $room;
-        if ($house->housetypes_id == '2') {
-            if ($house->housetypes_id == '3') {
-                return redirect()->route('apartments.edit', $house->id);
-            }
-            return redirect()->route('apartments.edit', $house->id);
-        }
-        else {
+        $types_id = $this->getTypeId('room');
+        $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+        if (!is_null($house)) {
             if (Auth::user()->id == $house->users_id) {
                 $types = $this->getType('room');
                 $provinces = Province::all();
@@ -318,6 +330,15 @@ class RoomController extends Controller
             }
             Session::flash('fail', 'Unauthorized access.');
             return back();
+        }
+        else {
+            $types_id = $this->getTypeId('apartment');
+            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            if (!is_null($house)) {
+                return redirect()->route('apartments.edit', $house->id);
+            }
+            Session::flash('fail', 'Unauthorized access.');
+            return redirect()->route('home');
         }
     }
 
