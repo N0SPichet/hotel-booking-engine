@@ -6,7 +6,7 @@ use App\Models\Apartmentprice;
 use App\Models\District;
 use App\Models\Food;
 use App\Models\Guestarrive;
-use App\Models\Himage;
+use App\Models\HouseImage;
 use App\Models\House;
 use App\Models\Houseamenity;
 use App\Models\Housedetail;
@@ -22,6 +22,7 @@ use App\Models\Review;
 use App\Models\SubDistrict;
 use App\User;
 use File;
+use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Image;
@@ -31,41 +32,12 @@ use Storage;
 
 class ApartmentController extends Controller
 {
-    private $select_types_global = ['type 2 apartment', 'type 3 apartment'];
-    /*publish flag 0 private, 1 public, 2 trash, 3 permanant delete*/
+    use GlobalFunctionTraits;
 
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
         $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myapartment', 'owner', 'detroyimage');
-    }
-
-    private function getTypeId($request)
-    {
-        $select_types = $this->select_types_global;
-        if ($request == 'room') {
-            $types = Housetype::whereNotIn('name', $select_types)->get();
-        }
-        else {
-            $types = Housetype::whereIn('name', $select_types)->get();
-        }
-        $types_id = array();
-        foreach ($types as $key => $type) {
-            array_push($types_id, $type->id);
-        }
-        return $types_id;
-    }
-
-    private function getType($request)
-    {
-        $select_types = $this->select_types_global;
-        if ($request == 'room') {
-            $types = Housetype::whereNotIn('name', $select_types)->get();
-        }
-        else {
-            $types = Housetype::whereIn('name', $select_types)->get();
-        }
-        return $types;
     }
     
     /**
@@ -217,7 +189,7 @@ class ApartmentController extends Controller
         $map->save();
         if ($request->hasFile('image_names')) {
             foreach ($request->image_names as $image_name) {
-                $images = new Himage;
+                $images = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -226,15 +198,15 @@ class ApartmentController extends Controller
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
 
-                $images->houses_id = $house->id;
-                $images->image_name = $filename;
+                $images->house_id = $house->id;
+                $images->name = $filename;
                 $images->save();
             }
         }
 
         if ($request->hasFile('type_single_images')) {
             foreach ($request->type_single_images as $image_name) {
-                $images = new Himage;
+                $images = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -243,15 +215,15 @@ class ApartmentController extends Controller
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
                 $images->room_type = '1';
-                $images->houses_id = $house->id;
-                $images->image_name = $filename;
+                $images->house_id = $house->id;
+                $images->name = $filename;
                 $images->save();
             }
         }
 
         if ($request->hasFile('type_deluxe_single_images')) {
             foreach ($request->type_deluxe_single_images as $image_name) {
-                $images = new Himage;
+                $images = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -260,15 +232,15 @@ class ApartmentController extends Controller
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
                 $images->room_type = '2';
-                $images->houses_id = $house->id;
-                $images->image_name = $filename;
+                $images->house_id = $house->id;
+                $images->name = $filename;
                 $images->save();
             }
         }
 
         if ($request->hasFile('type_double_room_images')) {
             foreach ($request->type_double_room_images as $image_name) {
-                $images = new Himage;
+                $images = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -277,15 +249,15 @@ class ApartmentController extends Controller
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
                 $images->room_type = '3';
-                $images->houses_id = $house->id;
-                $images->image_name = $filename;
+                $images->house_id = $house->id;
+                $images->name = $filename;
                 $images->save();
             }
         }
 
-        $cover_image = Himage::where('houses_id', $house->id)->first();
+        $cover_image = HouseImage::where('house_id', $house->id)->first();
         if ($cover_image) {
-            $house->cover_image = $cover_image->image_name;
+            $house->cover_image = $cover_image->name;
         }
         $house->save();
 
@@ -303,9 +275,8 @@ class ApartmentController extends Controller
         $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
         if (!is_null($house)) {
             if (Auth::user()->hasRole('Admin') || Auth::user()->id == $house->users_id) {
-                $images = Himage::where('houses_id', $house->id)->get();
                 $map = Map::where('houses_id', $house->id)->first();
-                return view('apartments.single')->with('house', $house)->with('images', $images)->with('map', $map);
+                return view('apartments.single')->with('house', $house)->with('map', $map);
             }
             Session::flash('fail', 'Unauthorized access.');
             return back();
@@ -333,7 +304,6 @@ class ApartmentController extends Controller
         $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
         if (!is_null($house)) {
             if ($house->publish == '1') {
-                $images = Himage::where('houses_id', $house->id)->get();
                 $reviews = Review::where('house_id', $house->id)->get();
                 $clean = Review::where('house_id', $house->id)->avg('clean');
                 $amenity = Review::where('house_id', $house->id)->avg('amenity');
@@ -342,7 +312,7 @@ class ApartmentController extends Controller
                 $avg = ($clean + $amenity + $service + $host)/4;
                 $avg = number_format((float)$avg, 2, '.', '');
                 $map = Map::where('houses_id', $house->id)->first();
-                return view('apartments.show')->with('house', $house)->with('images', $images)->with('avg', $avg)->with('map', $map);
+                return view('apartments.show')->with('house', $house)->with('avg', $avg)->with('map', $map);
             }
             Session::flash('fail', 'This room is no longer available.');
             return back();
@@ -351,7 +321,7 @@ class ApartmentController extends Controller
             $types_id = $this->getTypeId('room');
             $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
             if (!is_null($house)) {
-                return redirect()->route('rooms.owner', $houseId);
+                return redirect()->route('rooms.show', $houseId);
             }
             Session::flash('fail', 'Unauthorized access.');
             return redirect()->route('home');
@@ -382,7 +352,7 @@ class ApartmentController extends Controller
                 }
                 $amenities = Houseamenity::all();
                 $spaces = Housespace::all();
-                $houseimages = Himage::where('houses_id', $house->id)->get();
+                $houseimages = HouseImage::where('house_id', $house->id)->get();
                 $rules = Houserule::all();
                 $details = Housedetail::all();
                 return view('apartments.edit')->with('house', $house)->with('types', $types)->with('sub_districts', $sub_districts)->with('districts', $districts)->with('provinces', $provinces)->with('amenities', $amenities)->with('spaces', $spaces)->with('houseimages', $houseimages)->with('rules', $rules)->with('details', $details);
@@ -498,7 +468,7 @@ class ApartmentController extends Controller
 
         if ($request->hasFile('image_names')) {
             foreach ($request->image_names as $image_name) {
-                $image = new Himage;
+                $image = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -514,7 +484,7 @@ class ApartmentController extends Controller
 
         if ($request->hasFile('type_single_images')) {
             foreach ($request->type_single_images as $image_name) {
-                $images = new Himage;
+                $images = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -523,15 +493,15 @@ class ApartmentController extends Controller
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
                 $images->room_type = '1';
-                $images->houses_id = $house->id;
-                $images->image_name = $filename;
+                $images->house_id = $house->id;
+                $images->name = $filename;
                 $images->save();
             }
         }
 
         if ($request->hasFile('type_deluxe_single_images')) {
             foreach ($request->type_deluxe_single_images as $image_name) {
-                $images = new Himage;
+                $images = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -540,15 +510,15 @@ class ApartmentController extends Controller
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
                 $images->room_type = '2';
-                $images->houses_id = $house->id;
-                $images->image_name = $filename;
+                $images->house_id = $house->id;
+                $images->name = $filename;
                 $images->save();
             }
         }
 
         if ($request->hasFile('type_double_room_images')) {
             foreach ($request->type_double_room_images as $image_name) {
-                $images = new Himage;
+                $images = new HouseImage;
                 $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
                 $location = public_path('images/houses/'.$house->id.'/');
                 if (!file_exists($location)) {
@@ -557,8 +527,8 @@ class ApartmentController extends Controller
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
                 $images->room_type = '3';
-                $images->houses_id = $house->id;
-                $images->image_name = $filename;
+                $images->house_id = $house->id;
+                $images->name = $filename;
                 $images->save();
             }
         }
@@ -607,7 +577,7 @@ class ApartmentController extends Controller
         $house = House::find($houseId);
         if (Auth::user()->id == $house->users_id) {
             $rental = Rental::where('houses_id', $house->id)->first();
-            $images = Himage::all();
+            $images = HouseImage::all();
             if ($rental == NULL){
                 $house->houseamenities()->detach();
                 $house->housespaces()->detach();
@@ -615,8 +585,7 @@ class ApartmentController extends Controller
                 $house->housedetails()->detach();
                 foreach ($images as $image) {
                     if ($image->houses_id == $house->id) {
-                        $filename = $image->image_name;
-                        $image->image_name = $filename;
+                        $filename = $image->name;
                         $image->delete();
                         $location = public_path('images/houses/'.$houseId.'/'.$filename);
                         File::delete($location);
@@ -642,7 +611,7 @@ class ApartmentController extends Controller
         return back();
     }
 
-    public function detroyimage(Himage $image)
+    public function detroyimage(HouseImage $image)
     {
         $filename = $image->image_name;
         $houseId = $image->houses_id;

@@ -34,53 +34,47 @@ class DiaryController extends Controller
         return view('diaries.index')->with('diaries', $diaries);
     }
 
-    public function tripdiary($id){
-        if (Auth::check()) {
-            $rental = Rental::find($id);
-            if ($rental) {
-                if (Auth::user()->id == $rental->users->id && $rental->checkin_status == '1') {
-                    $datetime1 = new DateTime($rental->rental_datein);
-                    $datetime2 = new DateTime($rental->rental_dateout);
-                    $interval = $datetime1->diff($datetime2);
-                    $years = $interval->format('%y');
-                    $months = $interval->format('%m');
-                    $days = $interval->format('%d');
-                    $days = $days + 1;
+    public function tripdiary($rentalId){
+        $rental = Rental::find($rentalId);
+        if ($rental) {
+            if (Auth::user()->id == $rental->user_id && $rental->checkin_status == '1') {
+                $datetime1 = new DateTime($rental->rental_datein);
+                $datetime2 = new DateTime($rental->rental_dateout);
+                $interval = $datetime1->diff($datetime2);
+                $years = $interval->format('%y');
+                $months = $interval->format('%m');
+                $days = $interval->format('%d');
+                $days = $days + 1;
 
-                    $date[] = array();
-                    $rental_datein = $rental->rental_datein;
-                    for ($i=0; $i < $days; $i++) { 
-                        $date[$i] = $rental_datein;
-                        $rental_datein = date_create($rental_datein);
-                        date_add($rental_datein, date_interval_create_from_date_string('1 days'));
-                        $rental_datein = date_format($rental_datein, 'Y-m-d');
-                    }
+                $date[] = array();
+                $rental_datein = $rental->rental_datein;
+                for ($i=0; $i < $days; $i++) { 
+                    $date[$i] = $rental_datein;
+                    $rental_datein = date_create($rental_datein);
+                    date_add($rental_datein, date_interval_create_from_date_string('1 days'));
+                    $rental_datein = date_format($rental_datein, 'Y-m-d');
+                }
 
-                    $diaries = Diary::where('rentals_id', $id)->get();
-                    if ($diaries->isEmpty()) {
-                        for ($i=0; $i <= $days; $i++) {
-                            $diary = new Diary;
-                            $diary->publish = '0';
-                            if ($i == 0) {
-                                $diary->title = 'Diary Title';
-                            }
-                            if ($i != 0) {
-                                $diary->message = 'Story about day '. $i;
-                            }
-                            $diary->days = $i;
-                            $diary->users_id = $rental->users->id;
-                            $diary->categories_id = '1';
-                            $diary->rentals_id = $rental->id;
-                            $diary->save();
+                $diaries = Diary::where('rentals_id', $rentalId)->get();
+                if ($diaries->isEmpty()) {
+                    for ($i=0; $i <= $days; $i++) {
+                        $diary = new Diary;
+                        $diary->publish = '0';
+                        if ($i == 0) {
+                            $diary->title = 'Diary Title';
                         }
+                        if ($i != 0) {
+                            $diary->message = 'Story about day '. $i;
+                        }
+                        $diary->days = $i;
+                        $diary->users_id = $rental->user_id;
+                        $diary->categories_id = '1';
+                        $diary->rentals_id = $rental->id;
+                        $diary->save();
                     }
-                    $diaries = Diary::where('rentals_id', $id)->get();
-                    return view('diaries.tripdiary_single')->with('diaries', $diaries)->with('rental', $rental)->with('days', $days)->with('date', $date);
                 }
-                else {
-                    Session::flash('fail', "This diary is no longer available.");
-                    return back();
-                }
+                $diaries = Diary::where('rentals_id', $rentalId)->get();
+                return view('diaries.tripdiary_single')->with('diaries', $diaries)->with('rental', $rental)->with('days', $days)->with('date', $date);
             }
             else {
                 Session::flash('fail', "This diary is no longer available.");
@@ -88,8 +82,8 @@ class DiaryController extends Controller
             }
         }
         else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
+            Session::flash('fail', "This diary is no longer available.");
+            return back();
         }
     }
 

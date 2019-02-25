@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Diary;
-use App\Models\Himage;
+use App\Models\HouseImage;
 use App\Models\House;
 use App\Models\Payment;
 use App\Models\Province;
@@ -25,7 +25,11 @@ class PagesController extends Controller
     
     public function index() {
         $houses = House::where('publish', '1')->inRandomOrder()->paginate(10);
-        $images = Himage::all();
+        $houses_id = array();
+        foreach ($houses as $key => $house) {
+            array_push($houses_id, $house->id);
+        }
+        $images = HouseImage::whereIn('house_id', $houses_id)->get();
         return view('pages.home')->with('houses', $houses)->with('images', $images);
     }
 
@@ -38,7 +42,7 @@ class PagesController extends Controller
                 foreach ($houses as $key => $house) {
                     array_push($houses_id, $house->id);
                 }
-                $images = Himage::whereIn('houses_id', $houses_id)->get();
+                $images = HouseImage::whereIn('houses_id', $houses_id)->get();
                 return view('pages.home')->with('houses', $houses)->with('images', $images);
             }
         }

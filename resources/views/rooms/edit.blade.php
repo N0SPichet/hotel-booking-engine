@@ -203,12 +203,12 @@
 							@foreach ($houseimages as $index => $image)
 							<div class="col-md-4 margin-content">
 								<div class="form-check">
-				  				<input class="form-check-input" type="radio" name="cover_image" id="{{ $index }}" value="{{ $image->image_name }}" {{ $image->image_name == $house->cover_image ? 'checked'  : '' }}>
+				  				<input class="form-check-input" type="radio" name="cover_image" id="{{ $index }}" value="{{ $image->name }}" {{ $image->name == $house->cover_image ? 'checked'  : '' }}>
 					  			<label class="form-check-label" for="{{ $index }}">
-					  				@if($house->cover_image == $image->image_name)
+					  				@if($house->cover_image == $image->name)
 					  				<span class="use_as_home_thum">Home</span>
 					  				@endif
-					    			<img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive">
+					    			<img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive">
 					  			</label>
 								</div>
 							</div>

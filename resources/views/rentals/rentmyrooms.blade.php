@@ -39,18 +39,19 @@
 
 		<div class="col-md-9">
 			<ul class="nav nav-tabs rental_info">
-	    		<li><a data-toggle="tab" href="#menu1">New Rental <span class="badge badge-danger">{{ $rental_new }}</span></a></li>
+	    		<li class="active"><a data-toggle="tab" href="#menu1">New Rental <span class="badge badge-danger">{{ $rental_new }}</span></a></li>
 	    		<li><a data-toggle="tab" href="#menu2">Waiting for Payment <span class="badge badge-danger">{{ $payment_waiting_badge }}</span></a></li>
 	    		<li><a data-toggle="tab" href="#menu3">Arrive Confirmed <span class="badge badge-danger">{{ $payment_approved_badge }}</span></a></li>
 	    		<li><a data-toggle="tab" href="#menu4">History</a></li>
 	  		</ul>
 
 	  		<div class="tab-content">
-	    		<div id="menu1" class="tab-pane fade show in active">
+	    		<div id="menu1" class="tab-pane fade show active in">
+	    			@if($houses->count())
 	    			<div class="col-md-3 float-left">
-		    			<ul class="nav nav-pills m-t-10">
-		      			@foreach ($houses as $house)
-							<li><a data-toggle="pill" href="#room{{ $house->id }}" style="width: 140px;">{{ $house->house_title }}</a></li>
+		    			<ul class="nav myroom-lists m-t-10">
+		      			@foreach ($houses as $key => $house)
+							<li><a data-toggle="pill" href="#room{{ $house->id }}" style="width: 140px;">{{ $house->house_title }} <span class="badge badge-danger float-right m-r-10">{{ $rent_count[$key] }}</span></a></li>
 						@endforeach
 						</ul>
 					</div>
@@ -61,10 +62,12 @@
 								@foreach ($rentals as $rental)
 		      					@if ($rental->houses_id == $house->id)
 									@if ($rental->payment->payment_status == NULL  && $rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT')
+									<div class="card">
 										<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
-											<p>Rented by :{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
-											<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
+										<p>Rented by :{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
+										<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
 										</a>
+									</div>
 									@endif
 								@endif
 		    					@endforeach
@@ -72,18 +75,32 @@
 	    					@endforeach
 	    				</div>
 					</div>
+					@else
+					<div class="text-center m-t-10">
+						<p>No info</p>
+					</div>
+					@endif
 	    		</div>
 	    		<div id="menu2" class="tab-pane fade">
+	    			@if($rentals_waiting->count())
 	    			<div class="tab-content m-t-10">
 	    				@foreach ($rentals_waiting as $rental)
-		      			<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
-							<p>Rented by :{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
-							<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
-						</a>
+	    				<div class="card">
+		      				<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
+								<p>Rented by :{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
+								<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
+							</a>
+						</div>
 		      			@endforeach
 	    			</div>
+	    			@else
+	    			<div class="text-center m-t-10">
+	    				<p>No info</p>
+	    			</div>
+	    			@endif
 	    		</div>
 	    		<div id="menu3" class="tab-pane fade">
+	    			@if($rentals_approved->count())
 	    			<div class="tab-content m-t-10">
 	    				@foreach ($rentals_approved as $rental)
 		      			<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
@@ -94,6 +111,11 @@
 						</a>
 		      			@endforeach
 	    			</div>
+	    			@else
+	    			<div class="text-center m-t-10">
+	    				<p>No info</p>
+	    			</div>
+	    			@endif
 	    		</div>
 	    		<div id="menu4" class="tab-pane fade">
 	    			<div class="card">

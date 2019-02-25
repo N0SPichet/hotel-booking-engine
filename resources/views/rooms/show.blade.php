@@ -87,10 +87,11 @@
 			<div class="row">
 				<div class="card margin-content">
 					<div class="gallery">
-						@foreach ($images as $image)
-						<div class="col-md-4 float-left margin-content">
-							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
-							<br>
+						@foreach ($house->images as $image)
+						<div class="margin-content box show">
+							<div class="img-box">
+								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
+							</div>
 						</div>
 						@endforeach
 					</div>
@@ -269,68 +270,45 @@
 @endsection
 
 @section('scripts')
-	<script type="text/javascript">
-		$(document).ready(function() {
-			/* This is basic - uses default settings */
-			$("a#single_image").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	200, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-			/* Using custom settings */
-			$("a#inline").fancybox({
-				'hideOnContentClick': true
-			});
-			/* Apply fancybox to multiple items */
-			$("a.group").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	600, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-		});
+<script type="text/javascript">
+	$(document).ready(function(){
+  		var datein=$('input[name="datein"]'); //our date input has the name "date"
+  		var dateout=$('input[name="dateout"]'); //our date input has the name "date"
+  		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+  		var options={
+        	format: 'yyyy-mm-dd',
+        	container: container,
+        	todayHighlight: true,
+        	autoclose: true,
+      	};
+      	datein.datepicker(options);
+      	dateout.datepicker(options);
+	});
 
-		$(document).ready(function(){
-      		var datein=$('input[name="datein"]'); //our date input has the name "date"
-      		var dateout=$('input[name="dateout"]'); //our date input has the name "date"
-      		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-      		var options={
-	        	format: 'yyyy-mm-dd',
-	        	container: container,
-	        	todayHighlight: true,
-	        	autoclose: true,
-	      	};
-	      	datein.datepicker(options);
-	      	dateout.datepicker(options);
-    	});
+	var lat = {{ $map->map_lat }};
+	var lng = {{ $map->map_lng }};
 
-    	var lat = {{ $map->map_lat }};
-		var lng = {{ $map->map_lng }};
+	var map = new google.maps.Map(document.getElementById('map-canvas'), {
+		center:{
+			lat: lat,
+			lng: lng
+		},
+		zoom: 15
+	});
 
-		var map = new google.maps.Map(document.getElementById('map-canvas'), {
-			center:{
-				lat: lat,
-				lng: lng
-			},
-			zoom: 15
-		});
-
-		var circle = new google.maps.Circle({
-			position:{
-				lat: lat,
-				lng: lng
-			},
-			strokeColor: '#000000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#FFFFFF',
-            fillOpacity: 0.5,
-            map: map,
-            center: {lat: lat, lng: lng},
-            radius: Math.sqrt(10) * 60
-		});
-	</script>
+	var circle = new google.maps.Circle({
+		position:{
+			lat: lat,
+			lng: lng
+		},
+		strokeColor: '#000000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#FFFFFF',
+        fillOpacity: 0.5,
+        map: map,
+        center: {lat: lat, lng: lng},
+        radius: Math.sqrt(10) * 60
+	});
+</script>
 @endsection

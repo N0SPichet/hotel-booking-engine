@@ -238,17 +238,17 @@
 		    	</div>
 		    	<div id="menu5" class="tab-pane fade">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
-		    			{{ Form::label('image_name', '* Cover Images', ['class' => 'm-t-10']) }}
+		    			{{ Form::label('name', '* Cover Images', ['class' => 'm-t-10']) }}
 						<div class="row">
 							@foreach ($houseimages as $index => $image)
 							<div class="col-md-4 margin-content">
 								<div class="form-check">
-				  				<input class="form-check-input" type="radio" name="image_name" id="{{ $index }}" value="{{ $image->image_name }}" {{ $image->image_name == $house->cover_image ? 'checked'  : '' }}>
+				  				<input class="form-check-input" type="radio" name="name" id="{{ $index }}" value="{{ $image->name }}" {{ $image->name == $house->cover_image ? 'checked'  : '' }}>
 					  			<label class="form-check-label" for="{{ $index }}">
-					  				@if($house->cover_image == $image->image_name)
+					  				@if($house->cover_image == $image->name)
 					  				<span class="use_as_home_thum">Home</span>
 					  				@endif
-					    			<img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="width: 100%;">
+					    			<img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="width: 100%;">
 					  			</label>
 								</div>
 							</div>

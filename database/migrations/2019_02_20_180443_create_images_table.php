@@ -15,12 +15,12 @@ class CreateImagesTable extends Migration
     {
         Schema::create('images', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('image_name', 100)->nullable();
+            $table->string('name');
             $table->integer('room_type')->nullable();
             $table->timestamps();
 
-            $table->integer('houses_id')->unsigned();
-            $table->foreign('houses_id')->references('id')->on('houses');
+            $table->integer('house_id')->unsigned();
+            $table->foreign('house_id')->references('id')->on('houses')->onDelete('cascade');
         });
     }
 

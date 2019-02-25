@@ -17,78 +17,84 @@
 					@endif
 				</small>
 			</h2>
-			<div class="col-md-12">
+			<div class="col-md-12 clear-both">
 				<div class="row">
 					<h4>Cover Image</h4>
 				</div>
-				<div class="col-md-6 float-left">
-					<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}" class="img-responsive" style="border-radius: 2%"></a>
+				<div class="col-md-6 float-left margin-content">
+					<a href="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$house->cover_image) }}" class="img-responsive" style="border-radius: 2%"></a>
 				</div>
-				<div class="col-md-6 float-left">
-					
+				<div class="col-md-6 float-left margin-content">
+					<p></p>
 				</div>
 			</div>
 			<div class="col-md-12 clear-both">
 				<div class="row float-left">
 					<h4>Images</h4>
+				</div>
+				<div class="row float-left">
+					<h4>Overview</h4>
 					<div class="gallery">
-						<h4>Overview</h4>
-						@foreach ($images as $image)
+						@foreach ($house->images as $image)
 						@if ($image->room_type == NULL)
-						<div class="col-md-4 float-left margin-content">
-							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
-							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
-							@endif
-							<br>
+						<div class="margin-content box">
+							<div class="img-box">
+								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
+								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
+								@endif
+							</div>
 						</div>
 						@endif
 						@endforeach
 					</div>
 				</div>
 				<div class="row float-left">
+					<h4>Single Room (Standard)</h4>
 					<div class="gallery">
-						<h4>Single Room (Standard)</h4>
-						@foreach ($images as $image)
+						@foreach ($house->images as $image)
 						@if ($image->room_type == '1')
-						<div class="col-md-4 float-left margin-content">
-							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
-							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
-							@endif
-							<br>
+						<div class="margin-content box">
+							<div class="img-box">
+								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
+								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
+								@endif
+							</div>
 						</div>
 						@endif
 						@endforeach
 					</div>
 				</div>
 				<div class="row float-left">
+					<h4>Deluxe Single Room</h4>
 					<div class="gallery">
-						<h4>Deluxe Single Room</h4>
-						@foreach ($images as $image)
+						@foreach ($house->images as $image)
 						@if ($image->room_type == '2')
-						<div class="col-md-4 float-left margin-content">
-							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
-							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
-							@endif
-							<br>
+						<div class="margin-content box">
+							<div class="img-box">
+								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
+								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
+								@endif
+							</div>
 						</div>
 						@endif
 						@endforeach
 					</div>
 				</div>
 				<div class="row float-left">
+					<h4>Double Room (Standard)</h4>
 					<div class="gallery">
-						<h4>Double Room (Standard)</h4>
-						@foreach ($images as $image)
+						@foreach ($house->images as $image)
 						@if ($image->room_type == '3')
-						<div class="col-md-4 float-left margin-content">
-							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 2%"></a>
-							@if ($image->image_name != $house->cover_image && $house->users_id == Auth::user()->id)
-							<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
-							@endif
-							<br>
+						<div class="margin-content box">
+							<div class="img-box">
+								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
+								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
+								@endif
+							</div>
 						</div>
 						@endif
 						@endforeach
@@ -223,7 +229,7 @@
 					<dd>{{ date("jS M, Y", strtotime($house->updated_at)) }}</dd>
 				</div>
 				<div class="margin-content">
-				<p>Link to public <a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
+				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
 				</div>
 				@if (Auth::user()->id == $house->users_id || Auth::user()->hasRole('Admin'))
 				<div class="row">
@@ -253,79 +259,49 @@
 @endsection
 
 @section('scripts')
-	{!! Html::script('js/select2.min.js') !!}
-	<script type="text/javascript">
-		$('.select2-multi').select2();
-
-		$(document).ready(function() {
-
-			/* This is basic - uses default settings */
-			
-			$("a#single_image").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	200, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-			
-			/* Using custom settings */
-			
-			$("a#inline").fancybox({
-				'hideOnContentClick': true
-			});
-
-			/* Apply fancybox to multiple items */
-			
-			$("a.group").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	600, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-
-			$('#publish').on('click', function() {
-				$.ajax({
-					type: 'get',
-					url: '{{ route('api.rooms.publish', $house->id) }}',
-					data: {},
-					success: function(response) {
-						if (response.data == 1) {
-							$('#showPublish').html('<span class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</span>')
-						}
-						else if(response.data == 0) {
-							$('#showPublish').html('<span class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</span>')
-						}
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#publish').on('click', function() {
+			$.ajax({
+				type: 'get',
+				url: '{{ route('api.rooms.publish', $house->id) }}',
+				data: {},
+				success: function(response) {
+					if (response.data == 1) {
+						$('#showPublish').html('<span class="text-success m-t-20"><i class="fas fa-eye"></i> Published</span>')
 					}
-				});
+					else if(response.data == 0) {
+						$('#showPublish').html('<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>')
+					}
+				}
 			});
 		});
+	});
 
-		var lat = {{ $map->map_lat }};
-		var lng = {{ $map->map_lng }};
+	var lat = {{ $map->map_lat }};
+	var lng = {{ $map->map_lng }};
 
-		var map = new google.maps.Map(document.getElementById('map-canvas'), {
-			center:{
-				lat: lat,
-				lng: lng
-			},
-			zoom: 15
-		});
+	var map = new google.maps.Map(document.getElementById('map-canvas'), {
+		center:{
+			lat: lat,
+			lng: lng
+		},
+		zoom: 15
+	});
 
-		var circle = new google.maps.Circle({
-			position:{
-				lat: lat,
-				lng: lng
-			},
-			strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#0000FF',
-            fillOpacity: 0.3,
-            map: map,
-            center: {lat: lat, lng: lng},
-            radius: Math.sqrt(10) * 60
-		});
-	</script>
+	var circle = new google.maps.Circle({
+		position:{
+			lat: lat,
+			lng: lng
+		},
+		strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#0000FF',
+        fillOpacity: 0.3,
+        map: map,
+        center: {lat: lat, lng: lng},
+        radius: Math.sqrt(10) * 60
+	});
+</script>
 @endsection

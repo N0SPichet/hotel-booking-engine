@@ -95,10 +95,11 @@
 			<div class="row">
 				<div class="card margin-content">
 					<div class="gallery">
-						@foreach ($images as $image)
-						<div class="col-md-4 float-left">
-							<a id="single_image" href="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->image_name) }}" class="img-responsive" style="border-radius: 5%"></a>
-							<br>
+						@foreach ($house->images as $image)
+						<div class="margin-content box show">
+							<div class="img-box">
+								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
+							</div>
 						</div>
 						@endforeach
 					</div>

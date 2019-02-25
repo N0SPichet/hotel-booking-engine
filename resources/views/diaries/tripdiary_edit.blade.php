@@ -4,7 +4,6 @@
 
 @section('stylesheets')
 	{{ Html::style('css/parsley.css') }}
-	{!! Html::style('css/select2.min.css') !!}
 	<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
   	<script>
   		tinymce.init({ 
@@ -15,11 +14,11 @@
 @endsection
 
 @section ('content')
-<div class="container">
+<div class="container diaries">
 	<div class="row">
 		<div class="col">
 			{!! Form::model($diary, ['route' => ['tripdiary_update', $diary->id ], 'method' => 'PUT', 'files' => true]) !!}
-			<div class="col-md-9">
+			<div class="col-md-9 float-left">
 				@if ($day != 0)
 				<h4>{{ $diary_title }} day {{ $day }}</h4>
 				@elseif ($day == 0)
@@ -50,12 +49,12 @@
 				</select>
 				@endif
 			</div>
-			<div class="col-md-3 btn-h1-spacing">
-				<div class="col-sm-6">
+			<div class="col-md-3 float-left btn-h1-spacing">
+				<div class="col-sm-6 float-left">
 				{!! Html::linkRoute('tripdiary', 'Cancel', array($diary->rentals->id), array('class' => 'btn btn-danger btn-block btn-h1-spacing')) !!}
 				</div>
 
-				<div class="col-sm-6">
+				<div class="col-sm-6 float-left">
 				{{ Form::submit('Save Changes', ['class' => 'btn btn-success btn-h1-spacing']) }}
 				</div>
 			</div>
@@ -65,12 +64,6 @@
 	</div>
 </div>
 @endsection
-
 @section('scripts')
-	{!! Html::script('js/select2.min.js') !!}
 
-	<script type="text/javascript">
-		$('.select2-multi').select2();
-		
-	</script>
 @endsection

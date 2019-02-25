@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Diary;
-use App\Models\Himage;
+use App\Models\HouseImage;
 use App\Models\House;
 use App\Models\Houserule;
 use App\Models\Housetype;
@@ -15,6 +15,7 @@ use App\User;
 use Carbon\Carbon;
 use DateTime;
 use File;
+use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Image;
@@ -23,42 +24,12 @@ use Session;
 
 class RentalController extends Controller
 {
-    private $select_types_global = ['type 2 apartment', 'type 3 apartment'];
-    /*publish flag 0 private, 1 public, 2 trash, 3 permanant delete*/
-    /*check in status 0 not checkin 1 checkin 2 cancel*/
+    use GlobalFunctionTraits;
 
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('crole:Admin')->except('create', 'show', 'store', 'edit', 'update', 'destroy', 'mytrip', 'rentmyrooms', 'rentals_agreement', 'accept_rentalrequest', 'reject_rentalrequest', 'renthistories', 'checkcode', 'not_reviews');
-    }
-
-    private function getTypeId($request)
-    {
-        $select_types = $this->select_types_global;
-        if ($request == 'room') {
-            $types = Housetype::whereNotIn('name', $select_types)->get();
-        }
-        else {
-            $types = Housetype::whereIn('name', $select_types)->get();
-        }
-        $types_id = array();
-        foreach ($types as $key => $type) {
-            array_push($types_id, $type->id);
-        }
-        return $types_id;
-    }
-
-    private function getType($request)
-    {
-        $select_types = $this->select_types_global;
-        if ($request == 'room') {
-            $types = Housetype::whereNotIn('name', $select_types)->get();
-        }
-        else {
-            $types = Housetype::whereIn('name', $select_types)->get();
-        }
-        return $types;
     }
 
     /**
@@ -144,12 +115,12 @@ class RentalController extends Controller
                     $query->where('host_decision', 'ACCEPT')->where('checkin_status', '0');
                 })->orderBy('created_at', 'desc')->get();
                 foreach ($rentals as $rental) {
-                    if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
+                    if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == null) {
                         if ($datein > $rental->rental_datein) {
                             // echo "in after<br>";
                             if ($datein >= $rental->rental_dateout) {
                                 // echo "in after out<br>";
-                                if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
+                                if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == null) {
                                     $have_customer = '0';
                                 }
                                 else {
@@ -163,7 +134,7 @@ class RentalController extends Controller
                         }
                         elseif ($datein == $rental->rental_datein) {
                             // echo "in same<br>";
-                            if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
+                            if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == null) {
                                 if ($rental->no_rooms != $request->room) {
                                     $have_customer = '0';
                                 }
@@ -179,7 +150,7 @@ class RentalController extends Controller
                             // echo "in before<br>";
                             if ($dateout <= $rental->rental_datein) {
                                 // echo "out before in";
-                                if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == NULL) {
+                                if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == null) {
                                     $have_customer = '0';
                                 }
                                 else {
@@ -244,7 +215,7 @@ class RentalController extends Controller
 
     public function accept_rentalrequest(Rental $rental)
     {
-        if ($rental->payment->payment_status == NULL && $rental->payment->payment_status != 'Cancel' && $rental->payment->payment_status != 'Out of Date') {
+        if ($rental->payment->payment_status == null && $rental->payment->payment_status != 'Cancel' && $rental->payment->payment_status != 'Out of Date') {
             $rental->host_decision = 'ACCEPT';
             /*
             $premessage = "Dear " . $rental->user->user_fname;
@@ -279,7 +250,7 @@ class RentalController extends Controller
 
     public function reject_rentalrequest(Rental $rental) 
     {
-        if ($rental->payment->payment_status == NULL && $rental->payment->payment_status != 'Cancel' && $rental->payment->payment_status != 'Out of Date') {
+        if ($rental->payment->payment_status == null && $rental->payment->payment_status != 'Cancel' && $rental->payment->payment_status != 'Out of Date') {
             $rental->host_decision = 'REJECT';
             $rental->rental_checkroom = '1';
             $rental->save();
@@ -628,7 +599,7 @@ class RentalController extends Controller
             $payment->payment_amount = $request->payment_amount;
             $payment->payment_status = $request->payment_status;
             if ($request->hasFile('payment_transfer_slip')) {
-                if ($payment->payment_transfer_slip != NULL) {
+                if ($payment->payment_transfer_slip != null) {
                     $location = public_path('images/payments/'.$payment->id.'/'.$payment->payment_transfer_slip);
                     File::delete($location);
                 }
@@ -743,7 +714,7 @@ class RentalController extends Controller
         else {
             $payment->payment_status = "Cancel";
             $payment->save();
-            $rental->checkincode = NULL;
+            $rental->checkincode = null;
             $rental->rental_checkroom = '1';
             $rental->checkin_status = '2';
             $rental->save();
@@ -835,13 +806,19 @@ class RentalController extends Controller
         if (!is_null($houses)) {
             $rentals = Rental::whereIn('houses_id', $houses_id)->get();
             $rental_new = Rental::whereIn('houses_id', $houses_id)->where(function ($query) {
-                $query->where('host_decision', NULL)->where('rental_checkroom', '!=', '1');
+                $query->where('host_decision', null)->where('rental_checkroom', '!=', '1');
             })->count();
+            $rent_count = array();
+            foreach ($houses as $key => $house) {
+                $rent_count_get = Rental::where('houses_id', $house->id)->where('host_decision', null)->count();
+                array_push($rent_count, $rent_count_get);
+            }
 
             $data = array(
                 'rental_new' => $rental_new,
                 'payment_waiting_badge' => $payment_waiting_badge,
-                'payment_approved_badge' => $payment_approved_badge
+                'payment_approved_badge' => $payment_approved_badge,
+                'rent_count' => $rent_count
             );
             return view('rentals.rentmyrooms')->with($data)->with('rentals', $rentals)->with('houses', $houses)->with('rentals_approved', $rentals_approved)->with('rentals_waiting', $rentals_waiting);
         }
