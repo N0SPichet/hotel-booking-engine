@@ -8,7 +8,7 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<a href="{{ route('diaries.index') }}" class="btn btn-default"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
 		</div>
@@ -27,8 +27,10 @@
 			<div class="row">
 				<div class="gallery">
 					@foreach ($diary->diary_images as $image)
-					<div class="col-md-2 col-sm-3" style="margin-top: 10px; margin-bottom: 10px;">
-						<a id="single_image" href="{{ asset('images/diaries/' . $image->image) }}"><img src="{{ asset('images/diaries/' . $image->image) }}" class="img-responsive" style="border-radius: 1%"></a>
+					<div class="margin-content box diary">
+						<div class="img-box">
+							<a href="{{ asset('images/diaries/' . $image->image) }}"><img src="{{ asset('images/diaries/' . $image->image) }}" class="img-responsive" style="border-radius: 1%"></a>
+						</div>
 					</div>
 					@endforeach
 				</div>
@@ -41,7 +43,7 @@
 				@endforeach
 			</div>
 			<div class="row">
-				<div class="col-md-10 margin-top-50">
+				<div class="col-md-10 m-t-50">
 					@if ($diary->users->user_image == NULL)
 					<div class="author-info">
 						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
@@ -68,12 +70,12 @@
 
 							@elseif ($subscribe->writer != Auth::user()->id)
 							{!! Form::open(['route'=> ['diary.unsubscribe', $diary->users->id]]) !!}
-							<button class="btn btn-info btn-sm margin-top-50 pull-right">Unfollow {{ $diary->users->user_fname }}</button>
+							<button class="btn btn-info btn-sm m-t-50 pull-right">Unfollow {{ $diary->users->user_fname }}</button>
 							{!! Form::close() !!}
 							@endif
 						@else
 						{!! Form::open(['route'=> ['diary.subscribe', $diary->users->id]]) !!}
-						<button class="btn btn-info btn-sm margin-top-50 pull-right">Follow {{ $diary->users->user_fname }}</button>
+						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diary->users->user_fname }}</button>
 						{!! Form::close() !!}
 						@endif
 					@endif
@@ -91,7 +93,7 @@
 			@endif
 
 			@foreach ($diary->comments as $comment)
-			<div class="card margin-top-10">
+			<div class="card m-t-10">
 				<div class="margin-content">
 					<div class="col-md-11">
 						<div class="comment">
@@ -132,7 +134,7 @@
 			        </ul>
 			    </div>
 			@endif
-		<div id="comment-form" class="margin-top-50">
+		<div id="comment-form" class="m-t-50">
 			{!! Form::open(['route' => 'comments.store','data-parsley-validate']) !!}
 				<div class="row">
 					<div class="col-md-6">

@@ -1,5 +1,5 @@
 @extends('main')
-@section('title','Home')
+@section('title','HOME')
 @section('content')
 <div class="container">
     <div class="row m-t-10">

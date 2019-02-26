@@ -49,19 +49,6 @@ class PagesController extends Controller
         return redirect()->route('home');
     }
 
-    //Diaries
-    public function mydiaries()
-    {
-        if (Auth::check()) {
-            $diaries = Diary::where('users_id', Auth::user()->id)->whereNull('days')->orWhere('days', '0')->orderBy('created_at', 'desc')->paginate(10);
-            return view('diaries.mydiary')->with('diaries', $diaries);
-            }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
-    }
-
     public function introroom()
     {
         if (Auth::check()) {

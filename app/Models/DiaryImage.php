@@ -8,7 +8,7 @@ class DiaryImage extends Model
 {
     protected $table = 'diary_images';
 
-    public function diaries(){
+    public function diary(){
     	return $this->belongsTo(Diary::class);
     }
 }

@@ -577,7 +577,7 @@ class ApartmentController extends Controller
         $house = House::find($houseId);
         if (Auth::user()->id == $house->users_id) {
             $rental = Rental::where('houses_id', $house->id)->first();
-            $images = HouseImage::all();
+            $images = HouseImage::where('house_id', $house->id)->get();
             if ($rental == NULL){
                 $house->houseamenities()->detach();
                 $house->housespaces()->detach();
@@ -613,8 +613,8 @@ class ApartmentController extends Controller
 
     public function detroyimage(HouseImage $image)
     {
-        $filename = $image->image_name;
-        $houseId = $image->houses_id;
+        $filename = $image->name;
+        $houseId = $image->house_id;
         $location = public_path('images/houses/'.$houseId.'/'.$filename);
         File::delete($location);
         $image->delete();

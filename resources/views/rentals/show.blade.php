@@ -296,7 +296,7 @@
 			<div class="card">
 				<div class="margin-content" align="center">
 					@if ($rental->checkin_status == '1')
-					<a href="{{ route('tripdiary', $rental->id) }}" class="btn btn-primary btn-md">Write Diary for this great trip</a>
+					<a href="{{ route('diaries.tripdiary', [$rental->id, $rental->user_id]) }}" class="btn btn-primary btn-md">Write Diary for this great trip</a>
 					@else
 					<p>To write diary for this great trip, you must have <span class="text-success">Confirmed</span> status.</p>
 					@endif

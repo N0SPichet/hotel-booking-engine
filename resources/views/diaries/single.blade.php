@@ -4,26 +4,28 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h1 class="text-center">{{ $diary->title }}</h1>
 		</div>
-			<div class="col-md-8">
+			<div class="col-md-8 float-left">
 				@if ($diary->cover_image != NULL)
 				<div align="center">
 					<img src="{{ asset('images/diaries/' . $diary->cover_image) }}" class="img-responsive" style="width: auto; height: 500px; border-radius: 1%">
 				</div>
 				@endif
 				<div class="row">
-					<div class="card margin-top-10" style="width: 100%;">
+					<div class="card m-t-10" style="width: 100%;">
 						<div class="margin-content">
 							<p> {!! $diary->message !!}</p>
 						</div>
 						<div class="gallery">
 							@foreach ($diary->diary_images as $image)
-							<div class="col-md-3 col-sm-3" style="margin-top: 10px; margin-bottom: 10px;">
-								<a id="single_image" href="{{ asset('images/diaries/' . $image->image) }}"><img src="{{ asset('images/diaries/' . $image->image) }}" class="img-responsive" style="border-radius: 1%"></a>
-								<a href="{{ route('diaries.detroyimage', $image->id)}}" style="position: absolute; top:2px; right: : 2px; z-index: 100;" class="btn btn-default btn-sm"><i class="fas fa-trash"></i></a>
+							<div class="margin-content box diary">
+								<div class="img-box">
+									<a href="{{ asset('images/diaries/' . $image->image) }}"><img src="{{ asset('images/diaries/' . $image->image) }}" class="img-responsive" style="border-radius: 1%"></a>
+									<a href="{{ route('diaries.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
+								</div>
 							</div>
 							@endforeach
 						</div>
@@ -32,12 +34,12 @@
 				<hr>
 				<div class="tags">
 					@foreach ($diary->tags as $tag)
-					<span class="label label-default">{{ $tag->tag_name }}</span>
+					<span class="label label-default">{{ $tag->name }}</span>
 					@endforeach
 				</div>
 				<hr>
 				<div class="row">
-					<div class="col-md-12 margin-top-50">
+					<div class="col-md-12 m-t-50">
 						@if ($diary->users->user_image == NULL)
 						<div class="author-info">
 							<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
@@ -59,9 +61,9 @@
 					</div>
 				</div>
 
-				<div class="backend-comment" style="margin-top: 50px;">
+				<div class="backend-comment m-t-50">
 					<h3>Comments <small>{{ $diary->comments()->count() }} total</small></h3>
-
+					@if($diary->comments()->count())
 					<table class="table">
 						<thead>
 							<tr>
@@ -85,32 +87,42 @@
 							@endforeach
 						</tbody>
 					</table>
+					@endif
 				</div>
 			</div>
-
-			<div class="col-md-4">
+			<div class="col-md-4 float-left">
 				<div class="well">
 					<div class="dl-horizontal">
-						<p><b>Category :</b> {{ $diary->categories->category_name }}</p>
+						<p><b>Category :</b> {{ $diary->categories->name }}</p>
 					</div>
 					@if ($diary->users_id == Auth::user()->id)
+					<div class="col-md-12" align="center">
+						<div id="showPublish">
+							@if ($diary->publish == '2')
+							<p class="text-success m-t-20"><i class="fas fa-eye"></i> Published</p>
+							@elseif ($diary->publish == '1')
+							<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</p>
+							@elseif ($diary->publish == '0')
+							<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>
+							@endif
+						</div>
+					</div>
 					<div class="row">
 						<div class="col-md-6 col-sm-12" align="center">
 							<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-primary btn-block btn-h1-spacing"><i class="far fa-edit"></i> Edit</a>
 						</div>
-						<div class="col-md-6 col-sm-12" align="center">
+						<div class="col-md-6 col-sm-12 float-left" align="center">
 							{!! Form::open(['route' => ['diaries.destroy', $diary->id], 'method' => 'DELETE']) !!}
 							<button type="submit" class="btn btn-danger btn-block btn-h1-spacing"><i class="fas fa-trash"></i> Delete</button>
 							{!! Form::close() !!}
 						</div>
-						<div class="col-md-6 col-sm-6" align="center">
-							@if ($diary->publish == '2')
-							<p class="text-success margin-top-20"><i class="fas fa-eye"></i> Published</p>
-							@elseif ($diary->publish == '1')
-							<p class="text-primary margin-top-20"><i class="fas fa-eye"></i> Follower</p>
-							@elseif ($diary->publish == '0')
-							<p class="text-danger margin-top-20"><i class="fas fa-eye-slash"></i> Private</p>
-							@endif
+						<div class="col-md-6">
+							<select id="publishFlag" class="form-control text-center m-t-20" type="select" name="flag">
+								<option disabled="disabled">Select Viewer</option>
+								<option value="2" {{ $diary->publish == '2' ? 'selected' : '' }}>Public</option>
+								<option value="1" {{ $diary->publish == '1' ? 'selected' : '' }}>Follower</option>
+								<option value="0" {{ $diary->publish == '0' ? 'selected' : '' }}>Private</option>
+							</select>
 						</div>
 					</div>
 					<hr>
@@ -118,7 +130,7 @@
 					
 					<div class="row">
 						<div class="col-sm-6">
-							{!! Html::linkRoute('diaries.mydiaries', 'Back to My Diary', array(''), array('class' => 'btn btn-outline-secondary')) !!}
+							{!! Html::linkRoute('diaries.mydiaries', 'Back to My Diary', array($diary->users_id), array('class' => 'btn btn-outline-secondary')) !!}
 						</div>
 					</div>
 				</div>
@@ -128,34 +140,35 @@
 @endsection
 
 @section('scripts')
-	<script type="text/javascript">
-		$(document).ready(function() {
-
-			/* This is basic - uses default settings */
-			
-			$("a#single_image").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	200, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-			
-			/* Using custom settings */
-			
-			$("a#inline").fancybox({
-				'hideOnContentClick': true
-			});
-
-			/* Apply fancybox to multiple items */
-			
-			$("a.group").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	600, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
+<script type="text/javascript">
+	$(document).ready(function() {
+		$.ajaxSetup({
+	        headers:
+	        {
+	            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+	        }
+	    });
+		$('#publishFlag').on('change', function(event) {
+			$.ajax({
+				url: '{{ route('api.diaries.publish', $diary->id) }}',
+				type: 'post',
+				data: {
+					flag:$( "#publishFlag option:selected" ).val()
+				},
+				dataType: 'json',
+				success: function(response) {
+					if (response.data == 2) {
+						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Published</p>')
+					}
+					else if(response.data == 1) {
+						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</p>')
+					}
+					else if(response.data == 0) {
+						$('#showPublish').html('<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>')
+					}
+				}
 			});
 		});
-	</script>
+	});
+</script>
 @endsection

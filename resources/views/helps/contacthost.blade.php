@@ -9,7 +9,7 @@
 @section('content')
 
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h1 class="title-page">Contact {{ $house->users->user_fname }}</h1>
 			<hr>

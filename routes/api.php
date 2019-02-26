@@ -29,6 +29,10 @@ Route::prefix('address')->name('api.')->group(function() {
 	Route::get('searchPostal/{postalcode}', 'Api\AddressController@searchPostalCode')->name('search.postalcode');
 });
 
+Route::prefix('diaries')->name('api.diaries.')->group(function() {
+	Route::post('{diary}/publish', 'Api\DiaryController@togglePublish')->name('publish');
+});
+
 Route::prefix('rooms')->name('api.rooms.')->group(function() {
 	Route::get('owner/{house}/publish', 'Api\RoomController@togglePublish')->name('publish');
 });

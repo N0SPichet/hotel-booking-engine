@@ -7,8 +7,8 @@ use App\Models\Comment;
 use App\Models\Diary;
 use App\Models\DiaryImage;
 use App\Models\Rental;
+use App\Models\Subscribe;
 use App\Models\Tag;
-use App\Subscribe;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
@@ -22,6 +22,11 @@ use Storage;
 
 class DiaryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'mydiaries', 'single', 'tripdiary', 'tripdiary_edit', 'tripdiary_update', 'tripdiary_destroy', 'detroyimage', 'subscribe', 'unsubscribe');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,9 +39,21 @@ class DiaryController extends Controller
         return view('diaries.index')->with('diaries', $diaries);
     }
 
-    public function tripdiary($rentalId){
+    public function mydiaries($userId)
+    {
+        if (Auth::user()->id == $userId) {
+            $diaries = Diary::where('users_id', $userId)->where(function($query) {
+                $query->whereNull('days')->orWhere('days', '0');
+            })->orderBy('created_at', 'desc')->paginate(10);
+            return view('diaries.mydiary')->with('diaries', $diaries);
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
+    }
+
+    public function tripdiary($rentalId, $userId){
         $rental = Rental::find($rentalId);
-        if ($rental) {
+        if (!is_null($rental)) {
             if (Auth::user()->id == $rental->user_id && $rental->checkin_status == '1') {
                 $datetime1 = new DateTime($rental->rental_datein);
                 $datetime2 = new DateTime($rental->rental_dateout);
@@ -76,10 +93,8 @@ class DiaryController extends Controller
                 $diaries = Diary::where('rentals_id', $rentalId)->get();
                 return view('diaries.tripdiary_single')->with('diaries', $diaries)->with('rental', $rental)->with('days', $days)->with('date', $date);
             }
-            else {
-                Session::flash('fail', "This diary is no longer available.");
-                return back();
-            }
+            Session::flash('fail', 'Unauthorized access.');
+            return back();
         }
         else {
             Session::flash('fail', "This diary is no longer available.");
@@ -112,67 +127,52 @@ class DiaryController extends Controller
             'categories_id' => 'required',
             'message' => 'required'
         ));
-        if (Auth::check()) {
-            $diary = new Diary;
-            $diary->users_id = Auth::user()->id;
-            $diary->title = $request->title;
-            if ($request->cover_image) {
-                $cover_image = $request->file('cover_image');
-                $filename = time() . rand(9,99) . Auth::user()->id . '.' . $cover_image->getClientOriginalExtension();
+        $diary = new Diary;
+        $diary->users_id = Auth::user()->id;
+        $diary->title = $request->title;
+        if ($request->cover_image) {
+            $cover_image = $request->file('cover_image');
+            $filename = time() . rand(9,99) . Auth::user()->id . '.' . $cover_image->getClientOriginalExtension();
+            $location = public_path('images/diaries/'.$filename);
+            Image::make($cover_image)->resize(1440,1080)->save($location);
+            $diary->cover_image = $filename;
+        }
+        $diary->categories_id = $request->categories_id;
+        $diary->message = Purifier::clean($request->message);
+        $diary->save();
+        if ($request->hasFile('images')) {
+            foreach ($request->images as $diaryimage) {
+                $diary_image = new DiaryImage;
+                $filename = time() . rand(9,99) . Auth::user()->id . '.' . $diaryimage->getClientOriginalExtension();
                 $location = public_path('images/diaries/'.$filename);
-                Image::make($cover_image)->resize(1440,1080)->save($location);
-                $diary->cover_image = $filename;
+                Image::make($diaryimage)->resize(1440,1080)->save($location);
+                $diary_image->image = $filename;
+                $diary_image->diary_id = $diary->id;
+                $diary_image->save();
             }
-            $diary->categories_id = $request->categories_id;
-            $diary->message = Purifier::clean($request->message);
-            $diary->save();
-            if ($request->hasFile('images')) {
-                foreach ($request->images as $diaryimage) {
-                    $diary_image = new DiaryImage;
-                    $filename = time() . rand(9,99) . Auth::user()->id . '.' . $diaryimage->getClientOriginalExtension();
-                    $location = public_path('images/diaries/'.$filename);
-                    Image::make($diaryimage)->resize(1440,1080)->save($location);
-                    $diary_image->image = $filename;
-                    $diary_image->diary_id = $diary->id;
-                    $diary_image->save();
-                }
-            }
-            $subscribe = new Subscribe;
-            $subscribe->writer = $diary->users->id;
-            $subscribe->follower = Auth::user()->id;
-            $subscribe->save();
-            $diary->tags()->sync($request->tags, false);
-            Session::flash('success', 'This diary was succussfully save!');
-            return redirect()->route('diary.single', $diary->id);
         }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
+        $subscribe = new Subscribe;
+        $subscribe->writer = $diary->users_id;
+        $subscribe->follower = Auth::user()->id;
+        $subscribe->save();
+        $diary->tags()->sync($request->tags, false);
+        Session::flash('success', 'This diary was succussfully save!');
+        return redirect()->route('diaries.single', $diary->id);
     }
 
-    public function single($id)
+    public function single($diaryId)
     {
-        if (Auth::check()) {
-            $diary = Diary::find($id);
-            if ($diary != NULL) {
-                if (Auth::user()->id == $diary->users_id && $diary->rentals_id == NULL) {
-                    $categories = Category::all();
-                    return view('diaries.single')->with('diary', $diary)->with('categories', $categories);
-                }
-                else {
-                    Session::flash('fail', "This diary is no longer available.");
-                    return back();
-                }
+        $diary = Diary::find($diaryId);
+        if (!is_null($diary)) {
+            if (Auth::user()->id == $diary->users_id && $diary->rentals_id == null) {
+                return view('diaries.single')->with('diary', $diary);
             }
-            else {
-                Session::flash('fail', "This diary is no longer available.");
-                return back();
-            }
+            Session::flash('fail', 'Unauthorized access.');
+            return back();
         }
         else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
+            Session::flash('fail', "This diary is no longer available.");
+            return back();
         }
     }
 
@@ -182,13 +182,13 @@ class DiaryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($diaryId)
     {
-        $diary = Diary::where('id', $id)->where(function ($query) {
+        $diary = Diary::where('id', $diaryId)->where(function ($query) {
             $query->where('publish', '1')->orWhere('publish', '2');
         })->first();
         if ($diary) {
-            if ($diary->rentals_id != NULL) {
+            if ($diary->rentals_id != null) {
                 $rental = Rental::find($diary->rentals_id);
                 $datetime1 = new DateTime($rental->rental_datein);
                 $datetime2 = new DateTime($rental->rental_dateout);
@@ -208,45 +208,35 @@ class DiaryController extends Controller
                     $rental_datein = date_format($rental_datein, 'Y-m-d');
                 }
                 if ($diary->publish == '1') {
-                    if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
-                        if ($subscribe) {
-                            return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
-                        }
-                        else {
-                            return view('diaries.subscribe')->with('diary', $diary);
-                        }
+                    $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
+                    if ($subscribe) {
+                        return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
                     }
                     else {
                         return view('diaries.subscribe')->with('diary', $diary);
                     }
                 }
                 elseif ($diary->publish == '2') {
-                    $subscribe = NULL;
+                    $subscribe = null;
                     if (Auth::check()) {
                         $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
                     }
                     return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
                 }
             }
-            else if ($diary->rentals_id == NULL) {
+            else if ($diary->rentals_id == null) {
                 $categories = Category::all();
                 if ($diary->publish == '1') {
-                    if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
-                        if ($subscribe) {
-                            return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
-                        }
-                        else {
-                            return view('diaries.subscribe')->with('diary', $diary);
-                        }
+                    $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
+                    if ($subscribe) {
+                        return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
                     }
                     else {
                         return view('diaries.subscribe')->with('diary', $diary);
                     }
                 }
                 elseif ($diary->publish == '2') {
-                    $subscribe = NULL;
+                    $subscribe = null;
                     if (Auth::check()) {
                         $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
                     }
@@ -260,48 +250,36 @@ class DiaryController extends Controller
         }
     }
 
-    public function subscribe($id, Request $request)
+    public function subscribe($userId, Request $request)
     {
-        if (Auth::check()) {
-            $user = User::find($id);
-            $subscribe = Subscribe::where('writer', $id)->where('follower', Auth::user()->id)->first();
-            if ($subscribe) {
-                Session::flash('success', "You already follow " . $user->user_fname . ".");
-                return back();
-            }
-            else {
-                $subscribe = new Subscribe;
-                $subscribe->writer = $id;
-                $subscribe->follower = Auth::user()->id;
-                $subscribe->save();
-                Session::flash('success', "You are now following " . $user->user_fname . ".");
-                return back();
-            }
+        $user = User::find($userId);
+        $subscribe = Subscribe::where('writer', $userId)->where('follower', Auth::user()->id)->first();
+        if ($subscribe) {
+            Session::flash('success', "You already follow " . $user->user_fname . ".");
+            return back();
         }
         else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
+            $subscribe = new Subscribe;
+            $subscribe->writer = $userId;
+            $subscribe->follower = Auth::user()->id;
+            $subscribe->save();
+            Session::flash('success', "You are now following " . $user->user_fname . ".");
+            return back();
         }
     }
 
-    public function unsubscribe($id, Request $request)
+    public function unsubscribe($userId, Request $request)
     {
-        if (Auth::check()) {
-            $user = User::find($id);
-            $subscribe = Subscribe::where('writer', $id)->where('follower', Auth::user()->id)->first();
-            if ($subscribe) {
-                $subscribe->delete();
-                Session::flash('success', "Unfollowing " . $user->user_fname . ".");
-                return back();
-            }
-            else {
-                Session::flash('success', "You already follow " . $user->user_fname . ".");
-                return back();
-            }
+        $user = User::find($userId);
+        $subscribe = Subscribe::where('writer', $userId)->where('follower', Auth::user()->id)->first();
+        if ($subscribe) {
+            $subscribe->delete();
+            Session::flash('success', "Unfollowing " . $user->user_fname . ".");
+            return back();
         }
         else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
+            Session::flash('success', "You already follow " . $user->user_fname . ".");
+            return back();
         }
     }
 
@@ -316,17 +294,9 @@ class DiaryController extends Controller
         $diary = Diary::find($id);
         if ($diary->users->id == Auth::user()->id) {
             $categories = Category::all();
-            $cats = array();
-            foreach ($categories as $category) {
-                $cats[$category->id] = $category->category_name;
-            }
 
             $tags = Tag::all();
-            $tag2 = array();
-            foreach ($tags as $tag) {
-                $tag2[$tag->id] = $tag->tag_name;
-            }
-            return view('diaries.edit')->with('diary', $diary)->with('tags', $tag2)->with('categories', $cats);
+            return view('diaries.edit')->with('diary', $diary)->with('tags', $tags)->with('categories', $categories);
         }
         else {
             Session::flash('fail', "Request not found, You don't have permission to see this files!");
@@ -334,9 +304,9 @@ class DiaryController extends Controller
         }
     }
 
-    public function tripdiary_edit($id, $day){
-        if (Auth::check()) {
-            $diary_first = Diary::where('rentals_id', $id)->where('days', '0')->first();
+    public function tripdiary_edit($rentalId, $userId, $day){
+        if (Auth::user()->id == $userId) {
+            $diary_first = Diary::where('rentals_id', $rentalId)->where('days', '0')->first();
             $diary_title = $diary_first->title;
             $rental = Rental::find($diary_first->rentals_id);
             $datetime1 = new DateTime($rental->rental_datein);
@@ -346,48 +316,33 @@ class DiaryController extends Controller
             $months = $interval->format('%m');
             $days = $interval->format('%d');
             $days = $days + 1;
-            $diary = Diary::where('rentals_id', $id)->where('days', $day)->first();
-            if ($diary_first->users->id == Auth::user()->id) {
-                if ($diary == NULL && $day <= $days) {
-                    $diary = new Diary;
-                    if ($day == 0) {
-                        $diary->title = "Diary Title";
-                    }
-                    $diary->days = $day;
-                    $diary->users_id = Auth::user()->id;
-                    $diary->categories_id = $diary_first->categories_id;
-                    $diary->rentals_id = $id;
-                    $diary->save();
+            $diary = Diary::where('rentals_id', $rentalId)->where('days', $day)->first();
+            if ($diary == null && $day <= $days) {
+                $diary = new Diary;
+                if ($day == 0) {
+                    $diary->title = "Diary Title";
                 }
-                else if ($day > $days) {
-                    Session::flash('fail', "Request not found, url invalid!");
-                    return back();
-                }
+                $diary->days = $day;
+                $diary->users_id = Auth::user()->id;
+                $diary->categories_id = $diary_first->categories_id;
+                $diary->rentals_id = $rentalId;
+                $diary->save();
             }
-            if ($diary->users->id == Auth::user()->id) {
-                if ($diary->days == '0') {
-                    $categories = Category::all();
-                    $cats = array();
-                    foreach ($categories as $category) {
-                        $cats[$category->id] = $category->category_name;
-                    }
-
-                    $tags = Tag::all();
-                    $tag2 = array();
-                    foreach ($tags as $tag) {
-                        $tag2[$tag->id] = $tag->tag_name;
-                    }
-                    return view('diaries.tripdiary_edit')->with('diary_title', $diary_title)->with('diary', $diary)->with('tags', $tag2)->with('categories', $cats)->with('day', $day);
-                }
-                else {
-                    return view('diaries.tripdiary_edit')->with('diary_title', $diary_title)->with('diary', $diary)->with('day', $day);
-                }
+            if ($day > $days) {
+                Session::flash('fail', 'This diary is no longer available.');
+                            return back();
+            }
+            if ($diary->days == '0') {
+                $categories = Category::all();
+                $tags = Tag::all();
+                return view('diaries.tripdiary_edit')->with('diary_title', $diary_title)->with('diary', $diary)->with('tags', $tags)->with('categories', $categories)->with('day', $day);
             }
             else {
-                Session::flash('fail', "Request not found, You don't have permission to see this files!");
-                return back();
+                return view('diaries.tripdiary_edit')->with('diary_title', $diary_title)->with('diary', $diary)->with('day', $day);
             }
         }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     /**
@@ -397,7 +352,7 @@ class DiaryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $diaryId)
     {
         //validate the data
         $this->validate($request, array(
@@ -405,75 +360,70 @@ class DiaryController extends Controller
             'categories_id' => 'required|integer',
             'message' => 'required'
         ));
-        if (Auth::check()) {
-            $diary = Diary::find($id);
-            if (Auth::user()->id == $diary->users->id) {
-                $diary->users_id = Auth::user()->id;
-                $diary->title = $request->input('title');
-                if ($request->cover_image == NULL && $request->select_cover_image != NULL) {
+        $diary = Diary::find($diaryId);
+        if (Auth::user()->id == $diary->users_id) {
+            $diary->users_id = Auth::user()->id;
+            $diary->title = $request->input('title');
+            if ($request->cover_image == null && $request->select_cover_image != null) {
+                $cover_image = DiaryImage::where('image', $diary->cover_image)->first();
+                if ($cover_image == null) {
+                    $oldfilename = $diary->cover_image;
+                    $diary_image = new DiaryImage;
+                    $diary_image->image = $oldfilename;
+                    $diary_image->diary_id = $diary->id;
+                    $diary_image->save();
+                }
+                $diary->cover_image = $request->select_cover_image;
+            }
+            else if ($request->cover_image != null) {
+                if ($diary->cover_image != null) {
                     $cover_image = DiaryImage::where('image', $diary->cover_image)->first();
-                    if ($cover_image == NULL) {
+                    if ($cover_image == null) {
                         $oldfilename = $diary->cover_image;
                         $diary_image = new DiaryImage;
                         $diary_image->image = $oldfilename;
                         $diary_image->diary_id = $diary->id;
                         $diary_image->save();
                     }
-                    $diary->cover_image = $request->select_cover_image;
                 }
-                else if ($request->cover_image != NULL) {
-                    if ($diary->cover_image != NULL) {
-                        $cover_image = DiaryImage::where('image', $diary->cover_image)->first();
-                        if ($cover_image == NULL) {
-                            $oldfilename = $diary->cover_image;
-                            $diary_image = new DiaryImage;
-                            $diary_image->image = $oldfilename;
-                            $diary_image->diary_id = $diary->id;
-                            $diary_image->save();
-                        }
-                    }
-                    $cover_image = $request->file('cover_image');
-                    $filename = time() . rand(9,99) . Auth::user()->id . '.' . $cover_image->getClientOriginalExtension();
-                    $location = public_path('images/diaries/'.$filename);
-                    Image::make($cover_image)->resize(1440,1080)->save($location);
-                    $diary->cover_image = $filename;
-                }
-                $diary->categories_id = $request->input('categories_id');
-                $diary->message = Purifier::clean($request->input('message'));
-                $diary->publish = $request->publish;
-                $diary->save();
-                if (isset($request->tags)) {
-                    $diary->tags()->sync($request->tags);
-                }
-                else{
-                    $diary->tags()->sync(array());
-                }
-                if ($request->images) {
-                    foreach ($request->images as $diaryimage) {
-                        $diary_image = new DiaryImage;
-                        $filename = time() . rand(9,99) . Auth::user()->id . '.' . $diaryimage->getClientOriginalExtension();
-                        $location = public_path('images/diaries/'.$filename);
-                        Image::make($diaryimage)->resize(1440,1080)->save($location);
-                        $diary_image->image = $filename;
-                        $diary_image->diary_id = $diary->id;
-                        $diary_image->save();
-                    }
-                }
-                Session::flash('success', 'This diary was successfully saved.');
-                return redirect()->route('diary.single', $diary->id);
+                $cover_image = $request->file('cover_image');
+                $filename = time() . rand(9,99) . Auth::user()->id . '.' . $cover_image->getClientOriginalExtension();
+                $location = public_path('images/diaries/'.$filename);
+                Image::make($cover_image)->resize(1440,1080)->save($location);
+                $diary->cover_image = $filename;
             }
+            $diary->categories_id = $request->input('categories_id');
+            $diary->message = Purifier::clean($request->input('message'));
+            $diary->save();
+            if (isset($request->tags)) {
+                $diary->tags()->sync($request->tags);
+            }
+            else{
+                $diary->tags()->sync(array());
+            }
+            if ($request->images) {
+                foreach ($request->images as $diaryimage) {
+                    $diary_image = new DiaryImage;
+                    $filename = time() . rand(9,99) . Auth::user()->id . '.' . $diaryimage->getClientOriginalExtension();
+                    $location = public_path('images/diaries/'.$filename);
+                    Image::make($diaryimage)->resize(1440,1080)->save($location);
+                    $diary_image->image = $filename;
+                    $diary_image->diary_id = $diary->id;
+                    $diary_image->save();
+                }
+            }
+            Session::flash('success', 'This diary was successfully saved.');
+            return redirect()->route('diaries.single', $diary->id);
         }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
-    public function tripdiary_update(Request $request, $id)
+    public function tripdiary_update(Request $request, $diaryId)
     {
-        if (Auth::check()) {
-            $diary = Diary::find($id);
-            if (Auth::user()->id == $diary->users->id) {
+        $diary = Diary::find($diaryId);
+        if (Auth::user()->id == $diary->users_id) {
+            if (!is_null($diary)) {
                 if ($diary->days == '0') {
                     if ($diary->categories_id != $request->input('categories_id')) {
                         $diary->categories_id = $request->input('categories_id');
@@ -483,7 +433,7 @@ class DiaryController extends Controller
                              $diary->save();
                         }
                     }
-                    $diary = Diary::find($id);
+                    $diary = Diary::find($diaryId);
                     $diary->title = $request->input('title');
                     if (isset($request->tags)) {
                         $diary->tags()->sync($request->tags);
@@ -493,7 +443,7 @@ class DiaryController extends Controller
                     }
                     $diary->message = Purifier::clean($request->input('message'));
                     $image = DiaryImage::where('diary_id', $diary->id)->first();
-                    if ($image != NULL) {
+                    if (!is_null($image)) {
                         if ($request->cover_image) {
                             $filename = $image->image;
                             $image->delete();
@@ -511,7 +461,7 @@ class DiaryController extends Controller
                             $diary->cover_image = $filename;
                         }
                     }
-                    elseif ($image == NULL) {
+                    else {
                         if ($request->cover_image) {
                             $image = $request->cover_image;
                             $cover_image = new DiaryImage;
@@ -524,10 +474,9 @@ class DiaryController extends Controller
                             $diary->cover_image = $filename;
                         }
                     }
-                    $diary->publish = $request->publish;
                     $diary->save();
                     Session::flash('success', 'This diary was successfully saved.');
-                    return redirect()->route('tripdiary', $diary->rentals_id);
+                    return redirect()->route('diaries.tripdiary', [$diary->rentals_id, $diary->users_id]);
                 }
                 elseif ($diary->days != '0'){
                     $diary->message = Purifier::clean($request->input('message'));
@@ -544,14 +493,14 @@ class DiaryController extends Controller
                     }
                     $diary->save();
                     Session::flash('success', 'This diary was successfully saved.');
-                    return redirect()->route('tripdiary', $diary->rentals_id);
+                    return redirect()->route('diaries.tripdiary', [$diary->rentals_id, $diary->users_id]);
                 }
             }
+            Session::flash('fail', 'This diary is no longer available.');
+            return back();
         }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     /**
@@ -597,49 +546,43 @@ class DiaryController extends Controller
         }
     }
 
-    public function tripdiary_destroy($id)
+    public function tripdiary_destroy($rentalId)
     {
-        if (Auth::check()) {
-            $diaries = Diary::where('rentals_id', $id)->get();
-            if ($diaries) {
-                $comments = Comment::where('diary_id', $diaries[0]->id)->get();
-                foreach ($comments as $comment) {
-                    $comment->delete();
-                }
-                $diaries[0]->tags()->detach();
-                foreach ($diaries as $diary) {
-                    $images = DiaryImage::where('diary_id', $diary->id)->get();
-                    foreach ($images as $image) {
-                        $filename = $image->image;
-                        $image->delete();
-                        $location = public_path('images/diaries/'.$filename);
-                        File::delete($location);
-                    }
-                    $diary->delete();
-                }
-                Session::flash('success', 'This diary is no longer available.');
-                return redirect()->route('diaries.mydiaries');
+        $diaries = Diary::where('rentals_id', $rentalId)->get();
+        if (!is_null($diaries)) {
+            $comments = Comment::where('diary_id', $diaries[0]->id)->get();
+            foreach ($comments as $comment) {
+                $comment->delete();
             }
-        }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
+            $diaries[0]->tags()->detach();
+            foreach ($diaries as $diary) {
+                $images = DiaryImage::where('diary_id', $diary->id)->get();
+                foreach ($images as $image) {
+                    $filename = $image->image;
+                    $image->delete();
+                    $location = public_path('images/diaries/'.$filename);
+                    File::delete($location);
+                }
+                $diary->delete();
+            }
+            Session::flash('success', 'This diary is no longer available.');
+            return redirect()->route('diaries.mydiaries');
         }
     }
 
-    public function detroyimage($id)
+    public function detroyimage($imageId)
     {
-        if (Auth::check()) {
-            $image = DiaryImage::find($id);
-            $diary_id = $image->diary_id;
+        $image = DiaryImage::find($imageId);
+        if (Auth::user()->id == $image->diary->users_id) {
+            $diaryId = $image->diary_id;
             $filename = $image->image;
             $image->delete();
             $location = public_path('images/diaries/'.$filename);
             File::delete($location);
+            Session::flash('success', 'Image deleted.');
             return back();
         }
-        else {
-            return back();
-        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 }

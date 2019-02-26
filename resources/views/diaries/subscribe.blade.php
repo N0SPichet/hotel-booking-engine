@@ -13,7 +13,7 @@
 					<p style="font-size: 18px;">Following to <span style="text-transform: lowercase;">{{ $diary->users->user_fname }}</span> and get an access to diary that <span style="text-transform: lowercase;">{{ $diary->users->user_fname }}</span> have shared in public and follower.</p>
 				</div>
 				<div class="col-md-2">
-					{!! Form::open(['route'=> ['diary.subscribe', $diary->users->id]]) !!}
+					{!! Form::open(['route'=> ['diaries.subscribe', $diary->users->id]]) !!}
 					<button class="btn btn-danger form-spacing-top-8 poll-right">Follow {{ $diary->users->user_fname }}</button>
 					{!! Form::close() !!}
 				</div>

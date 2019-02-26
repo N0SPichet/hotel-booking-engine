@@ -1,4 +1,4 @@
-$( document ).ready(function() {
+$( document ).ready(function() {	
 	if($('#gender').text() === '1')
 	{
 		$('#gender').text('Male')

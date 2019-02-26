@@ -350,6 +350,22 @@ img.img-responsive {
 .m-l-50 {
     margin-left: 50px;
 }
+.p-r-10 {
+    float: right!important;
+    right: 10px;
+}
+.p-r-20 {
+    float: right!important;
+    right: 20px;
+}
+.p-r-30 {
+    float: right!important;
+    right: 30px;
+}
+.p-r-40 {
+    float: right!important;
+    right: 40px;
+}
 .btn-submit-green-color {
     width: 100%;
     background-color: #4CAF50;
@@ -486,7 +502,10 @@ img.img-responsive {
     height: auto;
 }
 .gallery .box.show {
-    width: 180px;
+    width: 33.33%;
+}
+.gallery .box.diary {
+    width: 25%;
 }
 .gallery .box.home {
     width: 300px;

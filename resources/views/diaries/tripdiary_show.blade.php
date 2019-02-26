@@ -8,7 +8,7 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<a href="{{ route('diaries.index') }}" class="btn btn-default"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
 		</div>
@@ -27,25 +27,29 @@
 			</div>
 			@endif
 			@for ($i = 1; $i <= $days ; $i++)
-			<div class="panel panel-default col margin-top-20">
-				<div class="panel-heading">
+			<div class="card col m-t-20">
+				<div class="card-title">
 					<div class="text-center">
 						<h2 class="diary_article__title">Day {{ $i }} <p class="trip-diary-time">{{ date('jS F, Y', strtotime($date[$i-1])) }}</p></h2>
 					</div>
 				</div>
-				<div class="panel-body">
+				<div class="card-body">
 					{!! $diaries[$i]->message !!}
+					<div class="gallery">
 					@foreach ($diaries[$i]->diary_images as $image)
-					<div class="col-md-3 col-sm-4">
-						<a id="single_image" href="{{ asset('images/diaries/' . $image->image) }}"><img src="{{ asset('images/diaries/' . $image->image) }}" class="img-responsive margin-top-10" style="border-radius: 5%; "></a>
+					<div class="margin-content box diary">
+							<div class="img-box">
+								<a href="{{ asset('images/diaries/' . $image->image) }}"><img src="{{ asset('images/diaries/' . $image->image) }}" class="img-responsive margin-top-10" style="border-radius: 2%; "></a>
+							</div>
 					</div>
 					@endforeach
+					</div>
 				</div>
 			</div>
 			@endfor
 			<h3 class="text-center trip-diary-end">~~ End ~~</h3>
 			<div class="row">
-				<div class="col-md-10 margin-top-50">
+				<div class="col-md-10 m-t-50">
 					@if ($diaries[0]->users->user_image == NULL)
 					<div class="author-info">
 						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
@@ -65,19 +69,19 @@
 					</div>
 					@endif
 				</div>
-				<div class="col-md-2  margin-top-50">
+				<div class="col-md-2 float-left m-t-50">
 					@if (Auth::check())
 						@if ($subscribe)
 							@if ($subscribe->writer == Auth::user()->id)
 
 							@elseif ($subscribe->writer != Auth::user()->id)
-							{!! Form::open(['route'=> ['diary.unsubscribe', $diaries[0]->users->id]]) !!}
-							<button class="btn btn-info btn-sm margin-top-50 pull-right">Unfollow {{ $diaries[0]->users->user_fname }}</button>
+							{!! Form::open(['route'=> ['diaries.unsubscribe', $diaries[0]->users->id]]) !!}
+							<button class="btn btn-info btn-sm m-t-50 pull-right">Unfollow {{ $diaries[0]->users->user_fname }}</button>
 							{!! Form::close() !!}
 							@endif
 						@else
 						{!! Form::open(['route'=> ['diary.subscribe', $diaries[0]->users->id]]) !!}
-						<button class="btn btn-info btn-sm margin-top-50 pull-right">Follow {{ $diaries[0]->users->user_fname }}</button>
+						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diaries[0]->users->user_fname }}</button>
 						{!! Form::close() !!}
 						@endif
 					@endif
@@ -97,7 +101,7 @@
 			@foreach ($diaries[0]->comments as $comment)
 			<div class="card margin-top-10">
 				<div class="margin-content">
-					<div class="col-md-11">
+					<div class="col-md-11 float-left">
 						<div class="comment">
 							<div class="author-info">
 								<img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($comment->email))) . '?s=50&d=monsterid' }}" class="author-image">
@@ -111,7 +115,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-1 float-left">
 						@if (Auth::check())
 						@if (Auth::user()->email == $comment->email)
 						{!! Form::open(['route' => ['comments.destroy', $comment->id], 'method' => 'DELETE', 'style'=>'display:inline']) !!}
@@ -136,10 +140,10 @@
 		        </ul>
 		    </div>
 		@endif
-		<div id="comment-form" class="margin-top-50">
+		<div id="comment-form" class="m-t-50">
 			{!! Form::open(['route' => 'comments.store','data-parsley-validate']) !!}
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-6 float-left">
 						{{ Form::hidden('diary_id', $diaries[0]->id) }}
 
 						{{ Form::label('name', 'Name:') }}
@@ -149,7 +153,7 @@
 						{{ Form::text('name', null, ['class' => 'form-control', 'required' => '']) }}
 						@endif
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-6 float-left">
 						@if (Auth::check())
 						<br><br>
 						<p style="color: red;">login as {{ Auth::user()->user_fname }}</p>
@@ -175,26 +179,7 @@
 @section('scripts')
 <script type="text/javascript">
 	$(document).ready(function() {
-	/* This is basic - uses default settings */
-		$("a#single_image").fancybox({
-			'transitionIn'	:	'elastic',
-			'transitionOut'	:	'elastic',
-			'speedIn'		:	200, 
-			'speedOut'		:	200, 
-			'overlayShow'	:	false
-		});
-		/* Using custom settings */
-		$("a#inline").fancybox({
-			'hideOnContentClick': true
-		});
-		/* Apply fancybox to multiple items */
-		$("a.group").fancybox({
-			'transitionIn'	:	'elastic',
-			'transitionOut'	:	'elastic',
-			'speedIn'		:	600, 
-			'speedOut'		:	200, 
-			'overlayShow'	:	false
-		});
+
 	});
 </script>
 @endsection

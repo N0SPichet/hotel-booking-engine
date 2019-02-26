@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use App\Models\Diary;
-use App\Models\HouseImage;
 use App\Models\House;
+use App\Models\HouseImage;
 use App\Models\Houserule;
 use App\Models\Housetype;
 use App\Models\Map;
 use App\Models\Payment;
 use App\Models\Rental;
 use App\Models\Review;
+use App\Models\Subscribe;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
 use File;
-use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Image;
@@ -871,6 +872,7 @@ class RentalController extends Controller
             if (Auth::user()->id == $rental->houses->users_id){
                 if ($checkin_code == $rental->checkincode) {
                     $rental->checkin_status = '1';
+                    $rental->save();
                     $datetime1 = new DateTime($rental->rental_datein);
                     $datetime2 = new DateTime($rental->rental_dateout);
                     $interval = $datetime1->diff($datetime2);
@@ -893,7 +895,10 @@ class RentalController extends Controller
                         $diary->rentals_id = $rental->id;
                         $diary->save();
                     }
-                    $rental->save();
+                    $subscribe = new Subscribe;
+                    $subscribe->writer = $diary->users_id;
+                    $subscribe->follower = Auth::user()->id;
+                    $subscribe->save();
                     return redirect()->route('rentals.show', $rental->id)->with('rental', $rental);
                 }
                 else {

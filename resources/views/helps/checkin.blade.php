@@ -5,11 +5,11 @@
 @section('content')
 
 <div class="container">
-	<div class="row">
-		<div class="panel panel-default">
-			<div class="panel-heading"><h1>Check in with Code</h1></div>
+	<div class="row m-t-10">
+		<div class="card">
+			<div class="card-title"><h1>Check in with Code</h1></div>
 
-			<div class="panel-body">
+			<div class="card-body">
 				<p>Genarated Code for Check in : {{ $randomString }}</p>
 				<p>ส่งรหัสนี้ให้เจ้าของบ้านเพื่อเป็นการยืนยันว่าเราได้เช่าบ้านเขาจริงๆ หากตรงกันจะแสดงข้อความ 'Granted' หากไม่ตรงกันจะแสดงข้อความ 'Denial'</p>
 				<p>ผู้เช่าห้องพักจะทราบรหัสนี้เพียงคนเดียว ส่วนผู้ให้เช่าห้องพักจะมี form ให้กรอกหมายเลขการเช่า และรหัสหลังผ่านการอนุมัติ</p>

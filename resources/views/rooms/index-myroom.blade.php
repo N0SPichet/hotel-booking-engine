@@ -5,14 +5,14 @@
 @section ('content')
 
 <div class="container">
-	@if (session('alert'))
-	    <div class="alert alert-success">
-	        {{ session('alert') }}
-	    </div>
-	@endif
 	<div class="row m-t-10">
 		<div class="card col">
 			<div class="card-title"><h1>Your Rooms</h1></div>
+			@if (session('alert'))
+			    <div class="alert alert-success">
+			        {{ session('alert') }}
+			    </div>
+			@endif
 			<div class="card-body">
 				@if($houses->count())
 				@foreach($houses as $house)

@@ -1,9 +1,11 @@
 <?php
 
 use App\Models\Category;
+use App\Models\Tag;
+use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 
-class CategoryTableSeeder extends Seeder
+class DiaryComponentTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,6 +18,12 @@ class CategoryTableSeeder extends Seeder
         	$cat = new Category;
         	$cat->name = "cat ".$i;
         	$cat->save();
+        }
+
+        for ($i = 1; $i <= 10 ; $i++) { 
+            $tag = new Tag;
+            $tag->name = "tag ".$i;
+            $tag->save();
         }
     }
 }

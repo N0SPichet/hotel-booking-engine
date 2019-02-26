@@ -127,13 +127,13 @@
 						</select>
 
 						<p>{{ Form::label('house_bathroomprivate', '* Is the bathroom private?', ['class' => 'm-t-10']) }}</p>
-						<div class="col-md-6" align="center">
+						<div class="col-md-3 float-left" align="center">
 							<div class="form-check form-check-inline">
 				  				<input class="form-check-input" type="radio" id="bathroomprivateyes" name="house_bathroomprivate" value="1" {{ $house->house_bathroomprivate=='1' ? 'checked'  : '' }}>
 				  				<label class="form-check-label" for="bathroomprivateyes">Yes</label>
 							</div>
 						</div>
-						<div class="col-md-6" align="center">
+						<div class="col-md-3 float-left" align="center">
 							<div class="form-check form-check-inline">
 				 				<input class="form-check-input" type="radio" id="bathroomprivateno" name="house_bathroomprivate" value="0" {{ $house->house_bathroomprivate=='0' ? 'checked'  : '' }}>
 				  				<label class="form-check-label" for="bathroomprivateno">No</label>
@@ -238,12 +238,12 @@
 		    	</div>
 		    	<div id="menu5" class="tab-pane fade">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
-		    			{{ Form::label('name', '* Cover Images', ['class' => 'm-t-10']) }}
+		    			{{ Form::label('image_name', '* Cover Images', ['class' => 'm-t-10']) }}
 						<div class="row">
 							@foreach ($houseimages as $index => $image)
 							<div class="col-md-4 margin-content">
 								<div class="form-check">
-				  				<input class="form-check-input" type="radio" name="name" id="{{ $index }}" value="{{ $image->name }}" {{ $image->name == $house->cover_image ? 'checked'  : '' }}>
+				  				<input class="form-check-input" type="radio" name="image_name" id="{{ $index }}" value="{{ $image->name }}" {{ $image->name == $house->cover_image ? 'checked'  : '' }}>
 					  			<label class="form-check-label" for="{{ $index }}">
 					  				@if($house->cover_image == $image->name)
 					  				<span class="use_as_home_thum">Home</span>

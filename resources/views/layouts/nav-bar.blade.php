@@ -22,7 +22,7 @@
 				<li><a href="{{ route('rentals.mytrips', Auth::user()->id) }}">Trips</a></li>
 				@if (Auth::user()->hasRole('Admin'))
 				<li>
-					<a href="#">Admin Section <i class="material-icons">keyboard_arrow_down</i></a>
+					<a href="#">Admin <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
 						<li><a href="{{ route('users.verify-index') }}">User Verifications</a></li>
 						<li><a href="{{ route('apartments.index') }}">Apartments</a></li>
@@ -31,12 +31,20 @@
 						<li><a href="{{ route('rentals.index') }}">Trips</a></li>
 					</ul>
 				</li>
+				<li>
+					<a href="#">Components <i class="material-icons">keyboard_arrow_down</i></a>
+					<ul class="hav-sub-nav">
+						<li><a href="{{ route('categories.index') }}"><i class="far fa-edit"></i> Categories</a></li>
+						<li><a href="{{ route('tags.index') }}"><i class="far fa-edit"></i> Diary Tags</a></li>
+						<li><a href="{{ route('houseamenities.index') }}"><i class="far fa-edit"></i> Amenities</a></li>
+					</ul>
+				</li>
 				@endif
 				<li>
 					<a href="#">{{ Auth::user()->user_fname }} Account <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
 						<li><a href="{{ route('users.profile', Auth::user()->id) }}">Profile</a></li>
-						<li><a href="{{ route('diaries.mydiaries') }}">My Diaries</a></li>
+						<li><a href="{{ route('diaries.mydiaries', Auth::user()->id) }}">My Diaries</a></li>
 						<li><a href="{{ route('summary') }}">Rental Summary</a></li>
 						<li><a href="{{ route('helps.index') }}">Help</a></li>
 						<li class="dropdown-divider"></li>

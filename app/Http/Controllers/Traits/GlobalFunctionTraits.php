@@ -18,7 +18,8 @@ trait GlobalFunctionTraits
     */
     
     /*check in status 0 not checkin 1 checkin 2 cancel*/
-	/*publish flag 0 private, 1 public, 2 trash, 3 permanant delete*/
+    /*diaries publish flag 0 private, 1 public, 2 subscriber*/
+	/*house publish flag 0 private, 1 public, 2 trash, 3 permanant delete*/
 	public $select_types_global = ['type 2 apartment', 'type 3 apartment'];
 
 	private function getTypeId($request)

@@ -19,7 +19,6 @@ Route::get('/home', 'PagesController@index')->name('home');
 Route::post('/search', 'PagesController@indexSearch')->name('search');
 
 //Create PagesController Route
-Route::get('diaries/mydiaries', 'PagesController@mydiaries')->name('diaries.mydiaries');
 Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
 
@@ -38,32 +37,19 @@ Route::prefix('users')->name('users.')->group(function () {
 	Route::post('verification/{id}/reject', 'UserController@verify_reject')->name('verify-reject');
 });
 
-//Create resource route for RentalController
-Route::resource('rentals', 'RentalController');
-Route::prefix('rentals')->name('rentals.')->group(function() {
-	Route::post('agreement', 'RentalController@rentals_agreement')->name('agreement');
-	Route::get('trips/{user}', 'RentalController@mytrip')->name('mytrips');
-	Route::get('trips/{user}/not_review', 'RentalController@not_reviews')->name('notreviews');
-	Route::get('trips/{user}/rentmyrooms', 'RentalController@rentmyrooms')->name('rentmyrooms');
-	Route::post('{rental}/accept-rentalrequest', 'RentalController@accept_rentalrequest')->name('accept-rentalrequest');
-	Route::post('{rental}/reject-rentalrequest', 'RentalController@reject_rentalrequest')->name('reject-rentalrequest');
-	Route::post('{rental}/approve', 'RentalController@rental_approve')->name('approve');
-	Route::post('{rental}/cancel', 'RentalController@rental_cancel')->name('cancel');
-	Route::post('{rental}/reject', 'RentalController@rental_reject')->name('reject');
-	Route::post('checkin/check', 'RentalController@checkcode')->name('checkin.code');
-	Route::get('trips/{user}/rentmyrooms/histories', 'RentalController@renthistories')->name('renthistories');
-});
-
 //Create resource route for DiaryController
 Route::resource('diaries', 'DiaryController');
-Route::get('diaries/{id}/single', 'DiaryController@single')->name('diary.single');
-Route::post('diaries/{id}/subscribe', 'DiaryController@subscribe')->name('diary.subscribe');
-Route::post('diaries/{id}/unsubscribe', 'DiaryController@unsubscribe')->name('diary.unsubscribe');
-Route::get('trip/{id}/diary', 'DiaryController@tripdiary')->name('tripdiary');
-Route::get('trip/{id}/diary/day/{day}/edit', 'DiaryController@tripdiary_edit')->name('tripdiary_edit');
-Route::put('trip/{id}/diary/update', 'DiaryController@tripdiary_update')->name('tripdiary_update');
-Route::get('trip/{id}/diary/delete', 'DiaryController@tripdiary_destroy')->name('tripdiary_destroy');
-Route::get('trip/{id}/diary/delete/image', 'DiaryController@detroyimage')->name('diaries.detroyimage');
+Route::prefix('diaries')->name('diaries.')->group(function() {
+	Route::get('mydiaries/{user}', 'DiaryController@mydiaries')->name('mydiaries');
+	Route::get('{diary}/single', 'DiaryController@single')->name('single');
+	Route::post('{user}/subscribe', 'DiaryController@subscribe')->name('subscribe');
+	Route::post('{user}/unsubscribe', 'DiaryController@unsubscribe')->name('unsubscribe');
+	Route::get('{rental}/trips/{user}', 'DiaryController@tripdiary')->name('tripdiary');
+	Route::get('{rental}/trips/{user}/day/{day}/edit', 'DiaryController@tripdiary_edit')->name('tripdiary.edit');
+	Route::put('trips-diary/{diary}/update', 'DiaryController@tripdiary_update')->name('tripdiary.update');
+	Route::get('trips-diary/{diary}/delete', 'DiaryController@tripdiary_destroy')->name('tripdiary.destroy');
+	Route::get('image/{image}/delete', 'DiaryController@detroyimage')->name('detroyimage');
+});
 
 //Create resource route for CategoryController
 Route::resource('categories', 'CategoryController', ['except' => ['create']]);
@@ -73,7 +59,9 @@ Route::resource('tags', 'TagController', ['except' => ['create']]);
 
 //Create resource route for CommentController
 Route::resource('comments', 'CommentController');
-Route::get('comments/{id}/delete', 'CommentController@delete')->name('comments.delete');
+Route::prefix('comments')->name('comments.')->group(function() {
+	Route::get('{comment}/delete', 'CommentController@delete')->name('delete');
+});
 
 //Create resource route for HouseitemController
 Route::resource('houseamenities', 'HouseamenityController', ['except' => ['create']]);
@@ -100,6 +88,22 @@ Route::prefix('rooms')->name('rooms.')->group(function() {
 	Route::get('image/{image}/delete', 'RoomController@detroyimage')->name('detroyimage');
 });
 
+//Create resource route for RentalController
+Route::resource('rentals', 'RentalController');
+Route::prefix('rentals')->name('rentals.')->group(function() {
+	Route::post('agreement', 'RentalController@rentals_agreement')->name('agreement');
+	Route::get('trips/{user}', 'RentalController@mytrip')->name('mytrips');
+	Route::get('trips/{user}/not_review', 'RentalController@not_reviews')->name('notreviews');
+	Route::get('trips/{user}/rentmyrooms', 'RentalController@rentmyrooms')->name('rentmyrooms');
+	Route::post('{rental}/accept-rentalrequest', 'RentalController@accept_rentalrequest')->name('accept-rentalrequest');
+	Route::post('{rental}/reject-rentalrequest', 'RentalController@reject_rentalrequest')->name('reject-rentalrequest');
+	Route::post('{rental}/approve', 'RentalController@rental_approve')->name('approve');
+	Route::post('{rental}/cancel', 'RentalController@rental_cancel')->name('cancel');
+	Route::post('{rental}/reject', 'RentalController@rental_reject')->name('reject');
+	Route::post('checkin/check', 'RentalController@checkcode')->name('checkin.code');
+	Route::get('trips/{user}/rentmyrooms/histories', 'RentalController@renthistories')->name('renthistories');
+});
+
 //create resource route for ReviewController
 Route::resource('reviews', 'ReviewController');
 
@@ -107,18 +111,9 @@ Route::resource('reviews', 'ReviewController');
 Route::resource('maps', 'MapController');
 
 //Create resource route for HelpController
-Route::resource('helps', 'HelpController', ['except' => ['create']]);
+Route::get('helps', 'HelpController@index')->name('helps.index');
 Route::get('helps/checkin/code', 'HelpController@checkincode')->name('checkincode');
 Route::get('contact', 'HelpController@getContact')->name('getcontact');
 Route::post('contact', 'HelpController@postContact')->name('postcontact');
 Route::get('contact/host/{host}', 'HelpController@getContactHost')->name('getcontacthost');
 Route::post('contact/host', 'HelpController@postContactHost')->name('postcontacthost');
-
-//Check Database Connection
-Route::get('check-connect',function(){
-	if(DB::connection()->getDatabaseName()){
-		return "Yes! successfully connected to the DB: " . DB::connection()->getDatabaseName();
-	}else{
-		return 'Connection False !!';
-	}
-});

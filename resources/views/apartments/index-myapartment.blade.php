@@ -5,11 +5,6 @@
 @section ('content')
 
 <div class="container">
-	@if (session('alert'))
-	    <div class="alert alert-success">
-	        {{ session('alert') }}
-	    </div>
-	@endif
 	<div class="row m-t-10">
 		<div class="card col">
 			<div class="card-title"><h1>Your Apartments</h1></div>

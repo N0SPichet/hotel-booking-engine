@@ -2,7 +2,6 @@
 @section ('title', 'Room | Hosting')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
-{{-- {!! Html::style('css/select2.min.css') !!} --}}
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
 <script>
 	tinymce.init({ 
