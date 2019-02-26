@@ -4,10 +4,19 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
+		<div class="col-md-12">
+			<p class="lead">User Details</p>
+			@if (Auth::check())
+			@if (Auth::user()->hasRole('Admin'))
+			<a href="{{ route('users.index') }}" class="btn btn-info">Back</a>
+			@endif
+			@endif
+			<hr>
+		</div>
 		<div class="col-md-12">
 			<div align="center">
-				<p class="lead">{{ $user->user_fname }} Profile @if ($user->user_verifications->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</p>
+				<p class="lead">{{ $user->user_fname }} Profile @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</p>
 				@if ($user->user_image == null)
 				<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="rounded-circle" style="width:200px; height: 200px; ">
 				@else
@@ -17,7 +26,7 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-8">
+		<div class="col-md-8 float-left">
 			<dl class="dl-horizontal">
 				<dt>Name</dt>
 				<dd>{{ $user->user_fname }}</dd>
@@ -28,11 +37,13 @@
 				<dt>Gender</dt>
 				<dd>{{ $user->user_gender }}</dd>
 
-				<dt>State / Province</dt>
-				<dd>{{ $user->user_state }}</dd>
+				@if($user->district_id !== null || $user->province_id !== null)
+				<dt>District</dt>
+				<dd>{{ $user->district->name }}</dd>
 
-				<dt>Country</dt>
-				<dd>{{ $user->user_country }}</dd>
+				<dt>Province</dt>
+				<dd>{{ $user->province->name }}</dd>
+				@endif
 
 				<dt><a href="{{ route('users.description', $user->id) }}" class="btn btn-outline-info">Description</a></dt>
 				<dd>{!! $user->user_description !!}</dd>
@@ -45,12 +56,12 @@
 			</dl>
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-4 float-left">
 			<p class="lead">Hosting List</p>
 			@if (Auth::check())
-			@if (Auth::user()->id == $user->id)
+			@if (Auth::user()->id == $user->id || Auth::user()->hasRole('Admin'))
 			@foreach ($houses as $house)
-				<a href="{{ route('rooms.single', $house->id) }}" class="btn btn-outline-success btn-md btn-block">
+				<a href="{{ route('rooms.owner', $house->id) }}" class="btn btn-outline-success btn-md btn-block">
 					<div align="left">
 						<p>Title : {{ $house->house_title }}</p>
 						<p>Last update : {{ date("jS F, Y", strtotime($house->updated_at)) }}</p>
@@ -67,16 +78,6 @@
 			@endif
 			@endif
 		</div>
-	</div>
-
-	<div class="row">
-		@if (Auth::check())
-		@if (Auth::user()->level == '0')
-		<div class="col-sm-6">
-			<a href="{{ route('users.index') }}" class="btn btn-link btn-md">Back</a>
-		</div>
-		@endif
-		@endif
 	</div>
 </div>
 @endsection

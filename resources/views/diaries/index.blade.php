@@ -4,7 +4,7 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h1 class="title-page">Diaries</h1>	
 		</div>
@@ -13,7 +13,7 @@
 	<div class="row">
 		<div class="col-md-12">
 			@foreach($diaries as $diary)
-			<div class="col-md-6 col-sm-6">
+			<div class="col-md-6 col-sm-6 float-left">
 				@if ($diary->days == '0' || $diary->days == NULL)
 				<div class="card" style="margin-top: 20px; width: 100%; height: 250px;">
 					<div class="col-md-12">

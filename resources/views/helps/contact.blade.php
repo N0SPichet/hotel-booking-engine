@@ -9,10 +9,9 @@
 @section('content')
 
 <div class="container">
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h1 class="title-page">Contact Us</h1>
-			<hr>
 
 			<form action="{{ route('postcontact') }}" method="POST">
 				{{ csrf_field() }}

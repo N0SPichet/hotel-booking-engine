@@ -1,32 +1,30 @@
 @extends ('main')
-
 @section ('title', 'Administrator | Rooms')
-
 @section ('content')
-
 <div class="container">
-	<div class="row">
-		<div class="panel panel-default col">
-			<div class="panel-heading"><h1 class="title-page">Rooms</h1></div>
+	<div class="row col m-t-10">
+		<div class="card col">
+			<div class="card-title"><h1 class="title-page">Rooms</h1></div>
 			@if (session('alert'))
 			    <div class="alert alert-success">
 			        {{ session('alert') }}
 			    </div>
 			@endif
-			<div class="panel-body">
+			<div class="card-body">
+				@if($houses->count())
 				@foreach($houses as $house)
-					<div class="card margin-top-10">
+					<div class="card">
 						<div class="margin-content">
-							<div class="col-md-9">
-								<a href="{{ route('rooms.single', $house->id) }}" style="text-decoration-line: none;">
+							<div class="col-md-9 float-left">
+								<a href="{{ route('rooms.owner', $house->id) }}" style="text-decoration-line: none;">
 								<p><b>Title</b> : {{ $house->house_title }} </p>
 								<p><b>Created by</b> : {{ $house->users->user_fname }} {{ $house->users->user_lname }}</p>
 								<p>Date Create : {{ date("jS F, Y", strtotime($house->created_at)) }}</p>
 								</a>
 							</div>
 
-							<div class="col-md-3" align="center">
-								{!! Html::linkRoute('rooms.single', 'View room detail', array($house->id), array('class' => 'btn btn-info btn-sm', 'style' => 'width: 60%')) !!}
+							<div class="col-md-3 float-left" align="center">
+								{!! Html::linkRoute('rooms.owner', 'View room detail', array($house->id), array('class' => 'btn btn-info btn-sm', 'style' => 'width: 60%')) !!}
 
 								@if ($house->users_id == Auth::user()->id)
 
@@ -39,8 +37,10 @@
 							</div>
 						</div>
 					</div>
-					<hr>
 				@endforeach
+				@else
+				<h4>No result</h4>
+				@endif
 			</div>
 		</div>
 		<div class="text-center">

@@ -15,7 +15,7 @@ class CreateHousespacesTable extends Migration
     {
         Schema::create('housespaces', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('spacename', 100)->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }

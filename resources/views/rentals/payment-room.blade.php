@@ -3,90 +3,73 @@
 @section ('title', 'Room Detail | Payment')
 
 @section('stylesheets')
-	{{ Html::style('css/parsley.css') }}
+{{ Html::style('css/parsley.css') }}
 @endsection
 
 @section ('content')
 <div class="container">
-	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+	<div class="row m-t-10">
+		<div class="col-md-6 float-left" style="margin: auto;">
 			<div class="lead">Booking summary</div>
-			<div class="panel panel-default">
-				<div class="panel-body">
+			<div class="card">
+				<div class="card-body">
 					<p style="font-size: 18px;"> <b>{{ $rental->houses->house_title }}</b> for <b> {{ $days }} {{ $days > 1 ? "Nights" : "Night" }}</b> </p>
 					<hr>
-					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
-						</div>
+					<div class="col-md-12">
+						<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
 					</div>
 					<hr>
-					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							<span>Room price ฿{{ $rental->houses->houseprices->price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
-							</span>
-							<span class="pull-right"> ฿{{ $rental->houses->houseprices->price*$days }} </span>
-						</div>
+					<div class="col-md-12">
+						<span>Room price ฿{{ $rental->houses->houseprices->price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
+						</span>
+						<span class="float-right"> ฿{{ $rental->houses->houseprices->price*$days }} </span>
 					</div>
-					<div class="row">
-						<div class="col-md-12">
-							<span> {{ $rental->no_rooms }} {{ $rental->no_rooms > 1 ? 'rooms' : 'room' }}</span>
-							<span class="pull-right">{{ $rental->no_rooms }}</span>
-						</div>
+					<div class="col-md-12">
+						<span> {{ $rental->no_rooms }} {{ $rental->no_rooms > 1 ? 'rooms' : 'room' }}</span>
+						<span class="float-right">{{ $rental->no_rooms }}</span>
 					</div>
 					@if ($rental->inc_food == '1')
-					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							<span>Food included ฿{{ $rental->houses->houseprices->food_price }} x {{ $days }} {{ $days > 1 ? "days" : "day" }}
-							</span>
-							<span class="pull-right"> ฿{{ $rental->houses->houseprices->food_price*$days }} </span>
-						</div>
+					<div class="col-md-12">
+						<span>Food included ฿{{ $rental->houses->houseprices->food_price }} x {{ $days }} {{ $days > 1 ? "days" : "day" }}
+						</span>
+						<span class="float-right"> ฿{{ $rental->houses->houseprices->food_price*$days }} </span>
 					</div>
 					@endif
-					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							<span> {{ $rental->rental_guest }} {{ $rental->rental_guest > 1 ? "guests" : "guest" }}
-							</span>
-							<span class="pull-right">{{ $rental->rental_guest }}</span>
-						</div>
+					<div class="col-md-12">
+						<span> {{ $rental->rental_guest }} {{ $rental->rental_guest > 1 ? "guests" : "guest" }}
+						</span>
+						<span class="float-right">{{ $rental->rental_guest }}</span>
 					</div>
 					<hr>
-					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							@if($days/7 >= 1 && $months < 1)
-							<span> Weekly Discount </span>
-							<span class="pull-right"> {{$rental->houses->houseprices->weekly_discount}} % </span>
-							@elseif($months >= 1)
-							<span> Monthly Discount </span>
-							<span class="pull-right"> {{$rental->houses->houseprices->monthly_discount}} % </span>
-							@endif
-						</div>
+					<div class="col-md-12">
+						@if($days/7 >= 1 && $months < 1)
+						<span> Weekly Discount </span>
+						<span class="float-right"> {{$rental->houses->houseprices->weekly_discount}} % </span>
+						@elseif($months >= 1)
+						<span> Monthly Discount </span>
+						<span class="float-right"> {{$rental->houses->houseprices->monthly_discount}} % </span>
+						@endif
 					</div>
-					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							<span> Service fee </span>
-							<span class="pull-right"> ฿{{ $fee }} </span>
-						</div>
+					<div class="col-md-12">
+						<span> Service fee </span>
+						<span class="float-right"> ฿{{ $fee }} </span>
 					</div>
 					<hr>
-					<div class="row">
-						<div class="col-md-12 col-md-offset-0">
-							<span> Total (Thai Baht)  </span>
-							<span class="pull-right"> ฿{{ $total_price }} </span>
-						</div>
+					<div class="col-md-12">
+						<span> Total (Thai Baht)  </span>
+						<span class="float-right"> ฿{{ $total_price }} </span>
 					</div>
-
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-md-6 col-md-offset-3">
+	<div class="row m-t-10">
+		<div class="col-md-6 float-left" style="margin: auto">
 			<div class="lead">Payment detail</div>
 			
 			<div class="row">
-				<div class="col-md-4 col-sm-4">
+				<div class="col-md-4 float-left">
 					<button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#KBank" aria-expanded="true">
 					    KASIKORN Bank
 					</button>
@@ -99,7 +82,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4">
+				<div class="col-md-4 float-left">
 					<button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#KrungsriBank" aria-expanded="true">
 					    Krungsri Bank
 					</button>
@@ -112,7 +95,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-sm-4">
+				<div class="col-md-4 float-left">
 					<button class="btn btn-info btn-block" type="button" data-toggle="collapse" data-target="#SCBBank" aria-expanded="true">
 					    SCB
 					</button>
@@ -170,7 +153,6 @@
 					</div>
 
 					<div class="col-md-12" style="overflow:hidden;">
-		                <!-- <h2>Modals</h2> -->
 		                <div class="modal" style="bottom: auto; display: block; left: auto; position: relative; right: auto; top: auto; z-index: 1; overflow:hidden;">
 		                    <div class="modal-dialog" style="width:90%;">
 		                        <div class="modal-content">
@@ -195,4 +177,7 @@
 		</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 @endsection

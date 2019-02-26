@@ -4,13 +4,12 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default col">
-                <div class="panel-heading">User Verification</div>
-                <div class="panel-body">
-                    <!-- <p style="color: red;">all information must be true</p> -->
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('user.requestverify') }}" enctype="multipart/form-data">
+    <div class="row m-t-10">
+        <div class="col-md-8 float-left" style="margin: auto">
+            <div class="card col">
+                <div class="card-title">User Verification</div>
+                <div class="card-body">
+                    <form class="form-horizontal" role="form" method="POST" action="{{ route('users.verify-request') }}" enctype="multipart/form-data">
                         {{ csrf_field() }}
                        
                         <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
@@ -18,12 +17,12 @@
 
                             <div class="col-md-6">
                                 <select id="title" type="select" class="form-control" name="title" value="{{ old('title') }}" required autofocus>
-                                    <option value="Mr.">Mr.</option>
-                                    <option value="Mrs.">Mrs.</option>
-                                    <option value="Ms.">Ms.</option>
-                                    <option value="Miss.">Miss.</option>
-                                    <option value="Dr.">Dr.</option>
-                                    <option value="Prof.">Prof.</option>
+                                    <option value="Mr." {{ Auth::user()->verification->title === 'Mr.' ? 'selected':'' }}>Mr.</option>
+                                    <option value="Mrs." {{ Auth::user()->verification->title === 'Mrs.' ? 'selected':'' }}>Mrs.</option>
+                                    <option value="Ms." {{ Auth::user()->verification->title === 'Ms.' ? 'selected':'' }}>Ms.</option>
+                                    <option value="Miss." {{ Auth::user()->verification->title === 'Miss.' ? 'selected':'' }}>Miss.</option>
+                                    <option value="Dr." {{ Auth::user()->verification->title === 'Dr.' ? 'selected':'' }}>Dr.</option>
+                                    <option value="Prof." {{ Auth::user()->verification->title === 'Prof.' ? 'selected':'' }}>Prof.</option>
                                 </select>
 
                                 @if ($errors->has('title'))
@@ -38,7 +37,7 @@
                             <label for="name" class="col-md-4 control-label">Name</label>
 
                             <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus>
+                                <input id="name" type="text" class="form-control" name="name" value="{{ Auth::user()->verification->name}}" required autofocus>
 
                                 @if ($errors->has('name'))
                                     <span class="help-block">
@@ -52,7 +51,7 @@
                             <label for="lastname" class="col-md-4 control-label">Last Name</label>
 
                             <div class="col-md-6">
-                                <input id="lastname" type="text" class="form-control" name="lastname" value="{{ old('lastname') }}" required autofocus>
+                                <input id="lastname" type="text" class="form-control" name="lastname" value="{{ Auth::user()->verification->lastname}}" required autofocus>
 
                                 @if ($errors->has('lastname'))
                                     <span class="help-block">
@@ -112,4 +111,7 @@
     </div>
 </div>
 
+@endsection
+@section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 @endsection

@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Map;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Map;
 use Session;
 
 class MapController extends Controller

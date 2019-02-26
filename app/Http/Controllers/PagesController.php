@@ -2,118 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Database\Eloquent\Model;
-use App\House;
-use App\Address;
-use App\Addresscity;
-use App\Addressstate;
-use App\Addresscountry;
-use DateTime;
-use App\Diary;
-use App\Category;
-use Mail;
-use App\Rental;
-use App\Payment;
+use App\Models\Category;
+use App\Models\Diary;
+use App\Models\HouseImage;
+use App\Models\House;
+use App\Models\Payment;
+use App\Models\Province;
+use App\Models\Rental;
 use App\User;
-use App\Himage;
 use Carbon;
+use DateTime;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Mail;
 use Session;
 
 class PagesController extends Controller
 {
+    /*publish flag 0 private, 1 public, 2 trash, 3 permanant delete*/
+    
     public function index() {
-        // $tomorrow = Carbon::tomorrow();
-        // $rentals_in = Rental::where('rental_datein', '<=', $tomorrow)->get();
-        // foreach ($rentals_in as $rental) {
-        //     if ($rental->payments->payment_status == NULL) {
-        //         $rental->payments->payment_status = 'Out of Date';
-        //         if ($rental->houses->housetypes_id == '1') {
-        //             $house = House::find($rental->houses->id);
-        //             $house->no_rooms = $house->no_rooms + $rental->no_rooms;
-        //             $house->save();
-        //         }
-        //         $rental->rental_checkroom = '1';
-        //         $rental->payments->save();
-        //         $rental->save();
-        //     }
-        //     if ($rental->host_decision != 'ACCEPT') {
-        //         $rental->host_decision = 'EARLY';
-        //         $rental->rental_checkroom = '1';
-        //         $rental->save();
-        //     }
-        // }
-        // $rentals_out = Rental::where('rental_dateout', '<=', $tomorrow)->get();
-        // foreach ($rentals_out as $rental) {
-        //     if ($rental->rental_checkroom == '0') {
-        //         if ($rental->checkin_status == '1') {
-        //             if ($rental->houses->housetypes_id == '1') {
-        //                 $house = House::find($rental->houses->id);
-        //                 $house->no_rooms = $house->no_rooms + $rental->no_rooms;
-        //                 $house->save();
-        //             }
-        //             $rental->rental_checkroom = '1';
-        //             $rental->save();
-        //         }
-        //         if ($rental->host_decision == NULL && $rental->checkin_status == NULL){
-        //             $rental->host_decision = 'REJECT';
-        //             $rental->rental_checkroom = '1';
-        //             $rental->save();
-        //         }
-        //     }
-        // }
-
-        $houses = House::where('publish', '2')->inRandomOrder()->paginate(10);
-        $images = Himage::all();
+        $houses = House::where('publish', '1')->inRandomOrder()->paginate(10);
+        $houses_id = array();
+        foreach ($houses as $key => $house) {
+            array_push($houses_id, $house->id);
+        }
+        $images = HouseImage::whereIn('house_id', $houses_id)->get();
         return view('pages.home')->with('houses', $houses)->with('images', $images);
     }
 
-    // public function index() {
-    //     return view('pages.home_new');
-    // }
-
     public function indexSearch(Request $request) {
         if ($request->search) {
-            $state = Addressstate::where('state_name', 'like', '%'.$request->search.'%')->first();
-            if ($state != NULL) {
-                $houses = House::where('publish', '1')->where('addressstates_id', $state->id)->paginate(10);
-                $images = Himage::all();
+            $province = Province::where('name', 'like', '%'.$request->search.'%')->first();
+            if (!is_null($province)) {
+                $houses = House::where('publish', '1')->where('province_id', $province->id)->paginate(10);
+                $houses_id = array();
+                foreach ($houses as $key => $house) {
+                    array_push($houses_id, $house->id);
+                }
+                $images = HouseImage::whereIn('houses_id', $houses_id)->get();
+                return view('pages.home')->with('houses', $houses)->with('images', $images);
             }
-            else {
-                $houses = NULL;
-                $images = NULL;
-            }
-            return view('pages.home')->with('houses', $houses)->with('images', $images);
         }
-        else {
-            return redirect()->route('home');
-        }
-    }
-
-    public function userprofile() {
-        if (Auth::check()) {
-            $user = User::where('email', Auth::user()->email)->first();
-            return view('users.profile', compact('user'));
-        }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
-    }
-
-    //Diaries
-    public function mydiaries()
-    {
-        if (Auth::check()) {
-            $diaries = Diary::where('users_id', Auth::user()->id)->whereNull('days')->orWhere('days', '0')->orderBy('created_at', 'desc')->paginate(10);
-            return view('diaries.mydiary')->with('diaries', $diaries);
-            }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
+        return redirect()->route('home');
     }
 
     public function introroom()
@@ -156,7 +89,7 @@ class PagesController extends Controller
             $rental_id = Rental::whereIn('houses_id', $h_id)->get();
             $p_id = array();
             foreach ($rental_id as $key => $rental) {
-                $p_id[$key] = $rental->payments_id;
+                $p_id[$key] = $rental->payment_id;
             }
 
             $payment_approved = Payment::whereIn('id', $p_id)->where(function ($query) {
@@ -181,7 +114,7 @@ class PagesController extends Controller
             })->get();
             $p_id = array();
             foreach ($rentals_id as $key => $rental) {
-                $p_id[$key] = $rental->payments_id;
+                $p_id[$key] = $rental->payment_id;
             }
 
             $approved = Payment::whereIn('id', $p_id)->where(function ($query) {

@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
-use App\Category;
 use Session;
 
 class CategoryController extends Controller
@@ -11,6 +11,7 @@ class CategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('crole:Admin');
     }
     
     /**
@@ -25,16 +26,6 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -43,17 +34,12 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, array(
-            'category_name' => 'required|max:45'
+            'category' => 'required|max:45'
         ));
-
         $category = New Category;
-
-        $category->category_name = $request->category_name;
-
+        $category->name = $request->category;
         $category->save();
-
         Session::flash('seccess', 'New Category has been created');
-
         return redirect()->route('categories.index');
     }
 
@@ -86,9 +72,15 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category)
     {
-        //
+        $this->validate($request, array(
+            'category_edit' => 'required|max:45'
+        ));
+        $category->name = $request->category_edit;
+        $category->save();
+        Session::flash('seccess', 'New Category has been created');
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -97,8 +89,10 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Category $category)
     {
-        //
+        if($category->delete()) {
+            return redirect()->route('categories.index');
+        }
     }
 }

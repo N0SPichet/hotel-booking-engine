@@ -15,7 +15,7 @@ class CreateHouseamenitiesTable extends Migration
     {
         Schema::create('houseamenities', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('amenityname', 100)->nullable();
+            $table->string('name');
             $table->timestamps();
         });
     }

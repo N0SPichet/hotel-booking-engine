@@ -3,7 +3,7 @@
 @section ('title', 'Room Detail | Agreement')
 
 @section('stylesheets')
-	{{ Html::style('css/parsley.css') }}
+{{ Html::style('css/parsley.css') }}
 @endsection
 
 @section ('content')
@@ -15,18 +15,20 @@
 				<div>
 					<ul>
 						@foreach ($house->houserules as $houserule)
-							<li>{{ $houserule->houserule_name }}</li>
+							<li>{{ $houserule->name }}</li>
 						@endforeach
 						
 						<hr>
 						<p>You must also acknowledge</p>
 						@foreach ($house->housedetails as $housedetail)
-							<li>{{ $housedetail->must_know }}</li>
+							<li>{{ $housedetail->name }}</li>
 						@endforeach
 						@if ($house->optional_rules != NULL)
 						<hr>
 						<p>Additional rules</p>
-						<p>{{ $house->optional_rules }}</p>
+						<div class="bg-warning">
+							<p>{{ $house->optional_rules }}</p>
+						</div>
 						@endif
 					</ul>
 				</div>
@@ -44,19 +46,19 @@
 					{{ Form::hidden('id', $id, []) }}
 					{{ Form::hidden('datein', $datein, []) }}
 					{{ Form::hidden('dateout', $dateout, []) }}
-					{{ Form::hidden('housetypes_id', $housetypes_id, []) }}
+					{{ Form::hidden('types', $types, []) }}
 
-					@if ($housetypes_id == '1' || $housetypes_id == '5')
+					@if ($types == 'room')
+					{{ Form::hidden('guest', $guest, []) }}
+					{{ Form::hidden('no_rooms', $no_rooms, []) }}
+					{{ Form::hidden('food', $food, []) }}
+					@else
 					{{ Form::hidden('no_type_single', $no_type_single, []) }}
 					{{ Form::hidden('no_type_deluxe_single', $no_type_deluxe_single, []) }}
 					{{ Form::hidden('no_type_double_room', $no_type_double_room, []) }}
 					{{ Form::hidden('type_single_price', $type_single_price, []) }}
 					{{ Form::hidden('type_deluxe_single_price', $type_deluxe_single_price, []) }}
 					{{ Form::hidden('type_double_room_price', $type_double_room_price, []) }}
-					@else
-					{{ Form::hidden('guest', $guest, []) }}
-					{{ Form::hidden('no_rooms', $no_rooms, []) }}
-					{{ Form::hidden('food', $food, []) }}
 					@endif
 
 					<hr>
@@ -66,4 +68,7 @@
 		</div>
 	</div> <!-- end of detail row-->
 </div>
+@endsection
+@section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 @endsection

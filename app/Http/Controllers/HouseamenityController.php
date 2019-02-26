@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Houseamenity;
 use Illuminate\Http\Request;
-use App\Houseamenity;
 use Session;
 
 class HouseamenityController extends Controller

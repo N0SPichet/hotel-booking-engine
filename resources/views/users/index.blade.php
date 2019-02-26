@@ -5,25 +5,25 @@
 @section ('content')
 
 <div class="container">
-	<div class="row">
-		<div class="panel panel-default col">
-			<div class="panel-heading"><h1 class="title-page">Users</h1></div>
+	<div class="row m-t-10">
+		<div class="col-12">
+			<div class="card-title"><h1 class="title-page">Users</h1></div>
 
-			<div class="panel-body">
+			<div class="card-text">
 				@foreach ($users as $user)
-				<div class="card margin-top-10">
+				<div class="card m-t-10">
 					<div class="margin-content">
-						<div class="col-md-9">
+						<div class="col-md-9 float-left">
 							<a href="{{ route('users.show', $user->id) }}" style="text-decoration-line: none; ">
-							<p><b>Level</b> {{ $user->level=='0' ? 'Admin' : 'User' }}</p>
+							<p><b>Level</b> <span class="text-danger">{{ $user->hasRole('Admin') ? 'Admin' : 'User' }}</span></p>
 							<p>{{ $user->user_fname }} {{ $user->user_lname }}</p>
 							<p><b>Email</b> {{ $user->email }}</p>
 							</a>
 						</div>
 
-						<div class="col-md-3" align="center">
+						<div class="col-md-3 float-left" align="center">
 							{!! Html::linkRoute('users.show', 'View User Profile', array($user->id), array('class' => 'btn btn-info btn-sm', 'style' => 'width: 60%')) !!}
-							{!! Form::open(['route' => ['users.report', $user->id]]) !!}
+							{!! Form::open(['route' => ['users.block', $user->id]]) !!}
 							{!! Form::submit('Report this User', ['class' => 'btn btn-danger btn-sm btn-h1-spacing', 'style' => 'width: 60%']) !!}
 							{!! Form::close() !!}
 						</div>
