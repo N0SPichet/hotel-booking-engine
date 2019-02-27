@@ -57,12 +57,12 @@
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 						{!! Form::model($house, ['route' => ['apartments.update', $house->id], 'files' => true, 'method' => 'PUT']) !!}
 						<h2>Basic</h2>
-						{{ Form::label('housetypes_id', '* What type of property is this?', ['class' => 'm-t-10']) }}
-						<select id="housetypes_id" class="form-control m-t-10" name="housetypes_id">
-							<option value="0">Select Types</option>
+						{{ Form::label('housetype_id', '* What type of property is this?', ['class' => 'm-t-10']) }}
+						<select id="housetype_id" class="form-control m-t-10" name="housetype_id">
+							<option value="0" disabled="">Select Types</option>
 							@foreach ($types as $type)
-							@if($house->housetypes_id !== null)
-							<option value="{{ $type->id }}" {{ $type->id==$house->housetypes_id? 'selected':'' }}>{{ $type->name }}</option>
+							@if($house->housetype_id !== null)
+							<option value="{{ $type->id }}" {{ $type->id==$house->housetype_id? 'selected':'' }}>{{ $type->name }}</option>
 							@else
 							<option value="{{ $type->id }}" {{ $type->id==1? 'selected':'' }}>{{ $type->name }}</option>
 							@endif

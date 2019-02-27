@@ -5,7 +5,7 @@
 			<p>{{ $detailmessage }}</p>
 			<p>{{ $guest }} guest.</p>
 			<p>{{ $endmessage }}</p>
-			<a href="{{ route('mytrips') }}" style="text-decoration-line: none;">My Trips</a>
+			<a href="{{ route('rentals.mytrips', $rentlUserId) }}" style="text-decoration-line: none;">My Trips</a>
 		</div>
 	</div>
 	<div align="center">

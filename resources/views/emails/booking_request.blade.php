@@ -3,7 +3,7 @@
 		<div style="padding: 20px;">
 			<p>{{ $bodyMessage }}</p>
 			<p>{{ $detailmessage }}</p>
-			<a href="{{ route('rentals.rmyrooms') }}">Rentals</a>
+			<a href="{{ route('rentals.rentmyrooms', $ownerId) }}">Rentals</a>
 		</div>
 	</div>
 	<div align="center">

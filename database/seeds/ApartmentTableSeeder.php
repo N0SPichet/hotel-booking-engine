@@ -63,7 +63,7 @@ class ApartmentTableSeeder extends Seeder
         $house->about_neighborhood = '<p>Test neighborhood</p>';
         $house->cover_image = '1551026687762.jpg';
         $house->users_id = 2;
-        $house->housetypes_id = 2;
+        $house->housetype_id = 2;
         $house->sub_district_id = 3348;
         $house->district_id = 434;
         $house->province_id = 33;

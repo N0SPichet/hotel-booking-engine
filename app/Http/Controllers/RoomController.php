@@ -47,14 +47,14 @@ class RoomController extends Controller
     public function index()
     {
         $types_id = $this->getTypeId('room');
-        $houses = House::whereIn('housetypes_id', $types_id)->orderBy('id')->paginate(10);
+        $houses = House::whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
         return view('rooms.index')->with('houses', $houses);
     }
 
     public function index_myroom(User $user) {
         if (Auth::user()->id === $user->id) {
             $types_id = $this->getTypeId('room');
-            $houses = House::where('users_id', $user->id)->whereIn('housetypes_id', $types_id)->orderBy('id')->paginate(10);
+            $houses = House::where('users_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
             return view('rooms.index-myroom')->with('houses', $houses);
         }
         Session::flash('fail', 'Unauthorized access.');
@@ -97,7 +97,7 @@ class RoomController extends Controller
             'house_bathroomprivate' => 'required',
             'house_address' => 'required',
             'house_postcode' => 'required',
-            'housetypes_id' => 'required',
+            'housetype_id' => 'required',
             'district_id' => 'required',
             'sub_district_id' => 'required',
             'province_id' => 'required',
@@ -118,7 +118,7 @@ class RoomController extends Controller
         $house->house_bathroomprivate = $request->house_bathroomprivate;
         $house->house_address = $request->house_address;
         $house->house_postcode = $request->house_postcode;
-        $house->housetypes_id = $request->housetypes_id;
+        $house->housetype_id = $request->housetype_id;
         $house->district_id = $request->district_id;
         $house->sub_district_id = $request->sub_district_id;
         $house->province_id = $request->province_id;
@@ -230,7 +230,7 @@ class RoomController extends Controller
 
     public function owner($houseId){
         $types_id = $this->getTypeId('room');
-        $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+        $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
             if (Auth::user()->hasRole('Admin') || Auth::user()->id == $house->users_id) {
                 $rentcount = Rental::where('houses_id', $house->id)->count();
@@ -242,7 +242,7 @@ class RoomController extends Controller
         }
         else {
             $types_id = $this->getTypeId('apartment');
-            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
             if (!is_null($house)) {
                 return redirect()->route('apartments.owner', $houseId);
             }
@@ -260,7 +260,7 @@ class RoomController extends Controller
     public function show($houseId)
     {
         $types_id = $this->getTypeId('room');
-        $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+        $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
             if ($house->publish == '1') {
                 $reviews = Review::where('house_id', $house->id)->get();
@@ -278,7 +278,7 @@ class RoomController extends Controller
         }
         else {
             $types_id = $this->getTypeId('apartment');
-            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
             if (!is_null($house)) {
                 return redirect()->route('apartments.show', $houseId);
             }
@@ -296,7 +296,7 @@ class RoomController extends Controller
     public function edit($houseId)
     {
         $types_id = $this->getTypeId('room');
-        $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+        $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
             if (Auth::user()->id == $house->users_id) {
                 $types = $this->getType('room');
@@ -321,7 +321,7 @@ class RoomController extends Controller
         }
         else {
             $types_id = $this->getTypeId('apartment');
-            $house = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
             if (!is_null($house)) {
                 return redirect()->route('apartments.edit', $house->id);
             }
@@ -340,7 +340,7 @@ class RoomController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, array(
-            'housetypes_id' => 'required',
+            'housetype_id' => 'required',
             'house_capacity' => 'required',
             'house_bedrooms' => 'required',
             'house_beds' => 'required',
@@ -357,7 +357,7 @@ class RoomController extends Controller
         ));
 
         $house = House::find($id);
-        $house->housetypes_id = $request->housetypes_id;
+        $house->housetype_id = $request->housetype_id;
         $house->house_capacity = $request->house_capacity;
         $house->house_guestspace = $request->house_guestspace;
         $house->house_bedrooms = $request->house_bedrooms;

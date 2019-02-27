@@ -59,8 +59,8 @@
 							<option value="hotel">Hotel</option>
 							<option value="something">Something else</option>
 						</select>
-						{{ Form::label('housetypes_id', '* What type of property is this?', ['class' => 'm-t-10']) }}
-						<select class="form-control m-t-10" name="housetypes_id">
+						{{ Form::label('housetype_id', '* What type of property is this?', ['class' => 'm-t-10']) }}
+						<select class="form-control m-t-10" name="housetype_id">
 							@foreach ($types as $type)
 							<option value="{{ $type->id }}">{{ $type->name }}</option>
 							@endforeach

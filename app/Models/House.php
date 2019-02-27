@@ -70,7 +70,7 @@ class House extends Model
         return $this->belongsToMany(Housespace::class);
     }
 
-    public function housetypes() {
+    public function housetype() {
         return $this->belongsTo(Housetype::class);
     }
 

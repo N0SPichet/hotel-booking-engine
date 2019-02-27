@@ -301,7 +301,7 @@
 				@endif
 			</div>
 			@if (Auth::user()->id == $rental->user->id)
-			<div class="card">
+			<div class="card m-t-10">
 				<div class="margin-content" align="center">
 					@if ($rental->checkin_status == '1')
 					<a href="{{ route('diaries.tripdiary', [$rental->id, $rental->user_id]) }}" class="btn btn-primary btn-md">Write Diary for this great trip</a>

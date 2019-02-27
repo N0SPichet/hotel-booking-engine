@@ -84,7 +84,8 @@ class SendEmails extends Command
                     'subject' => "LTT - You have a trip",
                     'bodyMessage' => $premessage,
                     'detailmessage' => $detailmessage,
-                    'endmessage' => $endmessage
+                    'endmessage' => $endmessage,
+                    'rentlUserId' => $rental->user_id
                 );
 
                 Mail::send('emails.notic_email', $data, function($message) use ($data){
