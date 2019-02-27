@@ -18,7 +18,7 @@ class Diary extends Model
     	return $this->belongsTo(User::class);
     }
 
-    public function categories(){
+    public function category(){
     	return $this->belongsTo(Category::class);
     }
 

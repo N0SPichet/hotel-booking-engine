@@ -22,5 +22,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DiaryComponentTableSeeder::class);
         $this->call(RoomTableSeeder::class);
         $this->call(ApartmentTableSeeder::class);
+        $this->call(RentalTableSeeder::class);
     }
 }

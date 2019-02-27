@@ -25,8 +25,8 @@
 				{{ Form::label('title', 'Title:') }}
 				{{ Form::text('title', null, ['class' => 'form-control']) }}
 
-				{{ Form::label('categories_id', 'Category:', ['class' => 'form-spacing-top']) }}
-				<select class="form-control form-spacing-top-8" name="categories_id">
+				{{ Form::label('category_id', 'Category:', ['class' => 'form-spacing-top']) }}
+				<select class="form-control form-spacing-top-8" name="category_id">
 					@foreach ($categories as $category)
 					<option value="{{ $category->id }}">{{ $category->name }}</option>
 					@endforeach

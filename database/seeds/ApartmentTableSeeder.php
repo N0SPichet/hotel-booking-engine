@@ -3,8 +3,12 @@
 use App\Models\Apartmentprice;
 use App\Models\Food;
 use App\Models\Guestarrive;
-use App\Models\Himage;
 use App\Models\House;
+use App\Models\HouseImage;
+use App\Models\Houseamenity;
+use App\Models\Housedetail;
+use App\Models\Houserule;
+use App\Models\Housespace;
 use App\Models\Map;
 use Illuminate\Database\Seeder;
 
@@ -36,8 +40,8 @@ class ApartmentTableSeeder extends Seeder
 
     	$food = new Food;
     	$food->breakfast = 0;
-    	$food->breakfast = 0;
-    	$food->breakfast = 0;
+        $food->lunch = 0;
+        $food->dinner = 0;
     	$food->save();
 
         $house = new House;
@@ -68,87 +72,112 @@ class ApartmentTableSeeder extends Seeder
         $house->foods_id = $food->id;
         $house->save();
 
+        $amenities_id = array();
+        $amenities = Houseamenity::all()->random(3);
+        foreach ($amenities as $key => $amenity) {
+            array_push($amenities_id, $amenity->id);
+        }
+        $spaces_id = array();
+        $spaces = Housespace::all()->random(3);
+        foreach ($spaces as $key => $space) {
+            array_push($spaces_id, $space->id);
+        }
+        $rules_id = array();
+        $rules = Houserule::all()->random(3);
+        foreach ($rules as $key => $rule) {
+            array_push($rules_id, $rule->id);
+        }
+        $details_id = array();
+        $details = Housedetail::all()->random(3);
+        foreach ($details as $key => $detail) {
+            array_push($details_id, $detail->id);
+        }
+        $house->houseamenities()->sync($amenities_id, false);
+        $house->housespaces()->sync($spaces_id, false);
+        $house->houserules()->sync($rules_id, false);
+        $house->housedetails()->sync($details_id, false);
+
         $map = new Map;
         $map->map_lat = '7.897171916761951000';
         $map->map_lng = '98.346434798889160000';
         $map->houses_id = $house->id;
         $map->save();
 
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026687762.jpg';
         $image->house_id = $house->id;
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026688142.jpg';
         $image->house_id = $house->id;
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026688272.jpg';
         $image->house_id = $house->id;
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026688212.jpg';
         $image->house_id = $house->id;
         $image->save();
 
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026689372.jpg';
         $image->house_id = $house->id;
         $image->room_type = '1';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026689692.jpg';
         $image->house_id = $house->id;
         $image->room_type = '1';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026690912.jpg';
         $image->house_id = $house->id;
         $image->room_type = '1';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026690202.jpg';
         $image->house_id = $house->id;
         $image->room_type = '1';
         $image->save();
 
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026690812.jpg';
         $image->house_id = $house->id;
         $image->room_type = '2';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026691812.jpg';
         $image->house_id = $house->id;
         $image->room_type = '2';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026691442.jpg';
         $image->house_id = $house->id;
         $image->room_type = '2';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026692612.jpg';
         $image->house_id = $house->id;
         $image->room_type = '2';
         $image->save();
 
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026692612.jpg';
         $image->house_id = $house->id;
         $image->room_type = '3';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026692632.jpg';
         $image->house_id = $house->id;
         $image->room_type = '3';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026693572.jpg';
         $image->house_id = $house->id;
         $image->room_type = '3';
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026693102.jpg';
         $image->house_id = $house->id;
         $image->room_type = '3';

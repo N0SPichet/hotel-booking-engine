@@ -93,7 +93,7 @@
 			<div class="col-md-4 float-left">
 				<div class="well">
 					<div class="dl-horizontal">
-						<p><b>Category :</b> {{ $diary->categories->name }}</p>
+						<p><b>Category :</b> {{ $diary->category->name }}</p>
 					</div>
 					@if ($diary->users_id == Auth::user()->id)
 					<div class="col-md-12" align="center">

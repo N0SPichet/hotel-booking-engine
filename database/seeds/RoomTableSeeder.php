@@ -2,9 +2,13 @@
 
 use App\Models\Food;
 use App\Models\Guestarrive;
-use App\Models\Himage;
 use App\Models\House;
+use App\Models\HouseImage;
+use App\Models\Houseamenity;
+use App\Models\Housedetail;
 use App\Models\Houseprice;
+use App\Models\Houserule;
+use App\Models\Housespace;
 use App\Models\Map;
 use Illuminate\Database\Seeder;
 
@@ -34,8 +38,8 @@ class RoomTableSeeder extends Seeder
 
     	$food = new Food;
     	$food->breakfast = 1;
-    	$food->breakfast = 1;
-    	$food->breakfast = 0;
+    	$food->lunch = 1;
+    	$food->dinner = 0;
     	$food->save();
 
         $house = new House;
@@ -67,25 +71,50 @@ class RoomTableSeeder extends Seeder
         $house->foods_id = $food->id;
         $house->save();
 
+        $amenities_id = array();
+        $amenities = Houseamenity::all()->random(3);
+        foreach ($amenities as $key => $amenity) {
+            array_push($amenities_id, $amenity->id);
+        }
+        $spaces_id = array();
+        $spaces = Housespace::all()->random(3);
+        foreach ($spaces as $key => $space) {
+            array_push($spaces_id, $space->id);
+        }
+        $rules_id = array();
+        $rules = Houserule::all()->random(3);
+        foreach ($rules as $key => $rule) {
+            array_push($rules_id, $rule->id);
+        }
+        $details_id = array();
+        $details = Housedetail::all()->random(3);
+        foreach ($details as $key => $detail) {
+            array_push($details_id, $detail->id);
+        }
+        $house->houseamenities()->sync($amenities_id, false);
+        $house->housespaces()->sync($spaces_id, false);
+        $house->houserules()->sync($rules_id, false);
+        $house->housedetails()->sync($details_id, false);
+
         $map = new Map;
         $map->map_lat = '7.898107099308214500';
         $map->map_lng = '98.348451820068360000';
         $map->houses_id = $house->id;
         $map->save();
 
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026527712.jpg';
         $image->house_id = $house->id;
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026528452.jpg';
         $image->house_id = $house->id;
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026528552.jpg';
         $image->house_id = $house->id;
         $image->save();
-        $image = new Himage;
+        $image = new HouseImage;
         $image->name = '1551026528672.jpg';
         $image->house_id = $house->id;
         $image->save();

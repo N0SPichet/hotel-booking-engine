@@ -266,6 +266,24 @@ class ApartmentController extends Controller
         $house->houserules()->sync($request->houserules, false);
         $house->housedetails()->sync($request->housedetails, false);
 
+        $premessage = "Dear " . $house->users->user_fname;
+        $detailmessage = "Your property are ready to deploy. At " . date('jS F, Y', strtotime($house->create_at)) . " you have create an apartment name ". $house->house_title;
+        $endmessage = "checkout you apartment click <a href='".route('apartments.owner', $house->id)."'>Owner</a>";
+
+        $data = array(
+            'email' => $rental->user->email,
+            'subject' => "LTT - Apartment Created",
+            'bodyMessage' => $premessage,
+            'detailmessage' => $detailmessage,
+            'endmessage' => $endmessage
+        );
+
+        Mail::send('emails.booking_accepted', $data, function($message) use ($data){
+            $message->from('noreply@ltt.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
+
         Session::flash('success', 'This house was succussfully saved!');
         return redirect()->route('apartments.owner', $house->id);
     }

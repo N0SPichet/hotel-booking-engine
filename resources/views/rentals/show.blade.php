@@ -65,9 +65,10 @@
 				</div>
 			</div>
 			
-			@if ($rental->payment->payment_status != null)
+			@if($rental->payment->payment_status != null)
 			<div class="m-t-20">
 				<div class="card">
+					@if($rental->payment->payment_status != 'Cancel')
 					<div class="margin-content">
 						@if($rental->payment->payment_status == 'Waiting')
 						@if(Auth::user()->hasRole('Admin'))
@@ -107,6 +108,13 @@
 						<p class="text-center">Transfer Slip</p>
 						@endif
 					</div>
+					@else
+					@if ($rental->payment->payment_status == 'Cancel')
+					<div class="margin-content">
+						<a href="#" class="btn btn-md btn-warning" style="width: 100px;">Refund</a>
+					</div>
+					@endif
+					@endif
 				</div>
 			</div>
 			@elseif ($rental->host_decision != null && $rental->host_decision != 'REJECT')

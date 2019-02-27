@@ -85,7 +85,7 @@ class DiaryController extends Controller
                         }
                         $diary->days = $i;
                         $diary->users_id = $rental->user_id;
-                        $diary->categories_id = '1';
+                        $diary->category_id = '1';
                         $diary->rentals_id = $rental->id;
                         $diary->save();
                     }
@@ -124,7 +124,7 @@ class DiaryController extends Controller
     {
         $this->validate($request, array(
             'title' => 'required|max:255',
-            'categories_id' => 'required',
+            'category_id' => 'required',
             'message' => 'required'
         ));
         $diary = new Diary;
@@ -137,7 +137,7 @@ class DiaryController extends Controller
             Image::make($cover_image)->resize(1440,1080)->save($location);
             $diary->cover_image = $filename;
         }
-        $diary->categories_id = $request->categories_id;
+        $diary->category_id = $request->category_id;
         $diary->message = Purifier::clean($request->message);
         $diary->save();
         if ($request->hasFile('images')) {
@@ -324,7 +324,7 @@ class DiaryController extends Controller
                 }
                 $diary->days = $day;
                 $diary->users_id = Auth::user()->id;
-                $diary->categories_id = $diary_first->categories_id;
+                $diary->category_id = $diary_first->category_id;
                 $diary->rentals_id = $rentalId;
                 $diary->save();
             }
@@ -357,7 +357,7 @@ class DiaryController extends Controller
         //validate the data
         $this->validate($request, array(
             'title' => 'required|max:255',
-            'categories_id' => 'required|integer',
+            'category_id' => 'required|integer',
             'message' => 'required'
         ));
         $diary = Diary::find($diaryId);
@@ -392,7 +392,7 @@ class DiaryController extends Controller
                 Image::make($cover_image)->resize(1440,1080)->save($location);
                 $diary->cover_image = $filename;
             }
-            $diary->categories_id = $request->input('categories_id');
+            $diary->category_id = $request->input('category_id');
             $diary->message = Purifier::clean($request->input('message'));
             $diary->save();
             if (isset($request->tags)) {
@@ -425,11 +425,11 @@ class DiaryController extends Controller
         if (Auth::user()->id == $diary->users_id) {
             if (!is_null($diary)) {
                 if ($diary->days == '0') {
-                    if ($diary->categories_id != $request->input('categories_id')) {
-                        $diary->categories_id = $request->input('categories_id');
+                    if ($diary->category_id != $request->input('category_id')) {
+                        $diary->category_id = $request->input('category_id');
                         $diaries = Diary::where('rentals_id', $diary->rentals_id)->get();
                         foreach ($diaries as $key => $diary) {
-                             $diary->categories_id = $request->input('categories_id');
+                             $diary->category_id = $request->input('category_id');
                              $diary->save();
                         }
                     }

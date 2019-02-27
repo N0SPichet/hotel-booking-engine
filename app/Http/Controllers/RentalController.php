@@ -30,7 +30,7 @@ class RentalController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('crole:Admin')->except('create', 'show', 'store', 'edit', 'update', 'destroy', 'mytrip', 'rentmyrooms', 'rentals_agreement', 'accept_rentalrequest', 'reject_rentalrequest', 'renthistories', 'checkcode', 'not_reviews');
+        $this->middleware('crole:Admin')->except('create', 'show', 'store', 'edit', 'update', 'destroy', 'mytrip', 'rentmyrooms', 'rentals_agreement', 'accept_rentalrequest', 'reject_rentalrequest', 'rental_cancel', 'renthistories', 'checkcode', 'not_reviews');
     }
 
     /**
@@ -40,7 +40,7 @@ class RentalController extends Controller
      */
     public function index()
     {
-        $rentals = Rental::orderBy('created_at', 'desc')->paginate(10);
+        $rentals = Rental::orderBy('id', 'desc')->paginate(10);
         return view('rentals.index')->with('rentals', $rentals);
     }
 
@@ -48,7 +48,7 @@ class RentalController extends Controller
     {   
         $user = User::findOrFail($userId);
         if (Auth::user()->id == $user->id) {
-            $rentals = Rental::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(5);
+            $rentals = Rental::where('user_id', $user->id)->orderBy('id', 'desc')->paginate(5);
             $reviews = Review::where('user_id', $user->id)->get();
             $rentals_id = array();
             foreach ($reviews as $key => $review) {
@@ -114,7 +114,7 @@ class RentalController extends Controller
                 $now->subDay();
                 $rentals = Rental::where('houses_id', $house->id)->where('rental_datein', '>', $now)->where( function ($query) {
                     $query->where('host_decision', 'ACCEPT')->where('checkin_status', '0');
-                })->orderBy('created_at', 'desc')->get();
+                })->orderBy('id', 'desc')->get();
                 foreach ($rentals as $rental) {
                     if ($rental->payment->payment_status == 'Waiting' || $rental->payment->payment_status == 'Approved' || $rental->payment->payment_status == null) {
                         if ($datein > $rental->rental_datein) {
@@ -218,7 +218,7 @@ class RentalController extends Controller
     {
         if ($rental->payment->payment_status == null && $rental->payment->payment_status != 'Cancel' && $rental->payment->payment_status != 'Out of Date') {
             $rental->host_decision = 'ACCEPT';
-            /*
+
             $premessage = "Dear " . $rental->user->user_fname;
             $detailmessage = "Your host was accepted your booking " . $rental->houses->house_title . " Stay date " . date('jS F, Y', strtotime($rental->rental_datein)) . " to " . date('jS F, Y', strtotime($rental->rental_dateout));
             $endmessage = "Next please have a payment to complete booking!";
@@ -236,7 +236,7 @@ class RentalController extends Controller
                 $message->to($data['email']);
                 $message->subject($data['subject']);
             });
-            */
+
             $rental->save();
             Session::flash('success', 'Thank you for accept this request.');
             return redirect()->route('rentals.rentmyrooms', $rental->user_id);
@@ -306,7 +306,7 @@ class RentalController extends Controller
         $rental->houses_id = $request->id;
         $rental->payment_id = $payment->id;
         $rental->save();
-        /*
+
         $premessage = "Dear " . $rental->houses->users->user_fname;
         $detailmessage = $rental->user->user_fname . " " . $rental->user->user_lname . " request to booking your room. Please check Rentals page for accept this request";
 
@@ -341,7 +341,7 @@ class RentalController extends Controller
             $message->to($data['email']);
             $message->subject($data['subject']);
         });
-        */
+
 
         Session::flash('success', 'You was succussfully booking, Now wait for host accept your booking and have a payment!');
 
@@ -619,7 +619,7 @@ class RentalController extends Controller
             $rental = Rental::where('payment_id', $payment->id)->first();
             $rental->discount = $request->discount;
             $rental->save();
-            /*
+
             $premessage = "Dear " . $rental->user->user_fname . " " . $rental->user->user_lname . " , With reference to your request for bill payment via LTT Service as follows.";
             $detailmessage = $rental->user->user_fname . " " . $rental->user->user_lname . " has pay " . $rental->payment->payment_amount . " thai baht for booking room " . $rental->houses->house_title . " Stay date " . date('jS F, Y', strtotime($rental->rental_datein)) . " to " . date('jS F, Y', strtotime($rental->rental_dateout)) . ".";
             $endmessage = "Now, wait for checking payment then you will completely booking and have a code for check-in.";
@@ -638,7 +638,7 @@ class RentalController extends Controller
                 $message->to($data['email']);
                 $message->subject($data['subject']);
             });
-            */
+
             return redirect()->route('rentals.mytrips', Auth::user()->id);
         }
         Session::flash('fail', 'Unauthorized access.');
@@ -667,7 +667,6 @@ class RentalController extends Controller
             $rental->save();
             $payment->save();
 
-            /*
             $premessage = "Dear " . $rental->user->user_fname;
             $detailmessage = $rental->user->user_fname . " request to booking room " . $rental->houses->house_title . " Stay date " . date('jS F, Y', strtotime($rental->rental_datein)) . " to " . date('jS F, Y', strtotime($rental->rental_dateout)) . " you payment has been approved!";
             $endmessage = "Thank you and have a great trip!";
@@ -685,7 +684,6 @@ class RentalController extends Controller
                 $message->to($data['email']);
                 $message->subject($data['subject']);
             });
-            */
 
             Session::flash('success', 'This trip has been approved.');
         }
@@ -726,7 +724,7 @@ class RentalController extends Controller
             }
             Session::flash('success', 'This trip has been canceled.');
         }
-        return redirect()->route('mytrips');
+        return redirect()->route('rentals.mytrips', $rental->user_id);
     }
 
     public function rental_reject($rentalId)
@@ -742,7 +740,7 @@ class RentalController extends Controller
                 $house->save();
             }
             $rental->checkin_status = '2';
-            /*
+
             $premessage = "Dear " . $rental->user->user_fname;
             $detailmessage = $rental->user->user_fname . " request to booking room " . $rental->houses->house_title . " Stay date " . date('jS F, Y', strtotime($rental->rental_datein)) . " to " . date('jS F, Y', strtotime($rental->rental_dateout)) . " you payment has been rejected!";
             $endmessage = "Please try to send your payment transfer slip again and we will check for you.";
@@ -760,7 +758,7 @@ class RentalController extends Controller
                 $message->to($data['email']);
                 $message->subject($data['subject']);
             });
-            */
+            
             $payment->save();
             Session::flash('success', 'This trip has been rejected.');
         }
@@ -846,8 +844,8 @@ class RentalController extends Controller
 
         if (!is_null($houses)) {
             foreach ($houses as $house) {
-                $rentals_approved = Rental::where('rental_datein', '<', $now)->whereIn('houses_id', $houses_id)->orderBy('created_at', 'desc')->where('checkin_status', '1')->get();
-                $rentals = Rental::where('rental_datein', '<', $now)->whereIn('houses_id', $houses_id)->orderBy('created_at', 'desc')->get();
+                $rentals_approved = Rental::where('rental_datein', '<', $now)->whereIn('houses_id', $houses_id)->orderBy('id', 'desc')->where('checkin_status', '1')->get();
+                $rentals = Rental::where('rental_datein', '<', $now)->whereIn('houses_id', $houses_id)->orderBy('id', 'desc')->get();
             }
         }
 
@@ -891,7 +889,7 @@ class RentalController extends Controller
                         }
                         $diary->days = $i;
                         $diary->users_id = $rental->user_id;
-                        $diary->categories_id = '1';
+                        $diary->category_id = '1';
                         $diary->rentals_id = $rental->id;
                         $diary->save();
                     }

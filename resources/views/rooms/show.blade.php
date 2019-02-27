@@ -132,10 +132,22 @@
 					        <p>Room Price: ฿{{ $house->houseprices->price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
 							@if ($house->houseprices->food_price)
 							<p>Food included : ฿{{ $house->houseprices->food_price }}/Day/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
-							<div class="alert alert-info" role="alert">
-				  				@if ($house->foods->breakfast == '1') Breakfast @endif 
-				  				@if ($house->foods->lunch == '1') @if($house->foods->lunch == '1' && $house->foods->breakfast == '1')/@endif Lunch @endif
-				  				@if ($house->foods->dinner == '1') @if($house->foods->dinner == '1' && $house->foods->lunch == '1')/@endif Dinner @endif
+			  				<div class="alert alert-info" role="alert">
+	  							@if ($house->foods->breakfast == '1')Breakfast
+		  							@if ($house->foods->lunch == '1')/ Lunch
+		  								@if ($house->foods->dinner == '1')/ Dinner
+		  								@endif
+		  							@else
+		  								@if ($house->foods->dinner == '1')/ Dinner
+		  								@endif
+		  							@endif
+		  						@elseif ($house->foods->lunch == '1')Lunch
+		  							@if ($house->foods->dinner == '1')/ Dinner
+		  							@endif
+		  						@else
+	  								@if ($house->foods->dinner == '1')Dinner
+	  								@endif
+	  							@endif
 							</div>
 						@endif
 					    </div>
