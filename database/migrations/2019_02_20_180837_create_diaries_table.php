@@ -28,8 +28,8 @@ class CreateDiariesTable extends Migration
             $table->integer('category_id')->unsigned()->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
 
-            $table->integer('rentals_id')->unsigned()->nullable();
-            $table->foreign('rentals_id')->references('id')->on('rentals')->onDelete('cascade');
+            $table->integer('rental_id')->unsigned()->nullable();
+            $table->foreign('rental_id')->references('id')->on('rentals')->onDelete('cascade');
         });
     }
 

@@ -890,13 +890,25 @@ class RentalController extends Controller
                         $diary->days = $i;
                         $diary->users_id = $rental->user_id;
                         $diary->category_id = '1';
-                        $diary->rentals_id = $rental->id;
+                        $diary->rental_id = $rental->id;
                         $diary->save();
                     }
-                    $subscribe = new Subscribe;
+                    $subscribe = Subscribe::where('writer', $diary->users_id)->where('follower', Auth::user()->id)->first();
+                    if (is_null($subscribe)) {
+                        $subscribe = new Subscribe;
+                    }
                     $subscribe->writer = $diary->users_id;
                     $subscribe->follower = Auth::user()->id;
                     $subscribe->save();
+
+                    $subscribe = Subscribe::where('writer', $diary->users_id)->where('follower', $diary->users_id)->first();
+                    if (is_null($subscribe)) {
+                        $subscribe = new Subscribe;
+                    }
+                    $subscribe->writer = $diary->users_id;
+                    $subscribe->follower = $diary->users_id;
+                    $subscribe->save();
+
                     return redirect()->route('rentals.show', $rental->id)->with('rental', $rental);
                 }
                 else {

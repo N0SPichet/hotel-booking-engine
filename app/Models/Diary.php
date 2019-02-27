@@ -34,7 +34,7 @@ class Diary extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function rentals(){
+    public function rental(){
         return $this->belongsTo(Rental::class);
     }
 }

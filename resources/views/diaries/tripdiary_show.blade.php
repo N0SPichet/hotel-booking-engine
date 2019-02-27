@@ -15,7 +15,7 @@
 		<div class="col-md-12">
 			<h2 class="text-center">
 				@if($diaries[0]->title != 'Diary Title') {{ $diaries[0]->title }} @else 'Diary Title' @endif 
-				@if ($diaries[0]->rentals_id != NULL)<small style="color: green;"><i class="far fa-check-circle"></i> granted trip</small>
+				@if ($diaries[0]->rental_id != NULL)<small style="color: green;"><i class="far fa-check-circle"></i> granted trip</small>
 				@else <small style="color: grey;"><i class="far fa-check-circle"></i> guide trip</small> @endif
 			</h2>
 			@if ($diaries[0]->cover_image)
@@ -80,7 +80,7 @@
 							{!! Form::close() !!}
 							@endif
 						@else
-						{!! Form::open(['route'=> ['diary.subscribe', $diaries[0]->users->id]]) !!}
+						{!! Form::open(['route'=> ['diaries.subscribe', $diaries[0]->users->id]]) !!}
 						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diaries[0]->users->user_fname }}</button>
 						{!! Form::close() !!}
 						@endif

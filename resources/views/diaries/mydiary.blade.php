@@ -26,7 +26,7 @@
 					@if ($diary->days != '0')
 					<a href="{{ route('diaries.single', $diary->id) }}" style="text-decoration-line: none;">
 					@elseif ($diary->days == '0')
-					<a href="{{ route('diaries.tripdiary', [$diary->rentals_id, $diary->rentals->user_id]) }}" style="text-decoration-line: none;">
+					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" style="text-decoration-line: none;">
 					@endif
 					@if ($diary->publish == '2')
 					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Published</span>
@@ -36,14 +36,14 @@
 					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>
 					@endif
 					<span style="font-size: 20px;"><b> {{ $diary->title }} </b></span>
-					@if ($diary->days == '0') <span>({{ $diary->rentals->houses->house_title }} - {{ date('jS F, Y', strtotime($diary->rentals->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rentals->rental_dateout)) }})</span>
+					@if ($diary->days == '0') <span>({{ $diary->rental->houses->house_title }} - {{ date('jS F, Y', strtotime($diary->rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rental->rental_dateout)) }})</span>
 					@endif
 					</a>
 					@if ($diary->days != '0')
 					<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-primary btn-sm float-right" style="position: relative;">Read More</a>
 					<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-sm p-r-20 m-r-20"><i class="far fa-edit"></i> Edit</a>
 					@elseif ($diary->days == '0')
-					<a href="{{ route('diaries.tripdiary', [$diary->rentals_id, $diary->rentals->user_id]) }}" class="btn btn-primary btn-sm float-right">Read More</a>
+					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" class="btn btn-primary btn-sm float-right">Read More</a>
 					@endif
 				</div>
 				<div class="card-body">

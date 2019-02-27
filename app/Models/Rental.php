@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Diary;
 use App\Models\House;
 use App\Models\Payment;
 use App\User;
@@ -23,7 +24,7 @@ class Rental extends Model
     	return $this->belongsTo(Payment::class);
     }
 
-    public function diaries(){
-        return $this->hasMany('App\Diary');
+    public function diary(){
+        return $this->hasOne(Diary::class);
     }
 }
