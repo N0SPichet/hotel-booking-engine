@@ -61,8 +61,8 @@
 		    			{{ Form::label('house_property', '* Is this listing a home, hotel, or something else?') }}
 						{{ Form::text('house_property', 'Hotel', array('class' => 'form-control m-t-10', 'required' => '', 'readonly' => '')) }}
 						
-						{{ Form::label('housetypes_id', '* What type of property is this?') }}
-						<select class="form-control m-t-10" name="housetypes_id">
+						{{ Form::label('housetype_id', '* What type of property is this?') }}
+						<select class="form-control m-t-10" name="housetype_id">
 							@foreach ($types as $type)
 							<option value="{{ $type->id }}">{{ $type->name }}</option>
 							@endforeach

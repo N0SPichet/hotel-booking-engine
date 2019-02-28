@@ -57,7 +57,7 @@ class HelpController extends Controller
 
     public function getContactHost($id)
     {
-        $house = House::where('users_id', $id)->first();
+        $house = House::where('user_id', $id)->first();
         return view('helps.contacthost')->with('house', $house);
     }
 

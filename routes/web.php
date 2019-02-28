@@ -93,7 +93,7 @@ Route::resource('rentals', 'RentalController');
 Route::prefix('rentals')->name('rentals.')->group(function() {
 	Route::post('agreement', 'RentalController@rentals_agreement')->name('agreement');
 	Route::get('trips/{user}', 'RentalController@mytrip')->name('mytrips');
-	Route::get('trips/{user}/not_review', 'RentalController@not_reviews')->name('notreviews');
+	Route::get('trips/{user}/not-review', 'RentalController@not_reviews')->name('notreviews');
 	Route::get('trips/{user}/rentmyrooms', 'RentalController@rentmyrooms')->name('rentmyrooms');
 	Route::post('{rental}/accept-rentalrequest', 'RentalController@accept_rentalrequest')->name('accept-rentalrequest');
 	Route::post('{rental}/reject-rentalrequest', 'RentalController@reject_rentalrequest')->name('reject-rentalrequest');

@@ -28,7 +28,7 @@
 				{{ Form::file('cover_image', ['class' => 'form-control-file']) }}
 
 				{{ Form::label('category_name', 'Category:', ['class' => 'm-t-20']) }}
-				<select class="form-control form-spacing-top-8" name="categories_id">
+				<select class="form-control form-spacing-top-8" name="category_id">
 					@foreach ($categories as $category)
 					<option value="{{ $category->id }}">{{ $category->name }}</option>
 					@endforeach

@@ -2,7 +2,6 @@
 
 use App\Models\Category;
 use App\Models\Tag;
-use Faker\Generator as Faker;
 use Illuminate\Database\Seeder;
 
 class DiaryComponentTableSeeder extends Seeder

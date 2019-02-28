@@ -72,7 +72,7 @@ class DiaryController extends Controller
                     $rental_datein = date_format($rental_datein, 'Y-m-d');
                 }
 
-                $diaries = Diary::where('rentals_id', $rentalId)->get();
+                $diaries = Diary::where('rental_id', $rentalId)->get();
                 if ($diaries->isEmpty()) {
                     for ($i=0; $i <= $days; $i++) {
                         $diary = new Diary;
@@ -85,12 +85,19 @@ class DiaryController extends Controller
                         }
                         $diary->days = $i;
                         $diary->users_id = $rental->user_id;
-                        $diary->categories_id = '1';
-                        $diary->rentals_id = $rental->id;
+                        $diary->category_id = '1';
+                        $diary->rental_id = $rental->id;
                         $diary->save();
                     }
+                    $subscribe = Subscribe::where('writer', $diary->users_id)->where('follower', $diary->users_id)->first();
+                    if (is_null($subscribe)) {
+                        $subscribe = new Subscribe;
+                    }
+                    $subscribe->writer = $diary->users_id;
+                    $subscribe->follower = $diary->users_id;
+                    $subscribe->save();
                 }
-                $diaries = Diary::where('rentals_id', $rentalId)->get();
+                $diaries = Diary::where('rental_id', $rentalId)->get();
                 return view('diaries.tripdiary_single')->with('diaries', $diaries)->with('rental', $rental)->with('days', $days)->with('date', $date);
             }
             Session::flash('fail', 'Unauthorized access.');
@@ -124,7 +131,7 @@ class DiaryController extends Controller
     {
         $this->validate($request, array(
             'title' => 'required|max:255',
-            'categories_id' => 'required',
+            'category_id' => 'required',
             'message' => 'required'
         ));
         $diary = new Diary;
@@ -137,7 +144,7 @@ class DiaryController extends Controller
             Image::make($cover_image)->resize(1440,1080)->save($location);
             $diary->cover_image = $filename;
         }
-        $diary->categories_id = $request->categories_id;
+        $diary->category_id = $request->category_id;
         $diary->message = Purifier::clean($request->message);
         $diary->save();
         if ($request->hasFile('images')) {
@@ -164,7 +171,7 @@ class DiaryController extends Controller
     {
         $diary = Diary::find($diaryId);
         if (!is_null($diary)) {
-            if (Auth::user()->id == $diary->users_id && $diary->rentals_id == null) {
+            if (Auth::user()->id == $diary->users_id && $diary->rental_id == null) {
                 return view('diaries.single')->with('diary', $diary);
             }
             Session::flash('fail', 'Unauthorized access.');
@@ -187,9 +194,9 @@ class DiaryController extends Controller
         $diary = Diary::where('id', $diaryId)->where(function ($query) {
             $query->where('publish', '1')->orWhere('publish', '2');
         })->first();
-        if ($diary) {
-            if ($diary->rentals_id != null) {
-                $rental = Rental::find($diary->rentals_id);
+        if (!is_null($diary)) {
+            if ($diary->rental_id != null) {
+                $rental = Rental::find($diary->rental_id);
                 $datetime1 = new DateTime($rental->rental_datein);
                 $datetime2 = new DateTime($rental->rental_dateout);
                 $interval = $datetime1->diff($datetime2);
@@ -197,7 +204,7 @@ class DiaryController extends Controller
                 $months = $interval->format('%m');
                 $days = $interval->format('%d');
                 $days = $days + 1;
-                $diaries = Diary::where('rentals_id', $rental->id)->get();
+                $diaries = Diary::where('rental_id', $rental->id)->get();
 
                 $date[] = array();
                 $rental_datein = $rental->rental_datein;
@@ -208,7 +215,7 @@ class DiaryController extends Controller
                     $rental_datein = date_format($rental_datein, 'Y-m-d');
                 }
                 if ($diary->publish == '1') {
-                    $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
+                    $subscribe = Subscribe::where('writer', $diary->users_id)->where('follower', Auth::user()->id)->first();
                     if ($subscribe) {
                         return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
                     }
@@ -217,14 +224,12 @@ class DiaryController extends Controller
                     }
                 }
                 elseif ($diary->publish == '2') {
-                    $subscribe = null;
-                    if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
-                    }
+                    $subscribe = Subscribe::where('writer', $diary->users_id)->where('follower', Auth::user()->id)->first();
+                    dd($subscribe);
                     return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
                 }
             }
-            else if ($diary->rentals_id == null) {
+            else if ($diary->rental_id == null) {
                 $categories = Category::all();
                 if ($diary->publish == '1') {
                     $subscribe = Subscribe::where('writer', $diary->users->id)->where('follower', Auth::user()->id)->first();
@@ -306,9 +311,9 @@ class DiaryController extends Controller
 
     public function tripdiary_edit($rentalId, $userId, $day){
         if (Auth::user()->id == $userId) {
-            $diary_first = Diary::where('rentals_id', $rentalId)->where('days', '0')->first();
+            $diary_first = Diary::where('rental_id', $rentalId)->where('days', '0')->first();
             $diary_title = $diary_first->title;
-            $rental = Rental::find($diary_first->rentals_id);
+            $rental = Rental::find($diary_first->rental_id);
             $datetime1 = new DateTime($rental->rental_datein);
             $datetime2 = new DateTime($rental->rental_dateout);
             $interval = $datetime1->diff($datetime2);
@@ -316,7 +321,7 @@ class DiaryController extends Controller
             $months = $interval->format('%m');
             $days = $interval->format('%d');
             $days = $days + 1;
-            $diary = Diary::where('rentals_id', $rentalId)->where('days', $day)->first();
+            $diary = Diary::where('rental_id', $rentalId)->where('days', $day)->first();
             if ($diary == null && $day <= $days) {
                 $diary = new Diary;
                 if ($day == 0) {
@@ -324,8 +329,8 @@ class DiaryController extends Controller
                 }
                 $diary->days = $day;
                 $diary->users_id = Auth::user()->id;
-                $diary->categories_id = $diary_first->categories_id;
-                $diary->rentals_id = $rentalId;
+                $diary->category_id = $diary_first->category_id;
+                $diary->rental_id = $rentalId;
                 $diary->save();
             }
             if ($day > $days) {
@@ -357,7 +362,7 @@ class DiaryController extends Controller
         //validate the data
         $this->validate($request, array(
             'title' => 'required|max:255',
-            'categories_id' => 'required|integer',
+            'category_id' => 'required|integer',
             'message' => 'required'
         ));
         $diary = Diary::find($diaryId);
@@ -392,7 +397,7 @@ class DiaryController extends Controller
                 Image::make($cover_image)->resize(1440,1080)->save($location);
                 $diary->cover_image = $filename;
             }
-            $diary->categories_id = $request->input('categories_id');
+            $diary->category_id = $request->input('category_id');
             $diary->message = Purifier::clean($request->input('message'));
             $diary->save();
             if (isset($request->tags)) {
@@ -425,11 +430,11 @@ class DiaryController extends Controller
         if (Auth::user()->id == $diary->users_id) {
             if (!is_null($diary)) {
                 if ($diary->days == '0') {
-                    if ($diary->categories_id != $request->input('categories_id')) {
-                        $diary->categories_id = $request->input('categories_id');
-                        $diaries = Diary::where('rentals_id', $diary->rentals_id)->get();
+                    if ($diary->category_id != $request->input('category_id')) {
+                        $diary->category_id = $request->input('category_id');
+                        $diaries = Diary::where('rental_id', $diary->rental_id)->get();
                         foreach ($diaries as $key => $diary) {
-                             $diary->categories_id = $request->input('categories_id');
+                             $diary->category_id = $request->input('category_id');
                              $diary->save();
                         }
                     }
@@ -476,7 +481,7 @@ class DiaryController extends Controller
                     }
                     $diary->save();
                     Session::flash('success', 'This diary was successfully saved.');
-                    return redirect()->route('diaries.tripdiary', [$diary->rentals_id, $diary->users_id]);
+                    return redirect()->route('diaries.tripdiary', [$diary->rental_id, $diary->users_id]);
                 }
                 elseif ($diary->days != '0'){
                     $diary->message = Purifier::clean($request->input('message'));
@@ -493,7 +498,7 @@ class DiaryController extends Controller
                     }
                     $diary->save();
                     Session::flash('success', 'This diary was successfully saved.');
-                    return redirect()->route('diaries.tripdiary', [$diary->rentals_id, $diary->users_id]);
+                    return redirect()->route('diaries.tripdiary', [$diary->rental_id, $diary->users_id]);
                 }
             }
             Session::flash('fail', 'This diary is no longer available.');
@@ -548,7 +553,7 @@ class DiaryController extends Controller
 
     public function tripdiary_destroy($rentalId)
     {
-        $diaries = Diary::where('rentals_id', $rentalId)->get();
+        $diaries = Diary::where('rental_id', $rentalId)->get();
         if (!is_null($diaries)) {
             $comments = Comment::where('diary_id', $diaries[0]->id)->get();
             foreach ($comments as $comment) {
@@ -566,7 +571,7 @@ class DiaryController extends Controller
                 $diary->delete();
             }
             Session::flash('success', 'This diary is no longer available.');
-            return redirect()->route('diaries.mydiaries');
+            return redirect()->route('diaries.mydiaries', Auth::user()->id);
         }
     }
 

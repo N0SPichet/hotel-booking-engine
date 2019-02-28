@@ -53,13 +53,13 @@ trait GlobalFunctionTraits
     public function checkType($houseId)
     {
         $types_id = $this->getTypeId('room');
-        $houses = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+        $houses = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($houses)) {
             return true;
         }
         else {
             $types_id = $this->getTypeId('apartment');
-            $houses = House::where('id', $houseId)->whereIn('housetypes_id', $types_id)->first();
+            $houses = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
             return false;
         }
     }

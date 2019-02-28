@@ -69,19 +69,19 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<h2>Hosted by <a href="{{ route('users.show', $house->users->id) }}" target="_blank" style="text-decoration-line: none;">{{ $house->users->user_fname }}</a> @if ($house->users->verification->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i></small> @endif</h2>
+			<h2>Hosted by <a href="{{ route('users.show', $house->user_id) }}" target="_blank" style="text-decoration-line: none;">{{ $house->user->user_fname }}</a> @if ($house->user->verification->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i></small> @endif</h2>
 			<p>{{ $house->district->name }}, {{ $house->province->name }}</p>
 		</div>
 		<div class="col-md-6 float-left">
 			<div class="row">
 				<div class="card" style="width: 100%;">
 					<div class="margin-content">
-						<p>{!! $house->users->user_description !!}</p>
+						<p>{!! $house->user->user_description !!}</p>
 					</div>
 				</div>
 			</div>
 			<div>
-				<a href="{{ route('getcontacthost', $house->users->id) }}" target="_blank" class="btn btn-info btn-sm form-spacing-top-8"><i class="fas fa-envelope"></i> Contact Host</a>
+				<a href="{{ route('getcontacthost', $house->user_id) }}" target="_blank" class="btn btn-info btn-sm form-spacing-top-8"><i class="fas fa-envelope"></i> Contact Host</a>
 			</div>
 			<br>
 			<div class="row">
@@ -101,7 +101,7 @@
 			<div class="row">
 				<div class="card" style="width: 100%;">
 					<div class="margin-content">
-						<p>{{ $house->users->user_fname }}'s home is located in {{ $house->sub_district->name }} {{ $house->district->name }}, {{ $house->province->name }} </p>
+						<p>{{ $house->user->user_fname }}'s home is located in {{ $house->sub_district->name }} {{ $house->district->name }}, {{ $house->province->name }} </p>
 						@if ($house->about_neighborhood != null)
 						<br>
 						<p>{!! $house->about_neighborhood !!}</p>
@@ -132,10 +132,22 @@
 					        <p>Room Price: ฿{{ $house->houseprices->price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
 							@if ($house->houseprices->food_price)
 							<p>Food included : ฿{{ $house->houseprices->food_price }}/Day/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
-							<div class="alert alert-info" role="alert">
-				  				@if ($house->foods->breakfast == '1') Breakfast @endif 
-				  				@if ($house->foods->lunch == '1') @if($house->foods->lunch == '1' && $house->foods->breakfast == '1')/@endif Lunch @endif
-				  				@if ($house->foods->dinner == '1') @if($house->foods->dinner == '1' && $house->foods->lunch == '1')/@endif Dinner @endif
+			  				<div class="alert alert-info" role="alert">
+	  							@if ($house->foods->breakfast == '1')Breakfast
+		  							@if ($house->foods->lunch == '1')/ Lunch
+		  								@if ($house->foods->dinner == '1')/ Dinner
+		  								@endif
+		  							@else
+		  								@if ($house->foods->dinner == '1')/ Dinner
+		  								@endif
+		  							@endif
+		  						@elseif ($house->foods->lunch == '1')Lunch
+		  							@if ($house->foods->dinner == '1')/ Dinner
+		  							@endif
+		  						@else
+	  								@if ($house->foods->dinner == '1')Dinner
+	  								@endif
+	  							@endif
 							</div>
 						@endif
 					    </div>

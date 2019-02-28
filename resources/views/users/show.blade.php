@@ -70,10 +70,15 @@
 			@endforeach
 			@else
 			@foreach ($houses as $house)
-				<a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-success btn-md btn-block">
-					<p>{{ $house->house_title }}</p>
-					<p>Last update : {{ date("jS F, Y", strtotime($house->updated_at)) }}</p>
+				@if($house->checkType($house->id))
+				<a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-info btn-sm btn-block">
+					<h4>{{ $house->house_title }}</h4>
 				</a>
+				@else
+				<a href="{{ route('apartments.show', $house->id) }}" class="btn btn-outline-info btn-sm btn-block">
+					<h4>{{ $house->house_title }}</h4>
+				</a>
+				@endif
 			@endforeach
 			@endif
 			@endif

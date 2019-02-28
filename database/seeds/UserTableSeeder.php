@@ -26,6 +26,7 @@ class UserTableSeeder extends Seeder
         $user->email = "admin@example.com";
         $user->password = bcrypt('admin');
         $user->user_verifications_id = $user_verifiation->id;
+        $user->user_score = '10';
         $user->save();
         $user->roles()->attach($role_admin);
 
@@ -37,6 +38,7 @@ class UserTableSeeder extends Seeder
         $user->email = "user1@example.com";
         $user->password = bcrypt('user');
         $user->user_verifications_id = $user_verifiation->id;
+        $user->user_score = '10';
         $user->save();
         $user->roles()->attach($role_user);
 
@@ -48,6 +50,7 @@ class UserTableSeeder extends Seeder
         $user->email = "user2@example.com";
         $user->password = bcrypt('user');
         $user->user_verifications_id = $user_verifiation->id;
+        $user->user_score = '10';
         $user->save();
         $user->roles()->attach($role_user);
     }

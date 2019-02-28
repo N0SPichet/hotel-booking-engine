@@ -26,7 +26,7 @@
 						</div>
 						<div class="col-md-2 float-left">
 							{!! Html::linkRoute('apartments.owner', 'View room detail', array($house->id), array('class' => 'btn btn-info btn-sm btn-block')) !!}
-							@if ($house->users_id == Auth::user()->id)
+							@if (Auth::user()->id == $house->user_id)
 							{!! Form::open(['route' => ['apartments.destroy', $house->id], 'method' => 'DELETE']) !!}
 							{!! Form::submit('Delete this room', ['class' => 'btn btn-danger btn-sm btn-block btn-h1-spacing']) !!}
 							{!! Form::close() !!}

@@ -32,7 +32,7 @@
 					</div>
 					<p><a href="{{ route('diaries.tripdiary.edit', [$rental->id, $rental->user_id, 0])}}" class="btn btn-default btn-md" style="width: 90%"><i class="far fa-edit"></i> Edit Topic</a></p>
 					<p><a href="{{ route('diaries.tripdiary.destroy', [$rental->id]) }}" class="btn btn-default btn-md" style="width: 90%"><i class="fas fa-trash"></i> Delete Diary</a></p>
-					<select id="publishFlag" class="form-control text-center" type="select" name="flag">
+					<select id="publishFlag" class="form-control text-center" type="select" name="flag" style="width: 120px; margin: 0 auto;">
 						<option disabled="disabled">Select Viewer</option>
 						<option value="2" {{ $diaries[0]->publish == '2' ? 'selected' : '' }}>Public</option>
 						<option value="1" {{ $diaries[0]->publish == '1' ? 'selected' : '' }}>Follower</option>

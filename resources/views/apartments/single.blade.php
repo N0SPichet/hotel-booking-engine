@@ -40,7 +40,7 @@
 						<div class="margin-content box">
 							<div class="img-box">
 								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
-								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								@if ($image->name != $house->cover_image && Auth::user()->id == $house->user_id)
 								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 								@endif
 							</div>
@@ -57,7 +57,7 @@
 						<div class="margin-content box">
 							<div class="img-box">
 								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
-								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								@if ($image->name != $house->cover_image && Auth::user()->id == $house->user_id)
 								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 								@endif
 							</div>
@@ -74,7 +74,7 @@
 						<div class="margin-content box">
 							<div class="img-box">
 								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
-								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								@if ($image->name != $house->cover_image && Auth::user()->id == $house->user_id)
 								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 								@endif
 							</div>
@@ -91,7 +91,7 @@
 						<div class="margin-content box">
 							<div class="img-box">
 								<a href="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}"><img src="{{ asset('images/houses/'.$house->id.'/'.$image->name) }}" class="img-responsive" style="border-radius: 2%"></a>
-								@if ($image->name != $house->cover_image && $house->users_id == Auth::user()->id)
+								@if ($image->name != $house->cover_image && Auth::user()->id == $house->user_id)
 								<a href="{{ route('rooms.detroyimage', $image->id)}}" class="btn btn-default btn-sm with-trash"><i class="fas fa-trash"></i></a>
 								@endif
 							</div>
@@ -222,7 +222,7 @@
 			<div class="well">
 			<div class="dl-horizontal">
 					<dt>Created by</dt>
-					<dd>{{ $house->users->user_fname }} {{ $house->users->user_lname }}</dd>
+					<dd>{{ $house->user->user_fname }} {{ $house->user->user_lname }}</dd>
 					<dt>Created at</dt>
 					<dd>{{ date("jS M, Y", strtotime($house->created_at)) }}</dd>
 					<dt>Date modified</dt>
@@ -231,7 +231,7 @@
 				<div class="margin-content">
 				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
 				</div>
-				@if (Auth::user()->id == $house->users_id || Auth::user()->hasRole('Admin'))
+				@if (Auth::user()->id == $house->user_id || Auth::user()->hasRole('Admin'))
 				<div class="row">
 					<div class="col-sm-4 float-left">
 						<a id="publish" class="btn btn-outline-info btn-block btn-h1-spacing">Publish</a>

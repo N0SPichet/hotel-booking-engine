@@ -66,7 +66,7 @@ class PagesController extends Controller
     public function summary()
     {
         if (Auth::check()) {
-            $house_id = House::where('users_id', Auth::user()->id)->get();
+            $house_id = House::where('user_id', Auth::user()->id)->get();
             $h_id = array();
             foreach ($house_id as $key => $house) {
                 $h_id[$key] = $house->id;

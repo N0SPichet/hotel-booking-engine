@@ -11,14 +11,14 @@
 <div class="container">
 	<div class="row m-t-10">
 		<div class="col-md-12">
-			<h1 class="title-page">Contact {{ $house->users->user_fname }}</h1>
+			<h1 class="title-page">Contact {{ $house->user->user_fname }}</h1>
 			<hr>
 		</div>
 		<div class="col-md-6">
-			<h4>Once you send a message, {{ $house->users->user_fname }} can invite you to book their home.</h4>
+			<h4>Once you send a message, {{ $house->user->user_fname }} can invite you to book their home.</h4>
 			<p>Make sure you share the following:</p>
 			<ul>
-				<li>Tell {{ $house->users->user_fname }} about yourself</li>
+				<li>Tell {{ $house->user->user_fname }} about yourself</li>
 				<li>What brings you to {{ $house->addresscities->city_name }}? Who’s joining you?</li>
 			</ul>
 		</div>
@@ -26,8 +26,8 @@
 		<div class="col-md-6">
 			<form action="{{ route('postcontacthost') }}" method="POST">
 				{{ csrf_field() }}
-				<input type="hidden" name="hostname" value="{{ $house->users->user_fname }}">
-				<input type="hidden" name="receiveremail" value="{{ $house->users->email }}">
+				<input type="hidden" name="hostname" value="{{ $house->user->user_fname }}">
+				<input type="hidden" name="receiveremail" value="{{ $house->user->email }}">
 				<input type="hidden" name="id" value="{{ $house->id }}">
 
 				<div class="form-group">

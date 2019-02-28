@@ -25,10 +25,10 @@
 				{{ Form::label('title', 'Title:') }}
 				{{ Form::text('title', null, ['class' => 'form-control']) }}
 
-				{{ Form::label('categories_id', 'Category:', ['class' => 'form-spacing-top']) }}
-				<select class="form-control form-spacing-top-8" name="categories_id">
+				{{ Form::label('category_id', 'Category:', ['class' => 'form-spacing-top']) }}
+				<select class="form-control form-spacing-top-8" name="category_id">
 					@foreach ($categories as $category)
-					<option value="{{ $category->id }}">{{ $category->name }}</option>
+					<option value="{{ $category->id }}" {{ $diary->category_id==$category->id? 'selected':'' }}>{{ $category->name }}</option>
 					@endforeach
 				</select>
 
@@ -54,7 +54,7 @@
 			</div>
 			<div class="col-md-3 float-left btn-h1-spacing">
 				<div class="col-sm-6 float-left">
-				{!! Html::linkRoute('diaries.tripdiary', 'Cancel', array($diary->rentals_id, $diary->rentals->user_id), array('class' => 'btn btn-danger btn-block btn-h1-spacing')) !!}
+				{!! Html::linkRoute('diaries.tripdiary', 'Cancel', array($diary->rental_id, $diary->rental->user_id), array('class' => 'btn btn-danger btn-block btn-h1-spacing')) !!}
 				</div>
 
 				<div class="col-sm-6 float-left">

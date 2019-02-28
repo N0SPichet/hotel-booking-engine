@@ -40,8 +40,8 @@
 				@endforeach
 			</div>
 
-			{{ Form::label('categories_id', 'Category:', ['class' => 'm-t-20']) }}
-			<select class="form-control form-spacing-top-8" name="categories_id">
+			{{ Form::label('category_id', 'Category:', ['class' => 'm-t-20']) }}
+			<select class="form-control form-spacing-top-8" name="category_id">
 				@foreach ($categories as $category)
 				<option value="{{ $category->id }}">{{ $category->name }}</option>
 				@endforeach
