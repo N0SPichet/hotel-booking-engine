@@ -22,7 +22,7 @@
 					<label>Booking Detail</label>
 					<p>@if($types == 'apartment') <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @else <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->houses->house_title }}  </p>
 						
-					<p><i class="fas fa-user"></i> Hosted by : {{ $rental->houses->users->user_fname }} {{ $rental->houses->users->user_lname }}</p>
+					<p><i class="fas fa-user"></i> Hosted by : {{ $rental->houses->user->user_fname }} {{ $rental->houses->user->user_lname }}</p>
 						
 					<p><i class="fas fa-user"></i> Rented by : <a href="{{ route('users.show', $rental->user_id) }}" target="_blank" class="btn btn-outline-info">{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</a></p>
 						
@@ -163,7 +163,7 @@
 					<div class="card">
 						<div class="margin-content">
 							@if ($review != null )
-								@if ($rental->user_id == Auth::user()->id || $rental->houses->users->id == Auth::user()->id || Auth::user()->level == '0')
+								@if ($rental->user_id == Auth::user()->id || $rental->houses->user_id == Auth::user()->id || Auth::user()->level == '0')
 								<label>Review</label>
 								<div class="comment">
 									<div class="author-info">
@@ -197,7 +197,7 @@
 								@endif
 
 								@if ($rental->payment->payment_status == 'Approved' && $rental->checkin_status == '1')
-									@if ( $rental->houses->users->id == Auth::user()->id )
+									@if (Auth::user()->id == $rental->houses->user_id)
 									<label>Review</label>
 									<p>No review</p>
 									@elseif ( $rental->user->id == Auth::user()->id )
@@ -277,10 +277,10 @@
 				</div>
 
 				<hr>
-				@if (Auth::user()->id == $rental->houses->users_id)
+				@if (Auth::user()->id == $rental->houses->user_id)
 				<div class="row">
 					<div class="col-sm-4 float-left">
-						<a href="{{ route('rentals.rentmyrooms', $rental->houses->users_id) }}" class="btn btn btn-link btn-md"><i class="fas fa-chevron-left"></i>Back</a>
+						<a href="{{ route('rentals.rentmyrooms', $rental->houses->user_id) }}" class="btn btn btn-link btn-md"><i class="fas fa-chevron-left"></i>Back</a>
 					</div>
 					<div class="col-sm-8 float-left">
 						@if ($rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT'  && $rental->payment->payment_status != 'Cancel')

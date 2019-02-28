@@ -44,7 +44,7 @@ class UserController extends Controller
     public function show(User $user)
     {
         if (!is_null($user)) {
-            $houses = House::where('users_id', $user->id)->get();
+            $houses = House::where('user_id', $user->id)->get();
             return view('users.show')->with('user', $user)->with('houses', $houses);
         }
         else {

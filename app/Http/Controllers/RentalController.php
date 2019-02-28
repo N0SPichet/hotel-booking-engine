@@ -308,11 +308,11 @@ class RentalController extends Controller
         $rental->payment_id = $payment->id;
         $rental->save();
 
-        $premessage = "Dear " . $rental->houses->users->user_fname;
+        $premessage = "Dear " . $rental->houses->user->user_fname;
         $detailmessage = $rental->user->user_fname . " " . $rental->user->user_lname . " request to booking your room. Please check Rentals page for accept this request";
 
         $data = array(
-            'email' => $rental->houses->users->email,
+            'email' => $rental->houses->user->email,
             'subject' => "LTT - You have new customer",
             'bodyMessage' => $premessage,
             'detailmessage' => $detailmessage,
@@ -361,7 +361,7 @@ class RentalController extends Controller
     {
         $rental = Rental::find($rentalId);
         if (!is_null($rental)) {
-            if (Auth::user()->id == $rental->user_id || Auth::user()->id == $rental->houses->users_id || Auth::user()->hasRole('Admin')) {
+            if (Auth::user()->id == $rental->user_id || Auth::user()->id == $rental->houses->user_id || Auth::user()->hasRole('Admin')) {
                 $types_id = $this->getTypeId('apartment');
                 $house = House::where('id', $rental->houses_id)->whereIn('housetype_id', $types_id)->first();
                 if (!is_null($house)) {
@@ -776,7 +776,7 @@ class RentalController extends Controller
     public function rentmyrooms(User $user)
     {
         $now = Carbon::yesterday();
-        $houses = House::where('users_id', Auth::user()->id)->get();
+        $houses = House::where('user_id', Auth::user()->id)->get();
         $houses_id = array();
         foreach ($houses as $key => $house) {
             array_push($houses_id, $house->id);
@@ -841,7 +841,7 @@ class RentalController extends Controller
     public function renthistories()
     {
         $now = Carbon::now();
-        $houses = House::where('users_id', Auth::user()->id)->get();
+        $houses = House::where('user_id', Auth::user()->id)->get();
         $houses_id = array();
         foreach ($houses as $key => $house) {
             array_push($houses_id, $house->id);
@@ -872,7 +872,7 @@ class RentalController extends Controller
         $rental = Rental::find($rent_id);
 
         if (!is_null($rental)) {
-            if (Auth::user()->id == $rental->houses->users_id){
+            if (Auth::user()->id == $rental->houses->user_id){
                 if ($checkin_code == $rental->checkincode) {
                     $rental->checkin_status = '1';
                     $rental->save();

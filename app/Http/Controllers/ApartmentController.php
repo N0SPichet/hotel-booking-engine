@@ -55,7 +55,7 @@ class ApartmentController extends Controller
     public function index_myapartment(User $user) {
         if (Auth::user()->id === $user->id) {
             $types_id = $this->getTypeId('apartment');
-            $houses = House::where('users_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
+            $houses = House::where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
             return view('apartments.index-myapartment')->with('houses', $houses);
         }
         Session::flash('fail', 'Unauthorized access.');
@@ -108,7 +108,7 @@ class ApartmentController extends Controller
             'checkin_to' => 'required'
         ));
         $house = new House;
-        $house->users_id = Auth::user()->id;
+        $house->user_id = Auth::user()->id;
         $house->house_property = $request->house_property;
         $house->house_capacity = $request->house_capacity;
         $house->house_guestspace = $request->house_guestspace;
@@ -266,19 +266,20 @@ class ApartmentController extends Controller
         $house->houserules()->sync($request->houserules, false);
         $house->housedetails()->sync($request->housedetails, false);
 
-        $premessage = "Dear " . $house->users->user_fname;
-        $detailmessage = "Your property are ready to deploy. At " . date('jS F, Y', strtotime($house->create_at)) . " you have create an apartment name ". $house->house_title;
-        $endmessage = "checkout you apartment click <a href='".route('apartments.owner', $house->id)."'>Owner</a>";
+        $premessage = "Dear " . $house->user->user_fname;
+        $detailmessage = "At " . date('jS F, Y H:i:s', strtotime($house->created_at)) . " you have create an apartment name '". $house->house_title."'";
+        $endmessage = "";
 
         $data = array(
-            'email' => $rental->user->email,
-            'subject' => "LTT - Apartment Created",
+            'email' => $house->user->email,
+            'subject' => "LTT - Your property are ready to deploy",
             'bodyMessage' => $premessage,
             'detailmessage' => $detailmessage,
-            'endmessage' => $endmessage
+            'endmessage' => $endmessage,
+            'house' => $house
         );
 
-        Mail::send('emails.booking_accepted', $data, function($message) use ($data){
+        Mail::send('emails.room_create', $data, function($message) use ($data){
             $message->from('noreply@ltt.com');
             $message->to($data['email']);
             $message->subject($data['subject']);
@@ -292,7 +293,7 @@ class ApartmentController extends Controller
         $types_id = $this->getTypeId('apartment');
         $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
-            if (Auth::user()->hasRole('Admin') || Auth::user()->id == $house->users_id) {
+            if (Auth::user()->hasRole('Admin') || Auth::user()->id == $house->user_id) {
                 $map = Map::where('houses_id', $house->id)->first();
                 return view('apartments.single')->with('house', $house)->with('map', $map);
             }
@@ -357,7 +358,7 @@ class ApartmentController extends Controller
         $types_id = $this->getTypeId('apartment');
         $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
-            if (Auth::user()->id == $house->users->id) {
+            if (Auth::user()->id == $house->user_id) {
                 $types = $this->getType('apartment');
                 $provinces = Province::all();
                 $districts = District::where('province_id', $provinces[0]->id)->get();
@@ -592,7 +593,7 @@ class ApartmentController extends Controller
     public function destroy($houseId)
     {
         $house = House::find($houseId);
-        if (Auth::user()->id == $house->users_id) {
+        if (Auth::user()->id == $house->user_id) {
             $rental = Rental::where('houses_id', $house->id)->first();
             $images = HouseImage::where('house_id', $house->id)->get();
             if ($rental == NULL){

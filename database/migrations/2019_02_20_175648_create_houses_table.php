@@ -36,8 +36,8 @@ class CreateHousesTable extends Migration
             $table->string('cover_image', 100)->nullable();
             $table->timestamps();
 
-            $table->integer('users_id')->unsigned();
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             
             $table->integer('housetype_id')->unsigned();
             $table->foreign('housetype_id')->references('id')->on('housetypes')->onDelete('cascade');

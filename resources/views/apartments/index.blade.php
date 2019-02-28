@@ -18,7 +18,7 @@
 							<div class="col-md-9 float-left">
 								<a href="{{ route('rooms.owner', $house->id) }}" style="text-decoration-line: none;">
 								<p><b>Title</b> : {{ $house->house_title }} </p>
-								<p><b>Created by</b> : {{ $house->users->user_fname }} {{ $house->users->user_lname }}</p>
+								<p><b>Created by</b> : {{ $house->user->user_fname }} {{ $house->user->user_lname }}</p>
 								<p>Date Create : {{ date("jS F, Y", strtotime($house->created_at)) }}</p>
 								</a>
 							</div>
@@ -26,7 +26,7 @@
 							<div class="col-md-3 float-left" align="center">
 								{!! Html::linkRoute('rooms.owner', 'View room detail', array($house->id), array('class' => 'btn btn-info btn-sm', 'style' => 'width: 60%')) !!}
 
-								@if ($house->users_id == Auth::user()->id)
+								@if (Auth::user()->id == $house->user_id)
 
 								{!! Form::open(['route' => ['rooms.destroy', $house->id], 'method' => 'DELETE']) !!}
 								

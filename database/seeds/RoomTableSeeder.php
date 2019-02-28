@@ -11,6 +11,7 @@ use App\Models\Houserule;
 use App\Models\Housespace;
 use App\Models\Map;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Mail;
 
 class RoomTableSeeder extends Seeder
 {
@@ -61,7 +62,7 @@ class RoomTableSeeder extends Seeder
         $house->optional_note = '<p>Test note</p>';
         $house->about_neighborhood = '<p>Test neighborhood</p>';
         $house->cover_image = '1551026527712.jpg';
-        $house->users_id = 2;
+        $house->user_id = 2;
         $house->housetype_id = 1;
         $house->sub_district_id = 3348;
         $house->district_id = 434;
@@ -118,5 +119,24 @@ class RoomTableSeeder extends Seeder
         $image->name = '1551026528672.jpg';
         $image->house_id = $house->id;
         $image->save();
+
+        $premessage = "Dear " . $house->user->user_fname;
+        $detailmessage = "At " . date('jS F, Y H:i:s', strtotime($house->created_at)) . " you have create a room name '". $house->house_title."'";
+        $endmessage = "";
+
+        $data = array(
+            'email' => $house->user->email,
+            'subject' => "LTT - Your property are ready to deploy",
+            'bodyMessage' => $premessage,
+            'detailmessage' => $detailmessage,
+            'endmessage' => $endmessage,
+            'house' => $house
+        );
+
+        Mail::send('emails.room_create', $data, function($message) use ($data){
+            $message->from('noreply@ltt.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
     }
 }
