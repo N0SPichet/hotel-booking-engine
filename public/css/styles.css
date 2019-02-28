@@ -1,29 +1,36 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand');
-
 body {
     font-family: 'Quicksand', sans-serif;
     font-size: 16px;
     font-weight: normal;
     margin: 0;
 }
-
 .clear-both:after {
     clear: both;
     display: block;
     content: "";
 }
-
+.margin-auto {
+    margin: auto;
+}
+ul.pagination li {
+    padding: 10px;
+}
+ul.pagination li.active {
+    border-block-end: 1px solid #000;
+}
+ul.pagination li.disabled {
+    display: none;
+}
 header {
     background-color: #BCDEFA;
 }
-
 .wrapper {
     width: 100%;
     max-width: 1140px;
     padding: 0 10px;
     margin: 0 auto;
 }
-
 h1.logo {
     background-image: url(../images/components/logo.png);
     background-size: 80px auto;
@@ -135,11 +142,6 @@ a {
 
 a:hover {
     text-decoration: none;
-}
-
-.float-right {
-    position: absolute;
-    right: 15px;
 }
 
 .footer {

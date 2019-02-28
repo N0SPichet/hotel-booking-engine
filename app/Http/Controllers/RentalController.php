@@ -888,30 +888,31 @@ class RentalController extends Controller
                         $diary->publish = '0';
                         if ($i == 0) {
                             $diary->title = 'Diary Title';
+                            $diary->message = "Short story of this trip.";
                         }
                         if ($i != 0) {
                             $diary->message = 'Story about day '. $i;
                         }
                         $diary->days = $i;
-                        $diary->users_id = $rental->user_id;
+                        $diary->user_id = $rental->user_id;
                         $diary->category_id = '1';
                         $diary->rental_id = $rental->id;
                         $diary->save();
                     }
-                    $subscribe = Subscribe::where('writer', $diary->users_id)->where('follower', Auth::user()->id)->first();
+                    $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
                     if (is_null($subscribe)) {
                         $subscribe = new Subscribe;
                     }
-                    $subscribe->writer = $diary->users_id;
+                    $subscribe->writer = $diary->user_id;
                     $subscribe->follower = Auth::user()->id;
                     $subscribe->save();
 
-                    $subscribe = Subscribe::where('writer', $diary->users_id)->where('follower', $diary->users_id)->first();
+                    $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', $diary->user_id)->first();
                     if (is_null($subscribe)) {
                         $subscribe = new Subscribe;
                     }
-                    $subscribe->writer = $diary->users_id;
-                    $subscribe->follower = $diary->users_id;
+                    $subscribe->writer = $diary->user_id;
+                    $subscribe->follower = $diary->user_id;
                     $subscribe->save();
 
                     return redirect()->route('rentals.show', $rental->id)->with('rental', $rental);

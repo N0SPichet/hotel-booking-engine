@@ -15,14 +15,19 @@
 			<hr>
 		</div>
 	</div>
-
+	<div class="row" align="center">
+		<div class="margin-auto">
+			{!! $diaries->links() !!}
+		</div>
+	</div>
 	<div class="row mydiaries">
 		<div class="col">
 			@if($diaries->count() > 0)
 			@foreach($diaries as $diary)
-			@if (Auth::user()->id == $diary->users_id)
-			<div class="card col">
+			@if (Auth::user()->id == $diary->user_id)
+			<div class="card col m-t-10">
 				<div class="card-title">
+					<div class="col-md-10 float-left">
 					@if ($diary->days != '0')
 					<a href="{{ route('diaries.single', $diary->id) }}" style="text-decoration-line: none;">
 					@elseif ($diary->days == '0')
@@ -39,12 +44,17 @@
 					@if ($diary->days == '0') <span>({{ $diary->rental->houses->house_title }} - {{ date('jS F, Y', strtotime($diary->rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rental->rental_dateout)) }})</span>
 					@endif
 					</a>
+					</div>
+					<div class="col-md-2 float-left">
+						<div class="margin-auto" align="center">
 					@if ($diary->days != '0')
-					<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-primary btn-sm float-right" style="position: relative;">Read More</a>
-					<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-sm p-r-20 m-r-20"><i class="far fa-edit"></i> Edit</a>
+					<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-primary btn-sm m-t-10">Read More</a>
+					<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-sm m-t-10"><i class="far fa-edit"></i> Edit</a>
 					@elseif ($diary->days == '0')
-					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" class="btn btn-primary btn-sm float-right">Read More</a>
+					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" class="btn btn-primary btn-sm">Read More</a>
 					@endif
+						</div>
+					</div>
 				</div>
 				<div class="card-body">
 					<p style="color: #7e7e7e; font-size: 14px; letter-spacing: .04em;">Date modified {{ date('jS F, Y - g:iA', strtotime($diary->updated_at)) }}</p>
@@ -58,9 +68,11 @@
 				<p>No result</p>
 			</div>
 			@endif
-			<div class="text-center">
-				{!! $diaries->links() !!}
-			</div>
+		</div>
+	</div>
+	<div class="row" align="center">
+		<div class="margin-auto">
+			{!! $diaries->links() !!}
 		</div>
 	</div>
 </div>

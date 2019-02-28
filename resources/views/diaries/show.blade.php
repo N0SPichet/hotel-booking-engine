@@ -1,6 +1,6 @@
 @extends ('main')
 
-@section ('title', $diary->users->user_fname. ' | ' .'Diary')
+@section ('title', $diary->user->user_fname. ' | ' .'Diary')
 
 @section('stylesheets')
 	{{ Html::style('css/parsley.css') }}
@@ -9,9 +9,11 @@
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
-		<div class="col-md-12">
-			<a href="{{ route('diaries.index') }}" class="btn btn-default"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
+		<div class="col-sm-12">
+			<a href="{{ route('diaries.index') }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
 		</div>
+	</div>
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<div class="text-center">
 				<h2>{{ $diary->title }}</h2>
@@ -36,27 +38,39 @@
 				</div>
 			</div>
 			@endif
+			<div class="m-t-10">
+				<b>Category :</b> {{ $diary->category->name }}
+			</div>
+			@if($diary->tags->count())
+			<?php
+			$tag_length = $diary->tags->count();
+			?>
 			<hr>
 			<div class="tags">
-				@foreach ($diary->tags as $tag)
-					<span class="label label-default">{{ $tag->tag_name }}</span>
+				<b>Tag :</b>
+				@foreach ($diary->tags as $key => $tag)
+					<span class="label label-default">{{ $tag->name }}</span>
+					@if($key+1 != $tag_length)
+					,
+					@endif
 				@endforeach
 			</div>
+			@endif
 			<div class="row">
 				<div class="col-md-10 m-t-50">
-					@if ($diary->users->user_image == NULL)
+					@if ($diary->user->user_image == NULL)
 					<div class="author-info">
 						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
 						<div class="author-name">
-							<h4>{{ $diary->users->user_fname }}</h4>
+							<h4>{{ $diary->user->user_fname }}</h4>
 							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
 						</div>
 					</div>
 					@else
 					<div class="author-info">
-						<img src="{{ asset('images/users/' . $diary->users->user_image) }}" class="author-image">
+						<img src="{{ asset('images/users/' . $diary->user->user_image) }}" class="author-image">
 						<div class="author-name">
-							<h4>{{ $diary->users->user_fname }}</h4>
+							<h4>{{ $diary->user->user_fname }}</h4>
 							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
 						</div>
 
@@ -69,13 +83,13 @@
 							@if ($subscribe->writer == Auth::user()->id)
 
 							@elseif ($subscribe->writer != Auth::user()->id)
-							{!! Form::open(['route'=> ['diary.unsubscribe', $diary->users->id]]) !!}
-							<button class="btn btn-info btn-sm m-t-50 pull-right">Unfollow {{ $diary->users->user_fname }}</button>
+							{!! Form::open(['route'=> ['diaries.unsubscribe', $diary->user_id]]) !!}
+							<button class="btn btn-warning btn-sm m-t-50 pull-right">Unfollow {{ $diary->user->user_fname }}</button>
 							{!! Form::close() !!}
 							@endif
 						@else
-						{!! Form::open(['route'=> ['diary.subscribe', $diary->users->id]]) !!}
-						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diary->users->user_fname }}</button>
+						{!! Form::open(['route'=> ['diaries.subscribe', $diary->user_id]]) !!}
+						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diary->user->user_fname }}</button>
 						{!! Form::close() !!}
 						@endif
 					@endif
@@ -134,7 +148,7 @@
 			        </ul>
 			    </div>
 			@endif
-		<div id="comment-form" class="m-t-50">
+		<div id="comment-form" class="margin-auto m-t-50">
 			{!! Form::open(['route' => 'comments.store','data-parsley-validate']) !!}
 				<div class="row">
 					<div class="col-md-6">

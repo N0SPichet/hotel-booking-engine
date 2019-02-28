@@ -43,7 +43,7 @@
 			{{ Form::label('category_id', 'Category:', ['class' => 'm-t-20']) }}
 			<select class="form-control form-spacing-top-8" name="category_id">
 				@foreach ($categories as $category)
-				<option value="{{ $category->id }}">{{ $category->name }}</option>
+				<option value="{{ $category->id }}" {{ $diary->category_id==$category->id? 'selected':'' }}>{{ $category->name }}</option>
 				@endforeach
 			</select>
 
