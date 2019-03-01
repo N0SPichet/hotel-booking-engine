@@ -21,7 +21,7 @@ $cusdataPoints = array(
  
 ?>
 
-@extends ('main')
+@extends ('manages.main')
 @section ('title', 'SUMMARY')
 @section ('content')
 <div class="container">

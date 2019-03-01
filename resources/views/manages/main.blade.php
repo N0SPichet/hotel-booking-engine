@@ -15,7 +15,7 @@
     {{ Html::style('css/styles.css') }}
   </head>
   <body>
-    @include('layouts.nav-bar')
+    @include('manages.nav-bar')
     @include('pages._messages')
     <div class="clearfix">
         @yield('content')
@@ -38,7 +38,7 @@
     @yield ('scripts')
     <script type="text/javascript">
         $(document).ready(function() {
-            $('.footer').removeClass('manage');
+            $('.footer').addClass('manage');
         });
     </script>
   </body>

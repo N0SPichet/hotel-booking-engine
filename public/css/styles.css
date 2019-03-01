@@ -25,6 +25,9 @@ ul.pagination li.disabled {
 header {
     background-color: #BCDEFA;
 }
+header.manage {
+    background-color: #03363e;
+}
 .wrapper {
     width: 100%;
     max-width: 1140px;
@@ -41,41 +44,61 @@ h1.logo {
     width: 180px;
     margin: 0;
 }
-
+header.manage h1.logo {
+    background-image: url(../images/components/logo-manages.png);
+    background-size: 80px auto;
+    background-repeat: no-repeat;
+    text-indent: -10000px;
+    float: left;
+    height: 80px;
+    width: 180px;
+    margin: 0;
+}
 header nav {
     float: right;
 }
-
 header nav h2 {
     text-indent: -10000px;
     margin: 0;
     height: 0;
 }
-
 header nav ul {
     margin: 0;
     padding: 0;
     list-style-type: none;
 }
-
 header nav ul li {
     background-color: #BCDEFA;
     float: left;
     position: relative;
 }
-
+header.manage nav ul li {
+    background-color: #03363e;
+    float: left;
+    position: relative;
+    color: #fff;
+}
 header nav ul li a {
     text-decoration: none;
     display: inline-block;
     line-height: 80px;
     padding: 0px 20px;
 }
-
+header.manage nav ul li a {
+    text-decoration: none;
+    display: inline-block;
+    line-height: 80px;
+    padding: 0px 20px;
+    color: #fff;
+}
 header nav ul li a:hover {
     background-color: #007bff;
     color: #fff;
 }
-
+header.manage nav ul li a:hover {
+    background-color: #035663;
+    color: #fff;
+}
 header nav ul li a:focus ~ ul.hav-sub-nav {
     max-height: 400px;
     -webkit-transition: max-height 0.4 ease-in;
@@ -105,12 +128,22 @@ ul.hav-sub-nav li {
     float: none;
     padding: 2px;
 }
+header.manage ul.hav-sub-nav li {
+    background-color: #03363e;
+    float: none;
+    padding: 2px;
+}
 
 ul.hav-sub-nav li:last-of-type {
     border-radius: 0 0 5px 5px;
 }
 
 ul.hav-sub-nav li a {
+    line-height: 40px;
+    padding: 0 20px;
+    width: 180px;
+}
+header.manage ul.hav-sub-nav li a {
     line-height: 40px;
     padding: 0 20px;
     width: 180px;
@@ -152,7 +185,8 @@ a:hover {
     text-align: center;
     background-color: #BCDEFA;
 }
-
+.footer.manage {
+    background-color: #03363e;
 }
 .footer a {
     text-decoration: underline;

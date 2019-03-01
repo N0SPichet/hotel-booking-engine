@@ -1,5 +1,4 @@
 @extends ('main')
-
 @section ('title', $diary->title. ' | ' .'My Diary')
 
 @section ('content')

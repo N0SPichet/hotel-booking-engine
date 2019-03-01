@@ -1,5 +1,4 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', "Administrator | $rule->name Rule")
 
 @section('content')

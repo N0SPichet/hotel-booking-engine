@@ -43,7 +43,7 @@ class RentalTableSeeder extends Seeder
         $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
 
@@ -73,7 +73,7 @@ class RentalTableSeeder extends Seeder
         $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
 
@@ -96,7 +96,7 @@ class RentalTableSeeder extends Seeder
         $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
 
@@ -127,7 +127,7 @@ class RentalTableSeeder extends Seeder
         $rental->checkincode = str_random(10);
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
     }

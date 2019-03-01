@@ -21,8 +21,8 @@ class CreateApartmentpricesTable extends Migration
             $table->integer('deluxe_single_price')->nullable();
             $table->integer('type_double_room')->nullable();
             $table->integer('double_price')->nullable();
-            $table->integer('discount')->nullable();
-            $table->integer('welcome_offer')->nullable();
+            $table->integer('discount')->default('0');
+            $table->integer('welcome_offer')->default('0');
             $table->timestamps();
         });
     }

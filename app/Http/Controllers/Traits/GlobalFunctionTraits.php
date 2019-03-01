@@ -13,8 +13,11 @@ trait GlobalFunctionTraits
     - House
     Controller
     - ApartmentController
+    - PagesController
     - RoomController
     - RentalController
+    Seeder
+    - RentalTableSeeder
     */
     
     /*check in status 0 not checkin 1 checkin 2 cancel*/

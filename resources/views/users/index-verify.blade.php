@@ -1,9 +1,7 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Administrator | Verify Users')
 
 @section ('content')
-
 <div class="container">
 	<div class="row m-t-10">
 		<div class="card col">

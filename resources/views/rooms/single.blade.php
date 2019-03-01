@@ -1,7 +1,5 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Review your settings | Rooms')
-
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">

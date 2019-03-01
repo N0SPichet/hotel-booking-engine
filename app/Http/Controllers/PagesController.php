@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use App\Models\Category;
 use App\Models\Diary;
 use App\Models\HouseImage;
@@ -21,7 +22,7 @@ use Session;
 
 class PagesController extends Controller
 {
-    /*publish flag 0 private, 1 public, 2 trash, 3 permanant delete*/
+    use GlobalFunctionTraits;
     
     public function index() {
         $houses = House::where('publish', '1')->inRandomOrder()->paginate(10);
@@ -42,7 +43,7 @@ class PagesController extends Controller
                 foreach ($houses as $key => $house) {
                     array_push($houses_id, $house->id);
                 }
-                $images = HouseImage::whereIn('houses_id', $houses_id)->get();
+                $images = HouseImage::whereIn('house_id', $houses_id)->get();
                 return view('pages.home')->with('houses', $houses)->with('images', $images);
             }
         }
@@ -72,21 +73,21 @@ class PagesController extends Controller
                 $h_id[$key] = $house->id;
             }
 
-            $rentals = Rental::whereIn('houses_id', $h_id)->count();
+            $rentals = Rental::whereIn('house_id', $h_id)->count();
 
-            $rental_accept = Rental::whereIn('houses_id', $h_id)->where(function ($query) {
+            $rental_accept = Rental::whereIn('house_id', $h_id)->where(function ($query) {
                 $query->where('host_decision', 'ACCEPT');
             })->count();
 
-            $rental_reject = Rental::whereIn('houses_id', $h_id)->where(function ($query) {
+            $rental_reject = Rental::whereIn('house_id', $h_id)->where(function ($query) {
                 $query->where('host_decision', 'REJECT');
             })->count();
 
-            $rental_ignore = Rental::whereIn('houses_id', $h_id)->where(function ($query) {
+            $rental_ignore = Rental::whereIn('house_id', $h_id)->where(function ($query) {
                 $query->where('host_decision', NULL)->where('rental_checkroom', '!=', '1');
             })->count();
 
-            $rental_id = Rental::whereIn('houses_id', $h_id)->get();
+            $rental_id = Rental::whereIn('house_id', $h_id)->get();
             $p_id = array();
             foreach ($rental_id as $key => $rental) {
                 $p_id[$key] = $rental->payment_id;
@@ -109,7 +110,7 @@ class PagesController extends Controller
                 $payment_lastmonth += $payment->payment_amount * 0.9;
             }
 
-            $rentals_id = Rental::whereIn('houses_id', $h_id)->where(function ($query) {
+            $rentals_id = Rental::whereIn('house_id', $h_id)->where(function ($query) {
                 $query->where('host_decision', 'ACCEPT');
             })->get();
             $p_id = array();
@@ -162,5 +163,15 @@ class PagesController extends Controller
     public function aboutus()
     {
     	return view('pages.about');
+    }
+
+    public function manages_index()
+    {
+        $types_room_id = $this->getTypeId('room');
+        $types_apartment_id = $this->getTypeId('apartment');
+        $apartments = House::where('publish', '1')->whereIn('housetype_id', $types_apartment_id)->get();
+        $rooms = House::where('publish', '1')->whereIn('housetype_id', $types_room_id)->get();
+        $diaries = Diary::whereIn('publish', ['1', '2'])->get();
+        return view('manages.index')->with('apartments', $apartments)->with('rooms', $rooms)->with('diaries', $diaries);
     }
 }

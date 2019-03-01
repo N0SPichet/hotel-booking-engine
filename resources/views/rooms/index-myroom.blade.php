@@ -1,9 +1,6 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Your Rooms')
-
 @section ('content')
-
 <div class="container">
 	<div class="row m-t-10">
 		<div class="card col">
@@ -15,7 +12,7 @@
 			@endif
 			<div class="card-body">
 				@if($houses->count())
-				@foreach($houses as $house)
+				@foreach($houses as $key => $house)
 				<div class="row m-t-10">
 					<div class="col-md-12">
 						<div class="col-md-10 float-left">
@@ -34,6 +31,9 @@
 						</div>
 					</div>
 				</div>
+				@if($houses->count() != $key+1)
+				<hr>
+				@endif
 				@endforeach
 				@else
 				<p>Create new one</p>

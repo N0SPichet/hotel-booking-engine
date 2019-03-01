@@ -1,5 +1,4 @@
 @extends ('main')
-
 @section ('title', 'My Diary')
 
 @section ('content')

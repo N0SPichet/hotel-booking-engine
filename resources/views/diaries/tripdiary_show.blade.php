@@ -1,9 +1,7 @@
 @extends ('main')
-
 @section ('title', $diaries[0]->title)
-
 @section('stylesheets')
-	{{ Html::style('css/parsley.css') }}
+{{ Html::style('css/parsley.css') }}
 @endsection
 
 @section ('content')

@@ -1,9 +1,6 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Administrator | Users')
-
 @section ('content')
-
 <div class="container">
 	<div class="row m-t-10">
 		<div class="col-12">
@@ -15,9 +12,8 @@
 					<div class="margin-content">
 						<div class="col-md-9 float-left">
 							<a href="{{ route('users.show', $user->id) }}" style="text-decoration-line: none; ">
-							<p><b>Level</b> <span class="text-danger">{{ $user->hasRole('Admin') ? 'Admin' : 'User' }}</span></p>
-							<p>{{ $user->user_fname }} {{ $user->user_lname }}</p>
-							<p><b>Email</b> {{ $user->email }}</p>
+							<p><b>Role</b> <span class="text-danger">{{ $user->hasRole('Admin') ? 'Admin' : 'User' }}</span></p>
+							<p>{{ $user->user_fname }} {{ $user->user_lname }} | {{ $user->email }}</p>
 							</a>
 						</div>
 

@@ -1,15 +1,14 @@
-@extends ('main')
-@section ('title', $rental->houses->province->name .' Trip')
+@extends ('manages.main')
+@section ('title', $rental->house->province->name .' Trip')
 @section('stylesheets')
-	<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
-  	<script>
-  		tinymce.init({ 
-  			selector:'textarea',
-  			menubar: false
-  		});
-  	</script>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
+	<script>
+		tinymce.init({ 
+			selector:'textarea',
+			menubar: false
+		});
+	</script>
 @endsection
-
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
@@ -20,9 +19,9 @@
 			<div class="card">
 				<div class="margin-content">
 					<label>Booking Detail</label>
-					<p>@if($types == 'apartment') <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @else <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->houses->house_title }}  </p>
+					<p>@if($types == 'apartment') <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @else <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->house->house_title }}  </p>
 						
-					<p><i class="fas fa-user"></i> Hosted by : {{ $rental->houses->user->user_fname }} {{ $rental->houses->user->user_lname }}</p>
+					<p><i class="fas fa-user"></i> Hosted by : {{ $rental->house->user->user_fname }} {{ $rental->house->user->user_lname }}</p>
 						
 					<p><i class="fas fa-user"></i> Rented by : <a href="{{ route('users.show', $rental->user_id) }}" target="_blank" class="btn btn-outline-info">{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</a></p>
 						
@@ -43,7 +42,7 @@
 					@endif
 					@if ($rental->inc_food == '1')<p><i class="fas fa-utensils"></i> Food included</p> @elseif ($rental->inc_food == '0')<p> <i class="fas fa-utensils"></i> Food are not included</p> @endif
 					@if ($rental->payment->payment_status == 'Approved')
-					<p>Address : {{ $rental->houses->house_address }} {{ $rental->houses->sub_district->name }} {{ $rental->houses->district->name }}, {{ $rental->houses->province->name }}</p>
+					<p>Address : {{ $rental->house->house_address }} {{ $rental->house->sub_district->name }} {{ $rental->house->district->name }}, {{ $rental->house->province->name }}</p>
 					<div id="map-canvas"></div>
 					@endif
 					<br>
@@ -163,7 +162,7 @@
 					<div class="card">
 						<div class="margin-content">
 							@if ($review != null )
-								@if ($rental->user_id == Auth::user()->id || $rental->houses->user_id == Auth::user()->id || Auth::user()->level == '0')
+								@if ($rental->user_id == Auth::user()->id || Auth::user()->id == $rental->house->user_id || Auth::user()->level == '0')
 								<label>Review</label>
 								<div class="comment">
 									<div class="author-info">
@@ -197,14 +196,14 @@
 								@endif
 
 								@if ($rental->payment->payment_status == 'Approved' && $rental->checkin_status == '1')
-									@if (Auth::user()->id == $rental->houses->user_id)
+									@if (Auth::user()->id == $rental->house->user_id)
 									<label>Review</label>
 									<p>No review</p>
 									@elseif ( $rental->user->id == Auth::user()->id )
 									<label>Write a Review</label>
 									{!! Form::open(array('route' => 'reviews.store', 'data-parsley-validate' => '')) !!}
 										<!-- <div class="col-md-6 col-sm-6"> -->
-										{{ Form::hidden('house_id', $rental->houses->id) }}
+										{{ Form::hidden('house_id', $rental->house_id) }}
 										{{ Form::hidden('rental_id', $rental->id) }}
 
 										{{ Form::label('name', 'Review as') }}
@@ -277,10 +276,10 @@
 				</div>
 
 				<hr>
-				@if (Auth::user()->id == $rental->houses->user_id)
+				@if (Auth::user()->id == $rental->house->user_id)
 				<div class="row">
 					<div class="col-sm-4 float-left">
-						<a href="{{ route('rentals.rentmyrooms', $rental->houses->user_id) }}" class="btn btn btn-outline-secondary btn-md"><i class="fas fa-chevron-left"></i> Back</a>
+						<a href="{{ route('rentals.rentmyrooms', $rental->house->user_id) }}" class="btn btn btn-outline-secondary btn-md"><i class="fas fa-chevron-left"></i> Back</a>
 					</div>
 					<div class="col-sm-8 float-left">
 						@if ($rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT'  && $rental->payment->payment_status != 'Cancel')
@@ -311,7 +310,7 @@
 				</div>
 			</div>
 			@endif
-			@if(Auth::user()->id == $rental->houses->user_id && $rental->diary != null)
+			@if(Auth::user()->id == $rental->house->user_id && $rental->diary != null)
 			@if($rental->diary->publish == 1 || $rental->diary->publish == 2)
 			<div class="card m-t-10">
 				<div class="margin-content text-success" align="center">

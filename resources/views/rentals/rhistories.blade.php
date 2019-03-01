@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('manages.main')
 @section ('title', 'Rentals | History')
 @section ('content')
 <div class="container">
@@ -31,7 +31,7 @@
 			<div class="card m-t-10">
 				<h2 class="text-danger margin-content">Rejected</h2>
 				@foreach ($rentals as $rental)
-				@if ($rental->payments->payment_status == 'Reject' || $rental->host_decision == 'REJECT')
+				@if ($rental->payment->payment_status == 'Reject' || $rental->host_decision == 'REJECT')
 				<div class="card m-t-10">
 					<div class="margin-content">
 						<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;">
@@ -49,7 +49,7 @@
 			<div class="card m-t-10">
 				<h2 class="text-warning margin-content">Cancel</h2>
 				@foreach ($rentals as $rental)
-				@if ($rental->payments->payment_status == 'Cancel')
+				@if ($rental->payment->payment_status == 'Cancel')
 				<div class="card m-t-10">
 					<div class="margin-content">
 						<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;">

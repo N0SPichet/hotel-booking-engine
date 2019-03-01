@@ -16,7 +16,7 @@ class Rental extends Model
     	return $this->belongsTo(User::class);
     }
 
-    public function houses(){
+    public function house(){
     	return $this->belongsTo(House::class);
     }
 

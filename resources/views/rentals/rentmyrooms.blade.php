@@ -1,11 +1,8 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Rentals')
-
 @section('stylesheets')
-	{{ Html::style('css/parsley.css') }}
+{{ Html::style('css/parsley.css') }}
 @endsection
-
 @section ('content')
 <div class="container rentals">
 	<div class="row m-t-10">
@@ -60,11 +57,11 @@
 							@foreach ($houses as $house)
 							<div id="room{{ $house->id }}" class="tab-pane fade">
 								@foreach ($rentals as $rental)
-		      					@if ($rental->houses_id == $house->id)
+		      					@if ($rental->house_id == $house->id)
 									@if ($rental->payment->payment_status == NULL  && $rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT')
 									<div class="card">
 										<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
-										<p>Rented by :{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
+										<p>Rented by : {{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
 										<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
 										</a>
 									</div>
@@ -87,7 +84,7 @@
 	    				@foreach ($rentals_waiting as $rental)
 	    				<div class="card">
 		      				<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
-								<p>Rented by :{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
+								<p>Rented by : {{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
 								<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
 							</a>
 						</div>
@@ -103,12 +100,14 @@
 	    			@if($rentals_approved->count())
 	    			<div class="tab-content m-t-10">
 	    				@foreach ($rentals_approved as $rental)
-		      			<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
-							<p>Rented by : {{ $rental->user->user_fname }} {{ $rental->user->user_lname }}
-								@if ($rental->checkin_status == '1') <span class="text-success"><i class="far fa-check-circle"></i> Checkin</span> @endif
-							</p>
-							<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
-						</a>
+	    				<div class="card">
+			      			<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
+								<p>Rented by : {{ $rental->user->user_fname }} {{ $rental->user->user_lname }}
+									@if ($rental->checkin_status == '1') <span class="text-success"><i class="far fa-check-circle"></i> Checkin</span> @endif
+								</p>
+								<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
+							</a>
+						</div>
 		      			@endforeach
 	    			</div>
 	    			@else

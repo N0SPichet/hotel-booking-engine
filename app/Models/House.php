@@ -43,7 +43,7 @@ class House extends Model
     }
 
     public function rentals() {
-        return $this->belongsTo(Rental::class);
+        return $this->hasMany(Rental::class);
     }
 
     public function guestarrives() {

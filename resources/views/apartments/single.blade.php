@@ -1,5 +1,4 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Review your settings | Apartments')
 
 @section ('content')

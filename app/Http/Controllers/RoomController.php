@@ -52,14 +52,17 @@ class RoomController extends Controller
         return view('rooms.index')->with('houses', $houses);
     }
 
-    public function index_myroom(User $user) {
-        if (Auth::user()->id === $user->id) {
-            $types_id = $this->getTypeId('room');
-            $houses = House::where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
-            return view('rooms.index-myroom')->with('houses', $houses);
+    public function index_myroom($userId) {
+        $user = User::find($userId);
+        if (!is_null($user)) {
+            if (Auth::user()->id === $user->id) {
+                $types_id = $this->getTypeId('room');
+                $houses = House::where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
+                return view('rooms.index-myroom')->with('houses', $houses);
+            }
         }
         Session::flash('fail', 'Unauthorized access.');
-        return back();
+        return redirect()->route('rooms.index-myroom', Auth::user()->id);
     }
 
     /**
@@ -235,12 +238,12 @@ class RoomController extends Controller
         $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
             if (Auth::user()->hasRole('Admin') || Auth::user()->id == $house->user_id) {
-                $rentcount = Rental::where('houses_id', $house->id)->count();
+                $rentcount = Rental::where('house_id', $house->id)->count();
                 $map = Map::where('houses_id', $house->id)->first();
                 return view('rooms.single')->with('house', $house)->with('rentcount', $rentcount)->with('map', $map);
             }
             Session::flash('fail', 'Unauthorized access.');
-            return back();
+            return redirect()->route('rooms.index-myroom', Auth::user()->id);
         }
         else {
             $types_id = $this->getTypeId('apartment');
@@ -249,7 +252,7 @@ class RoomController extends Controller
                 return redirect()->route('apartments.owner', $houseId);
             }
             Session::flash('fail', 'Unauthorized access.');
-            return redirect()->route('home');
+            return redirect()->route('rooms.index-myroom', Auth::user()->id);
         }
     }
 
@@ -472,7 +475,7 @@ class RoomController extends Controller
     {
         $house = House::find($houseId);
         if (Auth::user()->id == $house->user_id) {
-            $rental = Rental::where('houses_id', $house->id)->first();
+            $rental = Rental::where('house_id', $house->id)->first();
             $images = HouseImage::where('house_id', $house->id)->get();
             if ($rental == NULL){
                 $house->houseamenities()->detach();
@@ -480,7 +483,7 @@ class RoomController extends Controller
                 $house->houserules()->detach();
                 $house->housedetails()->detach();
                 foreach ($images as $image) {
-                    if ($image->houses_id == $house->id) {
+                    if ($image->house_id == $house->id) {
                         $filename = $image->name;
                         $image->delete();
                         $location = public_path('images/houses/'.$houseId.'/'.$filename);

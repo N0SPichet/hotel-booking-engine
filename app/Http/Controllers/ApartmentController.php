@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use App\Models\Apartmentprice;
 use App\Models\District;
 use App\Models\Food;
 use App\Models\Guestarrive;
-use App\Models\HouseImage;
 use App\Models\House;
+use App\Models\HouseImage;
 use App\Models\Houseamenity;
 use App\Models\Housedetail;
 use App\Models\Houseprice;
@@ -22,7 +23,6 @@ use App\Models\Review;
 use App\Models\SubDistrict;
 use App\User;
 use File;
-use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Image;
@@ -52,14 +52,17 @@ class ApartmentController extends Controller
         return view('apartments.index')->with('houses', $houses);
     }
 
-    public function index_myapartment(User $user) {
-        if (Auth::user()->id === $user->id) {
-            $types_id = $this->getTypeId('apartment');
-            $houses = House::where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
-            return view('apartments.index-myapartment')->with('houses', $houses);
+    public function index_myapartment($userId) {
+        $user = User::find($userId);
+        if (!is_null($user)) {
+            if (Auth::user()->id === $user->id) {
+                $types_id = $this->getTypeId('apartment');
+                $houses = House::where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
+                return view('apartments.index-myapartment')->with('houses', $houses);
+            }
         }
         Session::flash('fail', 'Unauthorized access.');
-        return back();
+        return redirect()->route('apartments.index-myapartment', Auth::user()->id);
     }
 
     /**
@@ -298,7 +301,7 @@ class ApartmentController extends Controller
                 return view('apartments.single')->with('house', $house)->with('map', $map);
             }
             Session::flash('fail', 'Unauthorized access.');
-            return back();
+            return redirect()->route('apartments.index-myapartment', Auth::user()->id);
         }
         else {
             $types_id = $this->getTypeId('room');
@@ -307,7 +310,7 @@ class ApartmentController extends Controller
                 return redirect()->route('rooms.owner', $houseId);
             }
             Session::flash('fail', 'Unauthorized access.');
-            return redirect()->route('home');
+            return redirect()->route('apartments.index-myapartment', Auth::user()->id);
         }
     }
 
@@ -494,8 +497,8 @@ class ApartmentController extends Controller
                 }
                 $location = public_path('images/houses/'.$house->id.'/'.$filename);
                 Image::make($image_name)->resize(1440, 1080)->save($location);
-                $image->houses_id = $house->id;
-                $image->image_name = $filename;
+                $image->house_id = $house->id;
+                $image->name = $filename;
                 $image->save();
             }
         }
@@ -594,7 +597,7 @@ class ApartmentController extends Controller
     {
         $house = House::find($houseId);
         if (Auth::user()->id == $house->user_id) {
-            $rental = Rental::where('houses_id', $house->id)->first();
+            $rental = Rental::where('house_id', $house->id)->first();
             $images = HouseImage::where('house_id', $house->id)->get();
             if ($rental == NULL){
                 $house->houseamenities()->detach();
@@ -602,7 +605,7 @@ class ApartmentController extends Controller
                 $house->houserules()->detach();
                 $house->housedetails()->detach();
                 foreach ($images as $image) {
-                    if ($image->houses_id == $house->id) {
+                    if ($image->house_id == $house->id) {
                         $filename = $image->name;
                         $image->delete();
                         $location = public_path('images/houses/'.$houseId.'/'.$filename);

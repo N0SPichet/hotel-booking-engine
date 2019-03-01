@@ -1,9 +1,7 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Edit Rule')
 
 @section ('content')
-
 <div class="container">
 	<div class="row m-t-10">
 		<div class="col-sm-12">
@@ -20,5 +18,4 @@
 		</div>
 	</div>
 </div>
-
 @endsection

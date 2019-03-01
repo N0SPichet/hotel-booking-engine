@@ -21,6 +21,7 @@ Route::post('/search', 'PagesController@indexSearch')->name('search');
 //Create PagesController Route
 Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
+Route::get('manages', 'PagesController@manages_index')->name('manages.index');
 
 //Create resource route for UserController
 Route::resource('users', 'UserController');
