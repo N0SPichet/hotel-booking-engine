@@ -19,7 +19,7 @@ class DiaryTableSeeder extends Seeder
         	$faker = Faker::create();
         	$diary = new Diary;
         	$diary->publish = $faker->numberBetween(0, 2);
-        	$diary->title = $faker->text(100);
+        	$diary->title = $faker->text(64);
         	$diary->message = $faker->paragraph;
         	$diary->user_id = User::all()->random()->id;
         	$diary->category_id = Category::all()->random()->id;

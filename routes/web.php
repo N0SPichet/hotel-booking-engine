@@ -147,9 +147,11 @@ Route::resource('reviews', 'ReviewController');
 Route::resource('maps', 'MapController');
 
 //Create resource route for HelpController
-Route::get('helps', 'HelpController@index')->name('helps.index');
-Route::get('helps/checkin/code', 'HelpController@checkincode')->name('checkincode');
-Route::get('contact', 'HelpController@getContact')->name('getcontact');
-Route::post('contact', 'HelpController@postContact')->name('postcontact');
-Route::get('contact/host/{host}', 'HelpController@getContactHost')->name('getcontacthost');
-Route::post('contact/host', 'HelpController@postContactHost')->name('postcontacthost');
+Route::prefix('helps')->name('helps.')->group(function() {
+	Route::get('', 'HelpController@index')->name('index');
+	Route::get('checkin/code', 'HelpController@checkincode')->name('checkincode');
+	Route::get('contact', 'HelpController@getContact')->name('getcontact');
+	Route::post('contact', 'HelpController@postContact')->name('postcontact');
+	Route::get('contact/host/{house}', 'HelpController@getContactHost')->name('getcontacthost');
+	Route::post('contact/host', 'HelpController@postContactHost')->name('postcontacthost');
+});

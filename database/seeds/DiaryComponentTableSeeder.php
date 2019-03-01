@@ -2,6 +2,7 @@
 
 use App\Models\Category;
 use App\Models\Tag;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 
 class DiaryComponentTableSeeder extends Seeder
@@ -14,14 +15,16 @@ class DiaryComponentTableSeeder extends Seeder
     public function run()
     {
         for ($i = 1; $i <= 10 ; $i++) { 
+            $faker = Faker::create();
         	$cat = new Category;
-        	$cat->name = "cat ".$i;
+        	$cat->name = $faker->text(16);
         	$cat->save();
         }
 
-        for ($i = 1; $i <= 10 ; $i++) { 
+        for ($i = 1; $i <= 10 ; $i++) {
+            $faker = Faker::create();
             $tag = new Tag;
-            $tag->name = "tag ".$i;
+            $tag->name = $faker->text(16);
             $tag->save();
         }
     }

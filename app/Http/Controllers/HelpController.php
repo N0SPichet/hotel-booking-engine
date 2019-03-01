@@ -55,9 +55,9 @@ class HelpController extends Controller
         return view('helps.contact');
     }
 
-    public function getContactHost($id)
+    public function getContactHost($houseId)
     {
-        $house = House::where('user_id', $id)->first();
+        $house = House::find($houseId);
         return view('helps.contacthost')->with('house', $house);
     }
 
@@ -89,7 +89,7 @@ class HelpController extends Controller
         });
 
         Session::flash('success', 'Your Email was sent');
-        return redirect()->route('rooms.show', $request->id);
+        return redirect()->route('rooms.show', $request->houseId);
     }
 
     public function getmaps ()

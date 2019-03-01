@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use App\Models\House;
 use App\Models\Payment;
 use App\Models\Rental;
@@ -9,6 +10,7 @@ use Illuminate\Database\Seeder;
 
 class RentalTableSeeder extends Seeder
 {
+    use GlobalFunctionTraits;
     /**
      * Run the database seeds.
      *
@@ -17,11 +19,11 @@ class RentalTableSeeder extends Seeder
     public function run()
     {
     	$today = Carbon::today();
-
+        $types_id = $this->getTypeId('room');
+        $user = User::find(3);
+        $house = House::where('publish', '1')->whereIn('housetype_id', $types_id)->first();
+        
     	// sample 1
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->addDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);
@@ -46,9 +48,6 @@ class RentalTableSeeder extends Seeder
         $rental->save();
 
     	// sample 2
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->subDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);
@@ -79,9 +78,6 @@ class RentalTableSeeder extends Seeder
         $rental->save();
 
         // sample 3
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->addDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);
@@ -105,9 +101,6 @@ class RentalTableSeeder extends Seeder
         $rental->save();
 
         // sample 4
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->addDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);

@@ -311,12 +311,14 @@
 				</div>
 			</div>
 			@endif
-			@if(Auth::user()->id == $rental->houses->user_id && ($rental->diary->publish == 1 || $rental->diary->publish == 2))
+			@if(Auth::user()->id == $rental->houses->user_id && $rental->diary != null)
+			@if($rental->diary->publish == 1 || $rental->diary->publish == 2)
 			<div class="card m-t-10">
 				<div class="margin-content text-success" align="center">
 					<p><b><a target="_blank" href="{{ route('users.show', $rental->user_id) }}">{{ $rental->user->user_fname }}</a></b> write diary about this trip <a target="_blank" href="{{ route('diaries.show', $rental->diary->id) }}">Click to read</a></p>
 				</div>
 			</div>
+			@endif
 			@endif
 		</div>
 	</div>

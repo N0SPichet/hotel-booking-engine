@@ -81,7 +81,7 @@
 				</div>
 			</div>
 			<div>
-				<a href="{{ route('getcontacthost', $house->user_id) }}" target="_blank" class="btn btn-info btn-sm form-spacing-top-8"><i class="fas fa-envelope"></i> Contact Host</a>
+				<a href="{{ route('helps.getcontacthost', $house->id) }}" target="_blank" class="btn btn-info btn-sm form-spacing-top-8"><i class="fas fa-envelope"></i> Contact Host</a>
 			</div>
 			<br>
 			<div class="row">
@@ -103,8 +103,7 @@
 					<div class="margin-content">
 						<p>{{ $house->user->user_fname }}'s home is located in {{ $house->sub_district->name }} {{ $house->district->name }}, {{ $house->province->name }} </p>
 						@if ($house->about_neighborhood != null)
-						<br>
-						<p>{!! $house->about_neighborhood !!}</p>
+						{!! $house->about_neighborhood !!}
 						@endif
 					</div>
 					<div id="map-canvas"></div>
@@ -280,8 +279,8 @@
 	</div>
 </div>
 @endsection
-
 @section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 <script type="text/javascript">
 	$(document).ready(function(){
   		var datein=$('input[name="datein"]'); //our date input has the name "date"
