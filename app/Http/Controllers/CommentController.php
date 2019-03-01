@@ -117,11 +117,11 @@ class CommentController extends Controller
                 $diary_id = $comment->diary_id;
                 $comment->delete();
                 $diary = Diary::find($diary_id);
-                if (Auth::user()->id == $diary->users_id) {
+                if (Auth::user()->id == $diary->user_id) {
                     Session::flash('success', 'Comment deleted');
                     return redirect()->route('diary.single', $diary->id);
                 }
-                elseif (Auth::user()->id != $diary->users_id) {
+                elseif (Auth::user()->id != $diary->user_id) {
                     Session::flash('success', 'Comment deleted');
                     return redirect()->route('diaries.show', $diary->id);
                 }

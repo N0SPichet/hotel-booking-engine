@@ -51,20 +51,56 @@ Route::prefix('diaries')->name('diaries.')->group(function() {
 	Route::get('image/{image}/delete', 'DiaryController@detroyimage')->name('detroyimage');
 });
 
-//Create resource route for CategoryController
-Route::resource('categories', 'CategoryController', ['except' => ['create']]);
-
-//Create resource route for TagController
-Route::resource('tags', 'TagController', ['except' => ['create']]);
-
 //Create resource route for CommentController
 Route::resource('comments', 'CommentController');
 Route::prefix('comments')->name('comments.')->group(function() {
 	Route::get('{comment}/delete', 'CommentController@delete')->name('delete');
 });
 
-//Create resource route for HouseitemController
-Route::resource('houseamenities', 'HouseamenityController', ['except' => ['create']]);
+Route::prefix('components')->name('comp.')->group(function() {
+	/*Diary Component*/
+	Route::prefix('categories')->name('categories.')->group(function() {
+		Route::get('/', 'DiaryComponentController@categories_index')->name('index');
+		Route::post('store', 'DiaryComponentController@categories_store')->name('store');
+		Route::get('show/{category}', 'DiaryComponentController@categories_show')->name('show');
+		Route::get('edit/{category}', 'DiaryComponentController@categories_edit')->name('edit');
+		Route::put('update/{category}', 'DiaryComponentController@categories_update')->name('update');
+		Route::delete('destroy/{category}', 'DiaryComponentController@categories_destroy')->name('destroy');
+	});
+	Route::prefix('tags')->name('tags.')->group(function() {
+		Route::get('/', 'DiaryComponentController@tags_index')->name('index');
+		Route::post('store', 'DiaryComponentController@tags_store')->name('store');
+		Route::get('show/{tag}', 'DiaryComponentController@tags_show')->name('show');
+		Route::get('edit/{tag}', 'DiaryComponentController@tags_edit')->name('edit');
+		Route::put('update/{tag}', 'DiaryComponentController@tags_update')->name('update');
+		Route::delete('destroy/{tag}', 'DiaryComponentController@tags_destroy')->name('destroy');
+	});
+	/*Room Component*/
+	Route::prefix('amenities')->name('amenities.')->group(function() {
+		Route::get('/', 'RoomComponentController@amenities_index')->name('index');
+		Route::post('store', 'RoomComponentController@amenities_store')->name('store');
+		Route::get('show/{amenity}', 'RoomComponentController@amenities_show')->name('show');
+		Route::get('edit/{amenity}', 'RoomComponentController@amenities_edit')->name('edit');
+		Route::put('update/{amenity}', 'RoomComponentController@amenities_update')->name('update');
+		Route::delete('destroy/{amenity}', 'RoomComponentController@amenities_destroy')->name('destroy');
+	});
+	Route::prefix('details')->name('details.')->group(function() {
+		Route::get('/', 'RoomComponentController@details_index')->name('index');
+		Route::post('store', 'RoomComponentController@details_store')->name('store');
+		Route::get('show/{detail}', 'RoomComponentController@details_show')->name('show');
+		Route::get('edit/{detail}', 'RoomComponentController@details_edit')->name('edit');
+		Route::put('update/{detail}', 'RoomComponentController@details_update')->name('update');
+		Route::delete('destroy/{detail}', 'RoomComponentController@details_destroy')->name('destroy');
+	});
+	Route::prefix('rules')->name('rules.')->group(function() {
+		Route::get('/', 'RoomComponentController@rules_index')->name('index');
+		Route::post('store', 'RoomComponentController@rules_store')->name('store');
+		Route::get('show/{rule}', 'RoomComponentController@rules_show')->name('show');
+		Route::get('edit/{rule}', 'RoomComponentController@rules_edit')->name('edit');
+		Route::put('update/{rule}', 'RoomComponentController@rules_update')->name('update');
+		Route::delete('destroy/{rule}', 'RoomComponentController@rules_destroy')->name('destroy');
+	});
+});
 
 //Create route for hosts
 Route::prefix('hosts')->name('hosts.')->group(function() {

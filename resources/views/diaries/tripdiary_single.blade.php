@@ -4,6 +4,11 @@
 
 @section ('content')
 <div class="container">
+	<div class="row m-t-10">
+		<div class="col-sm-12">
+			{!! Html::linkRoute('diaries.mydiaries', 'Back to My Diary', array($diaries[0]->user_id), array('class' => 'btn btn-outline-secondary')) !!}
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-md-12">
 			<h1 class="title-page">@if($diaries[0]->title != 'Diary Title') {{ $diaries[0]->title }} @else 'Diary Title' @endif</h1>
@@ -32,7 +37,7 @@
 					</div>
 					<p><a href="{{ route('diaries.tripdiary.edit', [$rental->id, $rental->user_id, 0])}}" class="btn btn-default btn-md" style="width: 90%"><i class="far fa-edit"></i> Edit Topic</a></p>
 					<p><a href="{{ route('diaries.tripdiary.destroy', [$rental->id]) }}" class="btn btn-default btn-md" style="width: 90%"><i class="fas fa-trash"></i> Delete Diary</a></p>
-					<select id="publishFlag" class="form-control text-center" type="select" name="flag" style="width: 120px; margin: 0 auto;">
+					<select id="publishFlag" class="form-control margin-auto" type="select" name="flag" style="width: 120px;">
 						<option disabled="disabled">Select Viewer</option>
 						<option value="2" {{ $diaries[0]->publish == '2' ? 'selected' : '' }}>Public</option>
 						<option value="1" {{ $diaries[0]->publish == '1' ? 'selected' : '' }}>Follower</option>
@@ -69,28 +74,40 @@
 		@endfor
 		</div>
 	</div>
-
+	<hr>
+	<div class="m-t-10">
+		<b>Category :</b> {{ $diaries[0]->category->name }}
+	</div>
+	@if($diaries[0]->tags->count())
+	<?php
+	$tag_length = $diaries[0]->tags->count();
+	?>
 	<div class="tags">
-		@foreach ($diaries[0]->tags as $tag)
-		<span class="label label-default">{{ $tag->tag_name }}</span>
+		<b>Tag :</b>
+		@foreach ($diaries[0]->tags as $key => $tag)
+		<span class="label label-default">{{ $tag->name }}</span>
+		@if($key+1 != $tag_length)
+		,
+		@endif
 		@endforeach
 	</div>
+	@endif
 	<hr>
 	<div class="row">
 		<div class="col-md-12 m-t-50">
-			@if ($diaries[0]->users->user_image == NULL)
+			@if ($diaries[0]->user->user_image == NULL)
 			<div class="author-info">
 				<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
 				<div class="author-name">
-					<h4>{{ $diaries[0]->users->user_fname }}</h4>
+					<h4>{{ $diaries[0]->user->user_fname }}</h4>
 					<p class="author-time">Published on {{ date('jS F, Y', strtotime($diaries[0]->created_at)) }}</p>
 				</div>
 			</div>
 			@else
 			<div class="author-info">
-				<img src="{{ asset('images/users/' . $diaries[0]->users->user_image) }}" class="author-image">
+				<img src="{{ asset('images/users/' . $diaries[0]->user->user_image) }}" class="author-image">
 				<div class="author-name">
-					<h4>{{ $diaries[0]->users->user_fname }}</h4>
+					<h4>{{ $diaries[0]->user->user_fname }}</h4>
 					<p class="author-time">Published on {{ date('jS F, Y', strtotime($diaries[0]->created_at)) }}</p>
 				</div>
 			</div>

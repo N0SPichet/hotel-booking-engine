@@ -9,9 +9,11 @@
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
-		<div class="col-md-12">
-			<a href="{{ route('diaries.index') }}" class="btn btn-default"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
+		<div class="col-sm-12">
+			<a href="{{ route('diaries.index') }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
 		</div>
+	</div>
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h2 class="text-center">
 				@if($diaries[0]->title != 'Diary Title') {{ $diaries[0]->title }} @else 'Diary Title' @endif 
@@ -48,21 +50,38 @@
 			</div>
 			@endfor
 			<h3 class="text-center trip-diary-end">~~ End ~~</h3>
+			<div class="m-t-10">
+				<b>Category :</b> {{ $diaries[0]->category->name }}
+			</div>
+			@if($diaries[0]->tags->count())
+			<?php
+			$tag_length = $diaries[0]->tags->count();
+			?>
+			<div class="tags">
+				<b>Tag :</b>
+				@foreach ($diaries[0]->tags as $key => $tag)
+				<span class="label label-default">{{ $tag->name }}</span>
+				@if($key+1 != $tag_length)
+				,
+				@endif
+				@endforeach
+			</div>
+			@endif
 			<div class="row">
 				<div class="col-md-10 m-t-50">
-					@if ($diaries[0]->users->user_image == NULL)
+					@if ($diaries[0]->user->user_image == NULL)
 					<div class="author-info">
 						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
 						<div class="author-name">
-							<h4>{{ $diaries[0]->users->user_fname }}</h4>
+							<h4>{{ $diaries[0]->user->user_fname }}</h4>
 							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diaries[0]->created_at)) }}</p>
 						</div>
 					</div>
 					@else
 					<div class="author-info">
-						<img src="{{ asset('images/users/' . $diaries[0]->users->user_image) }}" class="author-image">
+						<img src="{{ asset('images/users/' . $diaries[0]->user->user_image) }}" class="author-image">
 						<div class="author-name">
-							<h4>{{ $diaries[0]->users->user_fname }}</h4>
+							<h4>{{ $diaries[0]->user->user_fname }}</h4>
 							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diaries[0]->created_at)) }}</p>
 						</div>
 
@@ -75,13 +94,13 @@
 							@if ($subscribe->writer == Auth::user()->id)
 
 							@elseif ($subscribe->writer != Auth::user()->id)
-							{!! Form::open(['route'=> ['diaries.unsubscribe', $diaries[0]->users->id]]) !!}
-							<button class="btn btn-info btn-sm m-t-50 pull-right">Unfollow {{ $diaries[0]->users->user_fname }}</button>
+							{!! Form::open(['route'=> ['diaries.unsubscribe', $diaries[0]->user_id]]) !!}
+							<button class="btn btn-warning btn-sm m-t-50 pull-right">Unfollow {{ $diaries[0]->user->user_fname }}</button>
 							{!! Form::close() !!}
 							@endif
 						@else
-						{!! Form::open(['route'=> ['diaries.subscribe', $diaries[0]->users->id]]) !!}
-						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diaries[0]->users->user_fname }}</button>
+						{!! Form::open(['route'=> ['diaries.subscribe', $diaries[0]->user_id]]) !!}
+						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diaries[0]->user->user_fname }}</button>
 						{!! Form::close() !!}
 						@endif
 					@endif
@@ -140,7 +159,7 @@
 		        </ul>
 		    </div>
 		@endif
-		<div id="comment-form" class="m-t-50">
+		<div id="comment-form" class="margin-auto m-t-50">
 			{!! Form::open(['route' => 'comments.store','data-parsley-validate']) !!}
 				<div class="row">
 					<div class="col-md-6 float-left">

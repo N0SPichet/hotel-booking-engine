@@ -2,9 +2,11 @@
 
 namespace App;
 
+use App\Models\Diary;
 use App\Models\District;
 use App\Models\House;
 use App\Models\Province;
+use App\Models\Rental;
 use App\Models\Review;
 use App\Models\Role;
 use App\Models\SubDistrict;
@@ -57,7 +59,7 @@ class User extends Authenticatable
     }
 
     public function diaries() {
-        return $this->hasMany('App\Diary');
+        return $this->hasMany(Diary::class);
     }
 
     public function district()
@@ -75,7 +77,7 @@ class User extends Authenticatable
     }
 
     public function rentals() {
-        return $this->hasMany('App\Rental');
+        return $this->hasMany(Rental::class);
     }
 
     public function reviews() {

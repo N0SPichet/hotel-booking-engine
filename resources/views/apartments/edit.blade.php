@@ -401,7 +401,7 @@
 	    <div class="col-md-2 float-left">
 	    	{{ Form::submit('Save Change', array('class' => 'btn btn-warning m-t-10 pull-right')) }}
 			{!! Form::close() !!}
-			<a class="btn btn-success m-t-10 pull-right" href="{{ route('apartments.owner', $house->id) }}">Back</a>
+			<a class="btn btn-outline-secondary m-t-10 pull-right" href="{{ route('apartments.owner', $house->id) }}">Back</a>
 	    </div>
 	</div> 
 </div>

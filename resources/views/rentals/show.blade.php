@@ -280,7 +280,7 @@
 				@if (Auth::user()->id == $rental->houses->user_id)
 				<div class="row">
 					<div class="col-sm-4 float-left">
-						<a href="{{ route('rentals.rentmyrooms', $rental->houses->user_id) }}" class="btn btn btn-link btn-md"><i class="fas fa-chevron-left"></i>Back</a>
+						<a href="{{ route('rentals.rentmyrooms', $rental->houses->user_id) }}" class="btn btn btn-outline-secondary btn-md"><i class="fas fa-chevron-left"></i> Back</a>
 					</div>
 					<div class="col-sm-8 float-left">
 						@if ($rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT'  && $rental->payment->payment_status != 'Cancel')
@@ -300,7 +300,7 @@
 				</div>
 				@endif
 			</div>
-			@if (Auth::user()->id == $rental->user->id)
+			@if (Auth::user()->id == $rental->user_id)
 			<div class="card m-t-10">
 				<div class="margin-content" align="center">
 					@if ($rental->checkin_status == '1')
@@ -308,6 +308,13 @@
 					@else
 					<p>To write diary for this great trip, you must have <span class="text-success">Confirmed</span> status.</p>
 					@endif
+				</div>
+			</div>
+			@endif
+			@if(Auth::user()->id == $rental->houses->user_id && ($rental->diary->publish == 1 || $rental->diary->publish == 2))
+			<div class="card m-t-10">
+				<div class="margin-content text-success" align="center">
+					<p><b><a target="_blank" href="{{ route('users.show', $rental->user_id) }}">{{ $rental->user->user_fname }}</a></b> write diary about this trip <a target="_blank" href="{{ route('diaries.show', $rental->diary->id) }}">Click to read</a></p>
 				</div>
 			</div>
 			@endif
