@@ -34,9 +34,13 @@
 				<li>
 					<a href="#">Components <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
-						<li><a href="{{ route('categories.index') }}"><i class="far fa-edit"></i> Categories</a></li>
-						<li><a href="{{ route('tags.index') }}"><i class="far fa-edit"></i> Diary Tags</a></li>
-						<li><a href="{{ route('houseamenities.index') }}"><i class="far fa-edit"></i> Amenities</a></li>
+						<li class="text-center">Diary Comp</li>
+						<li><a href="{{ route('comp.categories.index') }}"><i class="far fa-edit"></i>Categories</a></li>
+						<li><a href="{{ route('comp.tags.index') }}"><i class="far fa-edit"></i>Tags</a></li>
+						<li class="text-center">Room Comp</li>
+						<li><a href="{{ route('comp.amenities.index') }}"><i class="far fa-edit"></i>Amenities</a></li>
+						<li><a href="{{ route('comp.details.index') }}"><i class="far fa-edit"></i>Details</a></li>
+						<li><a href="{{ route('comp.rules.index') }}"><i class="far fa-edit"></i>Rules</a></li>
 					</ul>
 				</li>
 				@endif
