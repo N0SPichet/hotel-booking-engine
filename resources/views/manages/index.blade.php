@@ -3,14 +3,26 @@
 @section('content')
 <div class="container">
 	<div class="row m-t-10">
+		<div class="col-md-12 text-center">
+			<h2 style="text-transform: uppercase;">welcome back {{ Auth::user()->user_fname }}'s</h2>
+		</div>
+	</div>
+	<div class="row m-t-10">
 		<div class="col-md-12 card">
 			<div class="card-title">
 				<h4>Diaries</h4>
-				@foreach($diaries as $key => $diary)
-				<div class="margin-content">
-					<p>{{ $diary->title }}</p>
+				<div id="private-diary" class="margin-content">
+					<b>Private Status</b>
 				</div>
-				@endforeach
+				<div id="public-diary" class="margin-content">
+					<b>Public Status</b>
+				</div>
+				<div id="subscriber-only-diary" class="margin-content">
+					<b>Subscriber Only Status</b>
+				</div>
+				<div id="in-trash-diary" class="margin-content">
+					<b>In Trash Status</b>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -18,11 +30,21 @@
 		<div class="col-md-12 card">
 			<div class="card-title">
 				<h4>Apartments</h4>
-				@foreach($apartments as $key => $apartment)
-				<div class="margin-content">
-					<p>{{ $apartment->house_title }} <small>rented {{ $apartment->rentals->count() }}</small></p>
+				<div class="col-md-4 float-left text-center">
+					<a href="{{ route('apartments.index-myapartment', Auth::user()->id) }}">
+					<b>{{ $apartments->count() }} {{ $apartments->count()>0? 'apartments':'apartment' }} created</b>
+					</a>
 				</div>
-				@endforeach
+				<div class="col-md-4 float-left text-center">
+					<a href="{{ route('manages.apartments.online', Auth::user()->id) }}">
+					<b>{{ $apartments->where('publish', '1')->count() }} online</b>
+					</a>
+				</div>
+				<div class="col-md-4 float-left text-center">
+					<a href="{{ route('manages.apartments.offline', Auth::user()->id) }}">
+					<b>{{ $apartments->where('publish', '0')->count() }} offline</b>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -30,20 +52,65 @@
 		<div class="col-md-12 card">
 			<div class="card-title">
 				<h4>Rooms</h4>
-				@foreach($rooms as $key => $room)
-				<div class="margin-content">
-					<p>{{ $room->house_title }} <small>rented {{ $room->rentals->count() }}</small></p>
+				<div class="col-md-4 float-left text-center">
+					<a href="{{ route('rooms.index-myroom', Auth::user()->id) }}">
+					<b>{{ $rooms->count() }} {{ $rooms->count()>0? 'rooms':'room' }} created</b>
+					</a>
 				</div>
-				@endforeach
-			</div>
-		</div>
-	</div>
-	<div class="row m-t-10">
-		<div class="col-md-12 card">
-			<div class="card-title">
-				<h4>Components</h4>
+				<div class="col-md-4 float-left text-center">
+					<a href="{{ route('manages.rooms.online', Auth::user()->id) }}">
+					<b>{{ $rooms->where('publish', '1')->count() }} online</b>
+					</a>
+				</div>
+				<div class="col-md-4 float-left text-center">
+					<a href="{{ route('manages.rooms.offline', Auth::user()->id) }}">
+					<b>{{ $rooms->where('publish', '0')->count() }} offline</b>
+					</a>
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+<script type="text/javascript">
+	$(document).ready(function() {
+		var diaries = {!! $diaries !!};
+		$.each(diaries, function(index, data) {
+			var publishflag;
+			var diaryUrl = '{{ route("diaries.single", ":id") }}';
+			diaryUrl = diaryUrl.replace(':id', data.id);
+			var diaryUrlEdit = '{{ route("diaries.edit", ":id") }}';
+			diaryUrlEdit = diaryUrlEdit.replace(':id', data.id);
+			var diaryUrlTempDelete = '{{ route('diaries.temp.delete', ':id') }}';
+			diaryUrlTempDelete = diaryUrlTempDelete.replace(':id', data.id);
+			var diaryUrlRestore = '{{ route('diaries.restore', ':id') }}';
+			diaryUrlRestore = diaryUrlRestore.replace(':id', data.id);
+
+			var diaryUrlDelete = '{{ route('diaries.destroy', ':id') }}';
+			diaryUrlDelete = diaryUrlDelete.replace(':id', data.id);
+			var del_form = '<form method="POST" action="'+diaryUrlDelete+'" accept-charset="UTF-8" style="display: inline;"><input name="_method" type="hidden" value="DELETE"><input name="_token" type="hidden" value="'+$('meta[name="csrf-token"]').attr('content')+'"> <button type="submit" class="btn btn-sm btn-danger" title="delete the diary">Delete</button></form>';
+
+			var action_edit = '<a target="_blank" href="'+diaryUrlEdit+'" class="btn btn-sm btn-warning" title="edit the diary">edit</a>';
+			var action_del_restore = '<a href="'+diaryUrlTempDelete+'" class="btn btn-sm btn-danger" title="move the diary to trash">Move to trash</a>';
+			if (data.publish == 0) {
+				publishflag = '<span class="text-danger"><i class="fas fa-eye-slash"></i> private</span>';
+				$('#private-diary').append('<div class="col-md-12 m-t-10"><a target="_blank" href="'+diaryUrl+'" class="btn btn-sm btn-info">open</a> '+action_edit+' '+action_del_restore+' <b>'+publishflag+'</b> - '+data.title+'</div>');
+			}
+			else if (data.publish == 1) {
+				publishflag = '<span class="text-success"><i class="fas fa-eye"></i> publish</span>';
+				$('#public-diary').append('<div class="col-md-12 m-t-10"><a target="_blank" href="'+diaryUrl+'" class="btn btn-sm btn-info">open</a> '+action_edit+' '+action_del_restore+' <b>'+publishflag+'</b> - '+data.title+'</div>');
+			}
+			else if (data.publish == 2) {
+				publishflag = '<span class="text-warning"><i class="fas fa-eye"></i> subscriber only</span>';
+				$('#subscriber-only-diary').append('<div class="col-md-12 m-t-10"><a target="_blank" href="'+diaryUrl+'" class="btn btn-sm btn-info">open</a> '+action_edit+' '+action_del_restore+' <b>'+publishflag+'</b> - '+data.title+'</div>');
+			}
+			else if (data.publish == 3) {
+				publishflag = '<span class="text-danger"><i class="fa fa-trash" aria-hidden="true"></i> in trash</span>';
+				action_edit = '<a href="'+diaryUrlRestore+'" class="btn btn-sm btn-warning" title="after restore the diary status will change to '+"'"+'private'+"'"+'">Restore</a>'
+				$('#in-trash-diary').append('<div class="col-md-12 m-t-10"><a target="_blank" href="'+diaryUrl+'" class="btn btn-sm btn-info">open</a> '+action_edit+' '+del_form+' <b>'+publishflag+'</b> - '+data.title+'</div>');
+			}
+		});
+	});
+</script>
 @endsection

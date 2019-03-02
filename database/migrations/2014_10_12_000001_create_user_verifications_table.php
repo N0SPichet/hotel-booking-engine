@@ -16,6 +16,7 @@ class CreateUserVerificationsTable extends Migration
         Schema::create('user_verifications', function (Blueprint $table) {
             $table->increments('id');
             $table->enum('verify', ['0', '1', '2'])->default('0');
+            $table->string('passport')->nullable();
             $table->string('title', 50)->nullable();
             $table->string('name', 100)->nullable();
             $table->string('lastname', 100)->nullable();

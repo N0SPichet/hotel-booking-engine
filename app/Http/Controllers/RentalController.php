@@ -19,6 +19,7 @@ use DateTime;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Image;
 use Mail;
 use Session;
@@ -666,7 +667,10 @@ class RentalController extends Controller
         $payment = Payment::find($rental->payment_id);
 
         if ($payment->payment_status == 'Waiting') {
-            $rental->checkincode = str_random(10);
+            $code = Hash::make($rental->id.$rental->user->email.$rental->house_id);
+            $code = str_replace(' ', '-', $code);
+            $code = preg_replace('/[^A-Za-z0-9\-]/', '', $code);
+            $rental->checkincode = substr($code, 2, 10);
             $payment->payment_status = "Approved";
             $rental->save();
             $payment->save();
@@ -773,95 +777,97 @@ class RentalController extends Controller
         return redirect()->route('rentals.index');
     }
 
-    public function rentmyrooms(User $user)
+    public function rentmyrooms($userId)
     {
-        $now = Carbon::yesterday();
-        $houses = House::where('user_id', Auth::user()->id)->get();
-        $houses_id = array();
-        foreach ($houses as $key => $house) {
-            array_push($houses_id, $house->id);
-        }
-        
-        /*payment with my house rentals*/
-        $payments_confirmed_id = array();
-        $rentals = Rental::where('rental_datein', '>=', $now)->whereIn('house_id', $houses_id)->get();
-        foreach ($rentals as $key => $rental) {
-            array_push($payments_confirmed_id, $rental->payment_id);
-        }
-        
-        /*rental with payment approve status*/
-        $payments = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', 'Approved')->get();
-        $payments_approved_id = array();
-        foreach ($payments as $key => $payment) {
-            array_push($payments_approved_id, $payment->id);
-        }
-        $rentals_approved = Rental::whereIn('payment_id', $payments_approved_id)->get();
-        $payment_approved_badge = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', 'Approved')->count();
-        
-        /*rental with waiting status*/
-        $payments = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', 'Waiting')->get();
-        $payments_waiting_id = array();
-        foreach ($payments as $key => $payment) {
-            array_push($payments_waiting_id, $payment->id);
-        }
-        $rentals_waiting = Rental::whereIn('payment_id', $payments_waiting_id)->get();
-        $payment_waiting_badge = Rental::whereIn('payment_id', $payments_waiting_id)->count();
-
-        /*payment status null*/
-        $payments = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', null)->get();
-        $payments_null_id = array();
-        foreach ($payments as $key => $payment) {
-            array_push($payments_null_id, $payment->id);
-        }
-        if (!is_null($houses)) {
-            $rentals = Rental::whereIn('house_id', $houses_id)->get();
-            $rental_new = Rental::whereIn('house_id', $houses_id)->where('host_decision', null)->whereIn('payment_id', $payments_null_id)->count();
-            $rent_count = array();
+        if (Auth::user()->id == $userId) {
+            $now = Carbon::yesterday();
+            $houses = House::where('user_id', Auth::user()->id)->get();
+            $houses_id = array();
             foreach ($houses as $key => $house) {
-                $rent_count_get = Rental::where('house_id', $house->id)->where('host_decision', null)->whereIn('payment_id', $payments_null_id)->count();
-                array_push($rent_count, $rent_count_get);
+                array_push($houses_id, $house->id);
             }
-            $data = array(
-                'rental_new' => $rental_new,
-                'payment_waiting_badge' => $payment_waiting_badge,
-                'payment_approved_badge' => $payment_approved_badge,
-                'rent_count' => $rent_count
-            );
-            return view('rentals.rentmyrooms')->with($data)->with('rentals', $rentals)->with('houses', $houses)->with('rentals_approved', $rentals_approved)->with('rentals_waiting', $rentals_waiting);
-        }
+            
+            /*payment with my house rentals*/
+            $payments_confirmed_id = array();
+            $rentals = Rental::where('rental_datein', '>=', $now)->whereIn('house_id', $houses_id)->get();
+            foreach ($rentals as $key => $rental) {
+                array_push($payments_confirmed_id, $rental->payment_id);
+            }
+            
+            /*rental with payment approve status*/
+            $payments = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', 'Approved')->get();
+            $payments_approved_id = array();
+            foreach ($payments as $key => $payment) {
+                array_push($payments_approved_id, $payment->id);
+            }
+            $rentals_approved = Rental::whereIn('payment_id', $payments_approved_id)->get();
+            $payment_approved_badge = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', 'Approved')->count();
+            
+            /*rental with waiting status*/
+            $payments = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', 'Waiting')->get();
+            $payments_waiting_id = array();
+            foreach ($payments as $key => $payment) {
+                array_push($payments_waiting_id, $payment->id);
+            }
+            $rentals_waiting = Rental::whereIn('payment_id', $payments_waiting_id)->get();
+            $payment_waiting_badge = Rental::whereIn('payment_id', $payments_waiting_id)->count();
 
-        else{
-            $rentals = Rental::where('id', '0')->get();
-            $data = array(
-                'rental_new' => 0,
-                'payment_waiting_badge' => 0,
-                'payment_approved_badge' => 0
-            );
-            return view('rentals.rentmyrooms')->with($data)->with('rentals', $rentals)->with('houses', $houses)->with('arriverentals', $arriverentals)->with('waiting_payment', $waiting_payment);
+            /*payment status null*/
+            $payments = Payment::whereIn('id', $payments_confirmed_id)->where('payment_status', null)->get();
+            $payments_null_id = array();
+            foreach ($payments as $key => $payment) {
+                array_push($payments_null_id, $payment->id);
+            }
+            if (!is_null($houses)) {
+                $rentals = Rental::whereIn('house_id', $houses_id)->get();
+                $rental_new = Rental::whereIn('house_id', $houses_id)->where('host_decision', null)->whereIn('payment_id', $payments_null_id)->count();
+                $rent_count = array();
+                foreach ($houses as $key => $house) {
+                    $rent_count_get = Rental::where('house_id', $house->id)->where('host_decision', null)->whereIn('payment_id', $payments_null_id)->count();
+                    array_push($rent_count, $rent_count_get);
+                }
+                $data = array(
+                    'rental_new' => $rental_new,
+                    'payment_waiting_badge' => $payment_waiting_badge,
+                    'payment_approved_badge' => $payment_approved_badge,
+                    'rent_count' => $rent_count
+                );
+                return view('rentals.rentmyrooms')->with($data)->with('rentals', $rentals)->with('houses', $houses)->with('rentals_approved', $rentals_approved)->with('rentals_waiting', $rentals_waiting);
+            }
+
+            else{
+                $rentals = Rental::where('id', '0')->get();
+                $data = array(
+                    'rental_new' => 0,
+                    'payment_waiting_badge' => 0,
+                    'payment_approved_badge' => 0
+                );
+                return view('rentals.rentmyrooms')->with($data)->with('rentals', $rentals)->with('houses', $houses)->with('arriverentals', $arriverentals)->with('waiting_payment', $waiting_payment);
+            }
         }
+        Session::flash('fail', 'Unauthorized access.');
+        return redirect()->route('rentals.rentmyrooms', Auth::user()->id);
     }
 
     public function renthistories()
     {
         $now = Carbon::now();
         $houses = House::where('user_id', Auth::user()->id)->get();
-        $houses_id = array();
-        foreach ($houses as $key => $house) {
-            array_push($houses_id, $house->id);
-        }
-
-        if (!is_null($houses)) {
+        $rentals_approved = Rental::where('id', '0')->get();
+        $rentals = Rental::where('id', '0')->get();
+        if ($houses->count()) {
+            $houses_id = array();
+            foreach ($houses as $key => $house) {
+                array_push($houses_id, $house->id);
+            }
             foreach ($houses as $house) {
                 $rentals_approved = Rental::where('rental_datein', '<', $now)->whereIn('house_id', $houses_id)->orderBy('id', 'desc')->where('checkin_status', '1')->get();
                 $rentals = Rental::where('rental_datein', '<', $now)->whereIn('house_id', $houses_id)->orderBy('id', 'desc')->get();
             }
+            return view('rentals.rhistories')->with('rentals', $rentals)->with('rentals_approved', $rentals_approved)->with('houses', $houses);
         }
-
-        else{
-            $rentals_approved = Rental::where('id', '0')->get();
-            $rentals = Rental::where('id', '0')->get();
-        }
-        return view('rentals.rhistories')->with('rentals', $rentals)->with('rentals_approved', $rentals_approved)->with('houses', $houses);
+        Session::flash('fail', 'Unauthorized access.');
+        return redirect()->route('rentals.rentmyrooms', Auth::user()->id);
     }
 
     public function checkcode(Request $request) {

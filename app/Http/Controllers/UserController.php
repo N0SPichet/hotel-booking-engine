@@ -233,9 +233,13 @@ class UserController extends Controller
     public function verify_approve(User $user)
     {
         if ($user) {
-            $user_verification = UserVerification::find($user->user_verifications_id);
-            $user_verification->verify = '1';
-            $user_verification->save();
+            $verification = UserVerification::find($user->user_verifications_id);
+            $verification->verify = '1';
+            $passport = bcrypt(Auth::user()->id.Auth::user()->email.Auth::user()->created_at);
+            $passport = str_replace(' ', '-', $passport);
+            $passport = preg_replace('/[^A-Za-z0-9\-]/', '', $passport);
+            $verification->passport = $passport;
+            $verification->save();
             return redirect()->route('users.verify-show', $user->id);
         }
         else {

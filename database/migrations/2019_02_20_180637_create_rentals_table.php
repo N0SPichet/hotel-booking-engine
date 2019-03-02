@@ -28,7 +28,7 @@ class CreateRentalsTable extends Migration
             $table->integer('no_rooms')->nullable();
             $table->integer('inc_food')->default(0);
             $table->integer('discount')->default(0);
-            $table->integer('checkin_status')->default(0);
+            $table->enum('checkin_status', ['0', '1'])->default(0);
             $table->string('checkincode', 50)->nullable();
             $table->integer('rental_checkroom')->default(0);
             $table->timestamps();

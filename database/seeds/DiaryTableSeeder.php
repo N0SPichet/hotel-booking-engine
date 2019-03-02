@@ -15,10 +15,11 @@ class DiaryTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 0; $i < 25 ; $i++) { 
+        $publish = ['0', '1', '2', '3'];
+        for ($i = 0; $i < 30 ; $i++) { 
         	$faker = Faker::create();
         	$diary = new Diary;
-        	$diary->publish = $faker->numberBetween(0, 2);
+        	$diary->publish = $publish[$faker->numberBetween(0, count($publish)-1)];
         	$diary->title = $faker->text(64);
         	$diary->message = $faker->paragraph;
         	$diary->user_id = User::all()->random()->id;

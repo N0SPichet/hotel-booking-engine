@@ -27,9 +27,9 @@
 				@endif
 					<div id="showPublish">
 						@if ($diaries[0]->publish == '2')
-						<p class="text-success m-t-20"><i class="fas fa-eye"></i> Published</p>
+						<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>
 						@elseif ($diaries[0]->publish == '1')
-						<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</p>
+						<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>
 						@elseif ($diaries[0]->publish == '0')
 						<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>
 						@endif
@@ -38,8 +38,8 @@
 					<p><a href="{{ route('diaries.tripdiary.destroy', [$rental->id]) }}" class="btn btn-default btn-md" style="width: 90%"><i class="fas fa-trash"></i> Delete Diary</a></p>
 					<select id="publishFlag" class="form-control margin-auto" type="select" name="flag" style="width: 120px;">
 						<option disabled="disabled">Select Viewer</option>
-						<option value="2" {{ $diaries[0]->publish == '2' ? 'selected' : '' }}>Public</option>
-						<option value="1" {{ $diaries[0]->publish == '1' ? 'selected' : '' }}>Follower</option>
+						<option value="2" {{ $diaries[0]->publish == '2' ? 'selected' : '' }}>Subscriber only</option>
+						<option value="1" {{ $diaries[0]->publish == '1' ? 'selected' : '' }}>Public</option>
 						<option value="0" {{ $diaries[0]->publish == '0' ? 'selected' : '' }}>Private</option>
 					</select>
 				</div>
@@ -166,10 +166,10 @@
 				dataType: 'json',
 				success: function(response) {
 					if (response.data == 2) {
-						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Published</p>')
+						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>')
 					}
 					else if(response.data == 1) {
-						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</p>')
+						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>')
 					}
 					else if(response.data == 0) {
 						$('#showPublish').html('<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>')

@@ -4,7 +4,7 @@
 		<nav>
 			<h2>Main Navigation</h2>
 			<ul>
-				<li><a href="{{ route('home') }}">Home</a></li>
+				<li><a href="{{ route('manages.index', Auth::user()->id) }}">Dashboard</a></li>
 				@if(Auth::check())
 				@if (Auth::user()->hasRole('Admin'))
 				<li>
@@ -30,12 +30,12 @@
 					</ul>
 				</li>
 				@endif
+				<li><a href="{{ route('rentals.rentmyrooms', Auth::user()->id) }}">Manage</a></li>
 				<li>
 					<a href="#">Hosting<i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
 						<li><a href="{{ route('hosts.introroom') }}">Room</a></li>
 						<li><a href="{{ route('hosts.introapartment') }}">Apartment</a></li>
-						<li><a href="{{ route('rentals.rentmyrooms', Auth::user()->id) }}">Manage</a></li>
 					</ul>
 				</li>
 				<li><a href="{{ route('rentals.mytrips', Auth::user()->id) }}">Trips</a></li>

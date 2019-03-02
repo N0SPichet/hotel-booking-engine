@@ -40,7 +40,6 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
         $rental->house_id = $house->id;
@@ -70,7 +69,6 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
         $rental->house_id = $house->id;
@@ -93,7 +91,6 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
         $rental->house_id = $house->id;
@@ -123,8 +120,10 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
-        $rental->checkincode = str_random(10);
+        $code = Hash::make($user->id.$user->email.$house->id);
+        $code = str_replace(' ', '-', $code);
+        $code = preg_replace('/[^A-Za-z0-9\-]/', '', $code);
+        $rental->checkincode = substr($code, 2, 10);
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
         $rental->house_id = $house->id;

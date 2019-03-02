@@ -13,7 +13,7 @@
 			@endif
 			<div class="card-body">
 				@if($houses->count())
-				@foreach($houses as $house)
+				@foreach($houses as $key => $house)
 				<div class="row m-t-10">
 					<div class="col-md-12">
 						<div class="col-md-10 float-left">

@@ -64,7 +64,7 @@
 
 		<div class="col-md-4 col-sm-4 float-left">
 			<div class="col-sm-6 float-left">
-			<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-danger m-t-10" style="width: 100%;">Cancel</a>
+			<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-outline-secondary m-t-10" style="width: 100%;">Cancel</a>
 			</div>
 			<div class="col-sm-6 float-left">
 			{{ Form::submit('Save Changes', ['class' => 'btn btn-success m-t-10']) }}

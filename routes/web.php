@@ -21,7 +21,13 @@ Route::post('/search', 'PagesController@indexSearch')->name('search');
 //Create PagesController Route
 Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
-Route::get('manages', 'PagesController@manages_index')->name('manages.index');
+Route::prefix('manages')->name('manages.')->group(function() {
+	Route::get('{user}', 'PagesController@manages_index')->name('index');
+	Route::get('{user}/rooms/online', 'PagesController@manages_rooms_online')->name('rooms.online');
+	Route::get('{user}/rooms/offline', 'PagesController@manages_rooms_offline')->name('rooms.offline');
+	Route::get('{user}/apartments/online', 'PagesController@manages_apartments_online')->name('apartments.online');
+	Route::get('{user}/apartments/offline', 'PagesController@manages_apartments_offline')->name('apartments.offline');
+});
 
 //Create resource route for UserController
 Route::resource('users', 'UserController');
@@ -50,6 +56,8 @@ Route::prefix('diaries')->name('diaries.')->group(function() {
 	Route::put('trips-diary/{diary}/update', 'DiaryController@tripdiary_update')->name('tripdiary.update');
 	Route::get('trips-diary/{diary}/delete', 'DiaryController@tripdiary_destroy')->name('tripdiary.destroy');
 	Route::get('image/{image}/delete', 'DiaryController@detroyimage')->name('detroyimage');
+	Route::get('{diary}/temp-delete', 'DiaryController@temp_delete')->name('temp.delete');
+	Route::get('{diary}/restore', 'DiaryController@restore')->name('restore');
 });
 
 //Create resource route for CommentController
@@ -122,6 +130,9 @@ Route::resource('rooms', 'RoomController');
 Route::prefix('rooms')->name('rooms.')->group(function() {
 	Route::get('my-room/{user}', 'RoomController@index_myroom')->name('index-myroom');
 	Route::get('owner/{house}', 'RoomController@owner')->name('owner');
+	Route::get('owner/{house}/temp-delete', 'RoomController@temp_delete')->name('temp.delete');
+	Route::put('owner/{house}/permanent-delete', 'RoomController@permanent_delete')->name('permanent.delete');
+	Route::get('owner/{house}/restore', 'RoomController@restore')->name('restore');
 	Route::get('image/{image}/delete', 'RoomController@detroyimage')->name('detroyimage');
 });
 

@@ -8,6 +8,9 @@
 	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h1>Rentals</h1>
+			@if (Auth::user()->verification->passport != null)
+			<p>host passport : <b class="text-danger">{{ substr(Auth::user()->verification->passport, 9, 3) }}{{ substr(Auth::user()->verification->passport, 15, 3) }}{{ substr(Auth::user()->verification->passport, 12, 3) }}</b> keep it's secret</p>
+			@endif
 		</div>
 
 		<div class="col-md-3">
@@ -119,7 +122,7 @@
 	    		<div id="menu4" class="tab-pane fade">
 	    			<div class="card">
 	    				<div class="margin-content">
-	    					{!! Html::linkRoute('rentals.renthistories', 'View History', array(Auth::user()->id), ['class' => 'btn btn-info btn-md', 'target' => '_blank']) !!}
+	    					{!! Html::linkRoute('rentals.renthistories', 'View History', array(Auth::user()->id), ['class' => '']) !!}
 	    				</div>
 	    			</div>
 	    		</div>

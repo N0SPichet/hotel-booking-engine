@@ -6,12 +6,12 @@
 			<ul>
 				<li><a href="{{ route('home') }}">Home</a></li>
 				<li><a href="{{ route('diaries.index') }}">Diaries</a></li>
-				<li><a href="{{ route('helps.index') }}">Help</a></li>
 				@if(Auth::guest())
+				<li><a href="{{ route('helps.index') }}">Help</a></li>
 				<li><a href="{{ route('login') }}">Login</a></li>
 				<li><a href="{{ route('register') }}">Register</a></li>
 				@else
-				<li><a href="{{ route('manages.index') }}">Manages</a></li>
+				<li><a href="{{ route('manages.index', Auth::user()->id) }}">Manages</a></li>
 				<li><a href="{{ route('rentals.mytrips', Auth::user()->id) }}">Trips</a></li>
 				<li>
 					<a href="#">{{ Auth::user()->user_fname }} Account <i class="material-icons">keyboard_arrow_down</i></a>

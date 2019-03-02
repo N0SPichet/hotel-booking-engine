@@ -33,9 +33,9 @@
 					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" style="text-decoration-line: none;">
 					@endif
 					@if ($diary->publish == '2')
-					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Published</span>
+					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</span>
 					@elseif ($diary->publish == '1')
-					<span class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</span>
+					<span class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</span>
 					@elseif ($diary->publish == '0')
 					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>
 					@endif

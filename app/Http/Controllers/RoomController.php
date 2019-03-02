@@ -37,7 +37,7 @@ class RoomController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
-        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myroom', 'owner', 'detroyimage');
+        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myroom', 'owner', 'temp_delete', 'permanent_delete', 'restore', 'detroyimage');
     }
 
     /**
@@ -48,7 +48,7 @@ class RoomController extends Controller
     public function index()
     {
         $types_id = $this->getTypeId('room');
-        $houses = House::whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
+        $houses = House::where('publish', '!=', '3')->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
         return view('rooms.index')->with('houses', $houses);
     }
 
@@ -57,7 +57,7 @@ class RoomController extends Controller
         if (!is_null($user)) {
             if (Auth::user()->id === $user->id) {
                 $types_id = $this->getTypeId('room');
-                $houses = House::where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
+                $houses = House::where('publish', '!=', '3')->where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
                 return view('rooms.index-myroom')->with('houses', $houses);
             }
         }
@@ -237,7 +237,7 @@ class RoomController extends Controller
         $types_id = $this->getTypeId('room');
         $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
-            if (Auth::user()->hasRole('Admin') || Auth::user()->id == $house->user_id) {
+            if ((Auth::user()->hasRole('Admin') || Auth::user()->id == $house->user_id) && $house->publish != '3') {
                 $rentcount = Rental::where('house_id', $house->id)->count();
                 $map = Map::where('houses_id', $house->id)->first();
                 return view('rooms.single')->with('house', $house)->with('rentcount', $rentcount)->with('map', $map);
@@ -303,7 +303,7 @@ class RoomController extends Controller
         $types_id = $this->getTypeId('room');
         $house = House::where('id', $houseId)->whereIn('housetype_id', $types_id)->first();
         if (!is_null($house)) {
-            if (Auth::user()->id == $house->user_id) {
+            if (Auth::user()->id == $house->user_id && $house->publish != '3') {
                 $types = $this->getType('room');
                 $provinces = Province::all();
                 $districts = District::where('province_id', $provinces[0]->id)->get();
@@ -342,7 +342,7 @@ class RoomController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $houseId)
     {
         $this->validate($request, array(
             'housetype_id' => 'required',
@@ -361,108 +361,112 @@ class RoomController extends Controller
             'price' => 'required'
         ));
 
-        $house = House::find($id);
-        $house->housetype_id = $request->housetype_id;
-        $house->house_capacity = $request->house_capacity;
-        $house->house_guestspace = $request->house_guestspace;
-        $house->house_bedrooms = $request->house_bedrooms;
-        $house->house_beds = $request->house_beds;
-        $house->house_bathroom = $request->house_bathroom;
-        $house->house_bathroomprivate = $request->house_bathroomprivate;
-        $house->house_address = $request->house_address;
-        $house->district_id = $request->district_id;
-        $house->sub_district_id = $request->sub_district_id;
-        $house->province_id = $request->province_id;
-        $house->house_postcode = $request->house_postcode;
-        $house->house_title = $request->house_title;
-        $house->cover_image = $request->cover_image;
-        $house->house_description = Purifier::clean($request->house_description);
-        $house->about_your_place = Purifier::clean($request->about_your_place);
-        $house->guest_can_access = Purifier::clean($request->guest_can_access);
-        $house->optional_note = Purifier::clean($request->optional_note);
-        $house->about_neighborhood = Purifier::clean($request->about_neighborhood);
-        
-        $guestarrive = Guestarrive::find($house->guestarrives_id);
-        $guestarrive->notice = $request->notice;
+        $house = House::find($houseId);
+        if (Auth::user()->id == $house->user_id && $house->publish != '3') {
+            $house->housetype_id = $request->housetype_id;
+            $house->house_capacity = $request->house_capacity;
+            $house->house_guestspace = $request->house_guestspace;
+            $house->house_bedrooms = $request->house_bedrooms;
+            $house->house_beds = $request->house_beds;
+            $house->house_bathroom = $request->house_bathroom;
+            $house->house_bathroomprivate = $request->house_bathroomprivate;
+            $house->house_address = $request->house_address;
+            $house->district_id = $request->district_id;
+            $house->sub_district_id = $request->sub_district_id;
+            $house->province_id = $request->province_id;
+            $house->house_postcode = $request->house_postcode;
+            $house->house_title = $request->house_title;
+            $house->cover_image = $request->cover_image;
+            $house->house_description = Purifier::clean($request->house_description);
+            $house->about_your_place = Purifier::clean($request->about_your_place);
+            $house->guest_can_access = Purifier::clean($request->guest_can_access);
+            $house->optional_note = Purifier::clean($request->optional_note);
+            $house->about_neighborhood = Purifier::clean($request->about_neighborhood);
+            
+            $guestarrive = Guestarrive::find($house->guestarrives_id);
+            $guestarrive->notice = $request->notice;
 
-        $houseprice = Houseprice::find($house->houseprices_id);
-        $houseprice->price_perperson = $request->price_perperson;
-        $houseprice->price = $request->price;
-        $houseprice->food_price = $request->food_price;
+            $houseprice = Houseprice::find($house->houseprices_id);
+            $houseprice->price_perperson = $request->price_perperson;
+            $houseprice->price = $request->price;
+            $houseprice->food_price = $request->food_price;
 
-        $food = Food::find($house->foods_id);
-        if ($request->food_breakfast == '1') {
-            $food->breakfast = '1';
-        }
-        else {
-            $food->breakfast = '0';
-        }
-        if ($request->food_lunch == '1') {
-            $food->lunch = '1';
-        }
-        else {
-            $food->lunch = '0';
-        }
-        if ($request->food_dinner == '1') {
-            $food->dinner = '1';
-        }
-        else {
-            $food->dinner = '0';
-        }
-
-        $houseprice->welcome_offer = $request->welcome_offer;
-        $houseprice->weekly_discount = $request->weekly_discount;
-        $houseprice->monthly_discount = $request->monthly_discount;
-        if ($request->hasFile('image_names')) {
-            foreach ($request->image_names as $image_name) {
-                $image = new HouseImage;
-                $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
-                $location = public_path('images/houses/'.$house->id.'/');
-                if (!file_exists($location)) {
-                    $result = File::makeDirectory($location, 0775, true);
-                }
-                $location = public_path('images/houses/'.$house->id.'/'.$filename);
-                Image::make($image_name)->resize(1440, 1080)->save($location);
-                $image->house_id = $house->id;
-                $image->name = $filename;
-                $image->save();
+            $food = Food::find($house->foods_id);
+            if ($request->food_breakfast == '1') {
+                $food->breakfast = '1';
             }
-        }
-        $guestarrive->save();
-        $houseprice->save();
-        $food->save();
-        $house->save();
+            else {
+                $food->breakfast = '0';
+            }
+            if ($request->food_lunch == '1') {
+                $food->lunch = '1';
+            }
+            else {
+                $food->lunch = '0';
+            }
+            if ($request->food_dinner == '1') {
+                $food->dinner = '1';
+            }
+            else {
+                $food->dinner = '0';
+            }
 
-        if (isset($request->houseamenities)) {
-            $house->houseamenities()->sync($request->houseamenities);
-        }
-        else {
-            $house->houseamenities()->sync(array());
-        }
+            $houseprice->welcome_offer = $request->welcome_offer;
+            $houseprice->weekly_discount = $request->weekly_discount;
+            $houseprice->monthly_discount = $request->monthly_discount;
+            if ($request->hasFile('image_names')) {
+                foreach ($request->image_names as $image_name) {
+                    $image = new HouseImage;
+                    $filename = time() . rand(9,99) . Auth::user()->id . '.' . $image_name->getClientOriginalExtension();
+                    $location = public_path('images/houses/'.$house->id.'/');
+                    if (!file_exists($location)) {
+                        $result = File::makeDirectory($location, 0775, true);
+                    }
+                    $location = public_path('images/houses/'.$house->id.'/'.$filename);
+                    Image::make($image_name)->resize(1440, 1080)->save($location);
+                    $image->house_id = $house->id;
+                    $image->name = $filename;
+                    $image->save();
+                }
+            }
+            $guestarrive->save();
+            $houseprice->save();
+            $food->save();
+            $house->save();
 
-        if (isset($request->housespaces)) {
-            $house->housespaces()->sync($request->housespaces);
-        }
-        else {
-            $house->housespaces()->sync(array());
-        }
+            if (isset($request->houseamenities)) {
+                $house->houseamenities()->sync($request->houseamenities);
+            }
+            else {
+                $house->houseamenities()->sync(array());
+            }
 
-        if (isset($request->houserules)) {
-            $house->houserules()->sync($request->houserules);
-        }
-        else {
-            $house->houserules()->sync(array());
-        }
+            if (isset($request->housespaces)) {
+                $house->housespaces()->sync($request->housespaces);
+            }
+            else {
+                $house->housespaces()->sync(array());
+            }
 
-        if (isset($request->housedetails)) {
-            $house->housedetails()->sync($request->housedetails);
-        }
-        else {
-            $house->housedetails()->sync(array());
-        }
+            if (isset($request->houserules)) {
+                $house->houserules()->sync($request->houserules);
+            }
+            else {
+                $house->houserules()->sync(array());
+            }
 
-        Session::flash('success', 'This house was succussfully updated!');
-        return redirect()->route('rooms.owner', $house->id);
+            if (isset($request->housedetails)) {
+                $house->housedetails()->sync($request->housedetails);
+            }
+            else {
+                $house->housedetails()->sync(array());
+            }
+
+            Session::flash('success', 'This house was succussfully updated!');
+            return redirect()->route('rooms.owner', $house->id);
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     /**
@@ -505,6 +509,51 @@ class RoomController extends Controller
                 $alt = 'Can not delete Room #ID ' . $house->id . ' because someone has rented.';
             }
             return redirect()->route('rooms.index-myroom', Auth::user()->id)->with('alert', $alt);
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
+    }
+
+    public function temp_delete($houseId)
+    {
+        $house = House::find($houseId);
+        if (!is_null($house)) {
+            if (Auth::user()->id == $house->user_id && $house->publish != '3') {
+                $house->publish = '2';
+                $house->save();
+                Session::flash('success', 'Move room '.$house->id.' to trash succussfully.');
+                return redirect()->route('rooms.owner', $house->id);
+            }
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
+    }
+
+    public function permanent_delete($houseId)
+    {
+        $house = House::find($houseId);
+        if (!is_null($house)) {
+            if (Auth::user()->id == $house->user_id) {
+                $house->publish = '3';
+                $house->save();
+                Session::flash('success', 'Permanent delete room '.$house->id.' succussfully.');
+                return redirect()->route('rooms.index-myroom', Auth::user()->id);
+            }
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
+    }
+
+    public function restore($houseId)
+    {
+        $house = House::find($houseId);
+        if (!is_null($house)) {
+            if (Auth::user()->id == $house->user_id && $house->publish != '3') {
+                $house->publish = '0';
+                $house->save();
+                Session::flash('success', 'Restore room '.$house->id.' from trash succussfully.');
+                return redirect()->route('rooms.owner', $house->id);
+            }
         }
         Session::flash('fail', 'Unauthorized access.');
         return back();

@@ -25,7 +25,7 @@ class DiaryController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
-        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'mydiaries', 'single', 'tripdiary', 'tripdiary_edit', 'tripdiary_update', 'tripdiary_destroy', 'detroyimage', 'subscribe', 'unsubscribe');
+        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'mydiaries', 'single', 'tripdiary', 'tripdiary_edit', 'tripdiary_update', 'tripdiary_destroy', 'detroyimage', 'temp_delete', 'restore', 'subscribe', 'unsubscribe');
     }
     /**
      * Display a listing of the resource.
@@ -35,7 +35,7 @@ class DiaryController extends Controller
     
     public function index()
     {
-        $diaries = Diary::where('publish', '1')->orWhere('publish', '2')->orderBy('created_at', 'desc')->paginate(8);
+        $diaries = Diary::where('publish', '1')->orWhere('publish', '2')->orderBy('id', 'desc')->paginate(8);
         return view('diaries.index')->with('diaries', $diaries);
     }
 
@@ -214,37 +214,42 @@ class DiaryController extends Controller
                     date_add($rental_datein, date_interval_create_from_date_string('1 days'));
                     $rental_datein = date_format($rental_datein, 'Y-m-d');
                 }
-                if ($diary->publish == '1') {
-                    $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                    if ($subscribe) {
-                        return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
+                if ($diary->publish == '2') {
+                    if (Auth::check()) {
+                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
+                        if ($subscribe) {
+                            return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
+                        }
                     }
                     else {
                         return view('diaries.subscribe')->with('diary', $diary);
                     }
                 }
-                elseif ($diary->publish == '2') {
-                    $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                    return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
+                elseif ($diary->publish == '1') {
+                    if (Auth::check()) {
+                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
+                        return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
+                    }
                 }
             }
             else if ($diary->rental_id == null) {
                 $categories = Category::all();
-                if ($diary->publish == '1') {
-                    $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                    if ($subscribe) {
-                        return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
+                if ($diary->publish == '2') {
+                    if (Auth::check()) {
+                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
+                        if ($subscribe) {
+                            return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
+                        }
                     }
                     else {
                         return view('diaries.subscribe')->with('diary', $diary);
                     }
                 }
-                elseif ($diary->publish == '2') {
-                    $subscribe = null;
+                elseif ($diary->publish == '1') {
                     if (Auth::check()) {
                         $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
+                        return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
                     }
-                    return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
                 }
             }
         }
@@ -513,41 +518,38 @@ class DiaryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($diaryId)
     {
-        if (Auth::check()) {
-            $diary = Diary::find($id);
-            if ($diary) {
-                if (Auth::user()->id == $diary->user_id) {
-                    $comments = Comment::where('diary_id', $diary->id)->get();
-                    foreach ($comments as $comment) {
-                        $comment->delete();
-                    }
-                    $filename = $diary->cover_image;
+        $diary = Diary::find($diaryId);
+        if (!is_null($diary)) {
+            if (Auth::user()->id == $diary->user_id) {
+                $comments = Comment::where('diary_id', $diary->id)->get();
+                foreach ($comments as $comment) {
+                    $comment->delete();
+                }
+                $filename = $diary->cover_image;
+                $location = public_path('images/diaries/'.$filename);
+                File::delete($location);
+                $diary->tags()->detach();
+                $diary_images = DiaryImage::where('diary_id', $diary->id)->get();
+                foreach ($diary_images as $image) {
+                    $filename = $image->image;
+                    $image->delete();
                     $location = public_path('images/diaries/'.$filename);
                     File::delete($location);
-                    $diary->tags()->detach();
-                    $diary_images = DiaryImage::where('diary_id', $diary->id)->get();
-                    foreach ($diary_images as $image) {
-                        $filename = $image->image;
-                        $image->delete();
-                        $location = public_path('images/diaries/'.$filename);
-                        File::delete($location);
-                    }
-                    $diary->delete();
-                    Session::flash('success', 'This diary is no longer available.');
-                    return redirect()->route('diaries.mydiaries');
                 }
-            }
-            else {
+                $diary->delete();
                 Session::flash('success', 'This diary is no longer available.');
-                return back();
+                if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
+                    return redirect()->route('manages.index', Auth::user()->id);
+                }
+                return redirect()->route('diaries.mydiaries', Auth::user()->id);
             }
+            Session::flash('fail', 'Unauthorized access.');
+            return back();
         }
-        else {
-            Session::flash('success', 'You need to login first!');
-            return redirect()->route('login');
-        }
+        Session::flash('success', 'This diary is no longer available.');
+        return back();
     }
 
     public function tripdiary_destroy($rentalId)
@@ -585,6 +587,36 @@ class DiaryController extends Controller
             File::delete($location);
             Session::flash('success', 'Image deleted.');
             return back();
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
+    }
+
+    public function temp_delete($diaryId)
+    {
+        $diary = Diary::find($diaryId);
+        if (Auth::user()->id == $diary->user_id) {
+            $diary->publish = '3';
+            $diary->save();
+            if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
+                return redirect()->route('manages.index', Auth::user()->id);
+            }
+            return redirect()->route('diaries.single', $diary->id);
+        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
+    }
+
+    public function restore($diaryId)
+    {
+        $diary = Diary::find($diaryId);
+        if (Auth::user()->id == $diary->user_id) {
+            $diary->publish = '0';
+            $diary->save();
+            if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
+                return redirect()->route('manages.index', Auth::user()->id);
+            }
+            return redirect()->route('diaries.single', $diary->id);
         }
         Session::flash('fail', 'Unauthorized access.');
         return back();

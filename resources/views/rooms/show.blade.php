@@ -3,6 +3,7 @@
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
+
 @section ('content')
 <div class="container rooms">
 	<div class="row m-t-10">

@@ -1,5 +1,4 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Verification Details')
 
 @section ('content')
