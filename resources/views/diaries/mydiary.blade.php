@@ -1,5 +1,4 @@
 @extends ('main')
-
 @section ('title', 'My Diary')
 
 @section ('content')
@@ -34,14 +33,14 @@
 					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" style="text-decoration-line: none;">
 					@endif
 					@if ($diary->publish == '2')
-					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Published</span>
+					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</span>
 					@elseif ($diary->publish == '1')
-					<span class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</span>
+					<span class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</span>
 					@elseif ($diary->publish == '0')
 					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>
 					@endif
 					<span style="font-size: 20px;"><b> {{ $diary->title }} </b></span>
-					@if ($diary->days == '0') <span>({{ $diary->rental->houses->house_title }} - {{ date('jS F, Y', strtotime($diary->rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rental->rental_dateout)) }})</span>
+					@if ($diary->days == '0') <span>({{ $diary->rental->house->house_title }} - {{ date('jS F, Y', strtotime($diary->rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rental->rental_dateout)) }})</span>
 					@endif
 					</a>
 					</div>

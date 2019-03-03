@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Traits\GlobalFunctionTraits;
 use App\Models\House;
 use App\Models\Payment;
 use App\Models\Rental;
@@ -9,6 +10,7 @@ use Illuminate\Database\Seeder;
 
 class RentalTableSeeder extends Seeder
 {
+    use GlobalFunctionTraits;
     /**
      * Run the database seeds.
      *
@@ -17,11 +19,11 @@ class RentalTableSeeder extends Seeder
     public function run()
     {
     	$today = Carbon::today();
-
+        $types_id = $this->getTypeId('room');
+        $user = User::find(3);
+        $house = House::where('publish', '1')->whereIn('housetype_id', $types_id)->where('user_id', '!=', $user->id)->first();
+        
     	// sample 1
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->addDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);
@@ -38,17 +40,13 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
 
     	// sample 2
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->subDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);
@@ -71,17 +69,13 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
 
         // sample 3
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->addDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);
@@ -97,17 +91,13 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
 
         // sample 4
-    	$user = User::find(3);
-    	$house = House::find(1);
-
     	$today = $today->addDays(3);
     	$date_in = $today->toDateString();
     	$today = $today->addDays(4);
@@ -130,11 +120,13 @@ class RentalTableSeeder extends Seeder
         $rental->no_rooms = 1;
         $rental->inc_food = 1;
         $rental->discount = 0;
-        $rental->checkin_status = 0;
-        $rental->checkincode = str_random(10);
+        $code = Hash::make($user->id.$user->email.$house->id);
+        $code = str_replace(' ', '-', $code);
+        $code = preg_replace('/[^A-Za-z0-9\-]/', '', $code);
+        $rental->checkincode = substr($code, 2, 10);
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
-        $rental->houses_id = $house->id;
+        $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
     }

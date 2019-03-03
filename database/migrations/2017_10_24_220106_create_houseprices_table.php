@@ -19,8 +19,8 @@ class CreateHousepricesTable extends Migration
             $table->integer('price')->nullable();
             $table->integer('food_price')->nullable();
             $table->integer('welcome_offer')->nullable();
-            $table->integer('weekly_discount')->nullable();
-            $table->integer('monthly_discount')->nullable();
+            $table->integer('weekly_discount')->default('0');
+            $table->integer('monthly_discount')->default('0');
             $table->timestamps();
         });
     }

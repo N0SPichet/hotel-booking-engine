@@ -13,7 +13,7 @@
 		<div class="col-md-12">
 			<h1 class="title-page">Contact Us</h1>
 
-			<form action="{{ route('postcontact') }}" method="POST">
+			<form action="{{ route('helps.postcontact') }}" method="POST">
 				{{ csrf_field() }}
 				<div class="form-group">
 					<label name="email">Email</label>
@@ -35,4 +35,7 @@
 		</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+{!! Html::script('js/parsley.min.js') !!}
 @endsection

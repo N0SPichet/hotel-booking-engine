@@ -1,16 +1,14 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'My Diary | Create')
-
 @section('stylesheets')
-	{{ Html::style('css/parsley.css') }}
-	<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
-  	<script>
-  		tinymce.init({ 
-  			selector:'textarea',
-  			menubar: false
-  		});
-  	</script>
+{{ Html::style('css/parsley.css') }}
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
+<script>
+	tinymce.init({ 
+		selector:'textarea',
+		menubar: false
+	});
+</script>
 @endsection
 
 @section ('content')

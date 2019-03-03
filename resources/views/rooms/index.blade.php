@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('manages.main')
 @section ('title', 'Administrator | Rooms')
 @section ('content')
 <div class="container">

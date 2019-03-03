@@ -12,9 +12,6 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css">
-    {{-- 
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    --}}
     {{ Html::style('css/styles.css') }}
   </head>
   <body>
@@ -39,5 +36,10 @@
     {{-- google map --}}
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDpapamqxDakm2fQBWzujijdyfQfMDUbxo&libraries=places"></script>
     @yield ('scripts')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.footer').removeClass('manage');
+        });
+    </script>
   </body>
 </html>

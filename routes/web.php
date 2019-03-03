@@ -21,6 +21,13 @@ Route::post('/search', 'PagesController@indexSearch')->name('search');
 //Create PagesController Route
 Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
+Route::prefix('manages')->name('manages.')->group(function() {
+	Route::get('{user}', 'PagesController@manages_index')->name('index');
+	Route::get('{user}/rooms/online', 'PagesController@manages_rooms_online')->name('rooms.online');
+	Route::get('{user}/rooms/offline', 'PagesController@manages_rooms_offline')->name('rooms.offline');
+	Route::get('{user}/apartments/online', 'PagesController@manages_apartments_online')->name('apartments.online');
+	Route::get('{user}/apartments/offline', 'PagesController@manages_apartments_offline')->name('apartments.offline');
+});
 
 //Create resource route for UserController
 Route::resource('users', 'UserController');
@@ -47,8 +54,10 @@ Route::prefix('diaries')->name('diaries.')->group(function() {
 	Route::get('{rental}/trips/{user}', 'DiaryController@tripdiary')->name('tripdiary');
 	Route::get('{rental}/trips/{user}/day/{day}/edit', 'DiaryController@tripdiary_edit')->name('tripdiary.edit');
 	Route::put('trips-diary/{diary}/update', 'DiaryController@tripdiary_update')->name('tripdiary.update');
-	Route::get('trips-diary/{diary}/delete', 'DiaryController@tripdiary_destroy')->name('tripdiary.destroy');
+	Route::delete('trips-diary/{rental}/delete', 'DiaryController@tripdiary_destroy')->name('tripdiary.destroy');
 	Route::get('image/{image}/delete', 'DiaryController@detroyimage')->name('detroyimage');
+	Route::get('{diary}/temp-delete', 'DiaryController@temp_delete')->name('temp.delete');
+	Route::get('{diary}/restore', 'DiaryController@restore')->name('restore');
 });
 
 //Create resource route for CommentController
@@ -121,6 +130,9 @@ Route::resource('rooms', 'RoomController');
 Route::prefix('rooms')->name('rooms.')->group(function() {
 	Route::get('my-room/{user}', 'RoomController@index_myroom')->name('index-myroom');
 	Route::get('owner/{house}', 'RoomController@owner')->name('owner');
+	Route::get('owner/{house}/temp-delete', 'RoomController@temp_delete')->name('temp.delete');
+	Route::put('owner/{house}/permanent-delete', 'RoomController@permanent_delete')->name('permanent.delete');
+	Route::get('owner/{house}/restore', 'RoomController@restore')->name('restore');
 	Route::get('image/{image}/delete', 'RoomController@detroyimage')->name('detroyimage');
 });
 
@@ -136,7 +148,8 @@ Route::prefix('rentals')->name('rentals.')->group(function() {
 	Route::post('{rental}/approve', 'RentalController@rental_approve')->name('approve');
 	Route::post('{rental}/cancel', 'RentalController@rental_cancel')->name('cancel');
 	Route::post('{rental}/reject', 'RentalController@rental_reject')->name('reject');
-	Route::post('checkin/check', 'RentalController@checkcode')->name('checkin.code');
+	Route::post('checkin/confirmed', 'RentalController@checkin_confirmed')->name('checkin.confirmed');
+	Route::post('checkin/check', 'RentalController@checkin_check')->name('checkin');
 	Route::get('trips/{user}/rentmyrooms/histories', 'RentalController@renthistories')->name('renthistories');
 });
 
@@ -147,9 +160,11 @@ Route::resource('reviews', 'ReviewController');
 Route::resource('maps', 'MapController');
 
 //Create resource route for HelpController
-Route::get('helps', 'HelpController@index')->name('helps.index');
-Route::get('helps/checkin/code', 'HelpController@checkincode')->name('checkincode');
-Route::get('contact', 'HelpController@getContact')->name('getcontact');
-Route::post('contact', 'HelpController@postContact')->name('postcontact');
-Route::get('contact/host/{host}', 'HelpController@getContactHost')->name('getcontacthost');
-Route::post('contact/host', 'HelpController@postContactHost')->name('postcontacthost');
+Route::prefix('helps')->name('helps.')->group(function() {
+	Route::get('', 'HelpController@index')->name('index');
+	Route::get('checkin', 'HelpController@checkincode')->name('checkincode');
+	Route::get('contact', 'HelpController@getContact')->name('getcontact');
+	Route::post('contact', 'HelpController@postContact')->name('postcontact');
+	Route::get('contact/host/{house}', 'HelpController@getContactHost')->name('getcontacthost');
+	Route::post('contact/host', 'HelpController@postContactHost')->name('postcontacthost');
+});

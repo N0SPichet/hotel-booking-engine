@@ -14,6 +14,12 @@
 					@endif
 				</div>
 				<div class="card-text">
+					@if ($user->verification->passport != null)
+					<div class="col-md-12">
+						<p>your passport : <b class="text-danger">{{ substr($user->verification->passport, 9, 3) }}{{ substr($user->verification->passport, 15, 3) }}{{ substr($user->verification->passport, 12, 3) }}</b> keep it's secret</p>
+						<p>passport code you can use to identify yourself when checkin. please keep it's secret and don't tell anyone or hosts that you has rent their's home.</p>
+					</div>
+					@endif
 					<div class="col-md-8 col-sm-8 float-left">
 						<dl class="dl-horizontal">
 							<dt>Name</dt>

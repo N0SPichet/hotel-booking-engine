@@ -1,14 +1,16 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', 'Verification Details')
 
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
+		<div class="col-sm-12">
+			<a href="{{ route('users.verify-index') }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Users</a>
+		</div>
+	</div>
+	<div class="row m-t-10">
 		<div class="col-md-12">
 			<p class="lead">Verification Details</p>
-			<a href="{{ route('users.verify-index') }}" class="btn btn-info">Back</a>
-			<hr>
 		</div>
 		<div class="col-md-8 float-left">
 			<div class="card">

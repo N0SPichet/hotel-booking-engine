@@ -13,16 +13,16 @@
 			<div class="lead">Booking summary</div>
 			<div class="card">
 				<div class="card-body">
-					<p style="font-size: 18px;"> <b>{{ $rental->houses->house_title }}</b> for <b> {{ $days }} {{ $days > 1 ? "Nights" : "Night" }}</b> </p>
+					<p style="font-size: 18px;"> <b>{{ $rental->house->house_title }}</b> for <b> {{ $days }} {{ $days > 1 ? "Nights" : "Night" }}</b> </p>
 					<hr>
 					<div class="col-md-12">
 						<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
 					</div>
 					<hr>
 					<div class="col-md-12">
-						<span>Room price ฿{{ $rental->houses->houseprices->price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
+						<span>Room price ฿{{ $rental->house->houseprices->price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
 						</span>
-						<span class="float-right"> ฿{{ $rental->houses->houseprices->price*$days }} </span>
+						<span class="float-right"> ฿{{ $rental->house->houseprices->price*$days }} </span>
 					</div>
 					<div class="col-md-12">
 						<span> {{ $rental->no_rooms }} {{ $rental->no_rooms > 1 ? 'rooms' : 'room' }}</span>
@@ -30,9 +30,9 @@
 					</div>
 					@if ($rental->inc_food == '1')
 					<div class="col-md-12">
-						<span>Food included ฿{{ $rental->houses->houseprices->food_price }} x {{ $days }} {{ $days > 1 ? "days" : "day" }}
+						<span>Food included ฿{{ $rental->house->houseprices->food_price }} x {{ $days }} {{ $days > 1 ? "days" : "day" }}
 						</span>
-						<span class="float-right"> ฿{{ $rental->houses->houseprices->food_price*$days }} </span>
+						<span class="float-right"> ฿{{ $rental->house->houseprices->food_price*$days }} </span>
 					</div>
 					@endif
 					<div class="col-md-12">
@@ -44,10 +44,10 @@
 					<div class="col-md-12">
 						@if($days/7 >= 1 && $months < 1)
 						<span> Weekly Discount </span>
-						<span class="float-right"> {{$rental->houses->houseprices->weekly_discount}} % </span>
+						<span class="float-right"> {{$rental->house->houseprices->weekly_discount}} % </span>
 						@elseif($months >= 1)
 						<span> Monthly Discount </span>
-						<span class="float-right"> {{$rental->houses->houseprices->monthly_discount}} % </span>
+						<span class="float-right"> {{$rental->house->houseprices->monthly_discount}} % </span>
 						@endif
 					</div>
 					<div class="col-md-12">
@@ -111,7 +111,7 @@
 			</div>
 
 			<div class="row">
-				{!! Form::model($payment, ['route' => ['rentals.update', $payment->id], 'files' => true, 'method' => 'PUT']) !!}
+				{!! Form::model($payment, ['route' => ['rentals.update', $payment->id], 'files' => true, 'method' => 'PUT', 'data-parsley-validate' => '']) !!}
 
 					<div class="col-md-12">
 						{{ Form::label('payment_bankaccount', 'Bank Account: ') }}
@@ -161,7 +161,7 @@
 		                                <h4 class="modal-title">Cancellation policy: Strict</h4>
 		                            </div>
 		                            <div class="modal-body">
-		                                <p>Cancel up to {{ $rental->houses->guestarrives->notice }} before check in and get a 50% refund (minus service fees). Cancel within {{ $rental->houses->guestarrives->notice }} of your trip and the reservation is non-refundable. Service fees are refunded when cancellation happens before check in and within 48 hours of booking.</p>
+		                                <p>Cancel up to {{ $rental->house->guestarrives->notice }} before check in and get a 50% refund (minus service fees). Cancel within {{ $rental->house->guestarrives->notice }} of your trip and the reservation is non-refundable. Service fees are refunded when cancellation happens before check in and within 48 hours of booking.</p>
 		                            </div>
 		                        </div>
 		                    </div>

@@ -1,5 +1,4 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', "Administrator | $amenity->name Amenity")
 
 @section('content')

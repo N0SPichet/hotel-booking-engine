@@ -12,8 +12,8 @@
 			</div>
 			<div class="card-body">
 				<a href="{{ route('aboutus') }}" class="btn btn-primary btn-md pull-right" style="margin-top: 5px; margin-left: 5px;">About Us</a>
-				<a href="{{ route('getcontact') }}" class="btn btn-primary btn-md pull-right" style="margin-top: 5px; margin-left: 5px;">Contact Us</a>
-				<a href="{{ route('checkincode') }}" class="btn btn-outline-info">	Check in Code</a>
+				<a href="{{ route('helps.getcontact') }}" class="btn btn-primary btn-md pull-right" style="margin-top: 5px; margin-left: 5px;">Contact Us</a>
+				<a href="{{ route('helps.checkincode') }}" class="btn btn-outline-info">	Check in Code</a>
 				<a href="{{ route('maps.index') }}" class="btn btn-outline-info">		Maps</a>
 			</div>
 		</div>

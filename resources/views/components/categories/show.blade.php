@@ -1,5 +1,4 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', "Administrator | $category->name Category")
 
 @section('content')

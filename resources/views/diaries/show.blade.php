@@ -1,9 +1,7 @@
 @extends ('main')
-
 @section ('title', $diary->user->user_fname. ' | ' .'Diary')
-
 @section('stylesheets')
-	{{ Html::style('css/parsley.css') }}
+{{ Html::style('css/parsley.css') }}
 @endsection
 
 @section ('content')
@@ -63,7 +61,7 @@
 						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
 						<div class="author-name">
 							<h4>{{ $diary->user->user_fname }}</h4>
-							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
+							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }} (last update {{ $diary->updated_at->diffForHumans() }})</p>
 						</div>
 					</div>
 					@else

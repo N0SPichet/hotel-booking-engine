@@ -1,5 +1,4 @@
-@extends ('main')
-
+@extends ('manages.main')
 @section ('title', $diary->title. ' | ' .'My Diary')
 
 @section ('content')
@@ -113,9 +112,9 @@
 				<div class="col-md-12" align="center">
 					<div id="showPublish">
 						@if ($diary->publish == '2')
-						<p class="text-success m-t-20"><i class="fas fa-eye"></i> Published</p>
+						<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>
 						@elseif ($diary->publish == '1')
-						<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</p>
+						<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>
 						@elseif ($diary->publish == '0')
 						<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>
 						@endif
@@ -123,21 +122,31 @@
 				</div>
 				<div class="row">
 					<div class="col-md-12 margin-auto" align="center">
-						<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-primary btn-h1-spacing"><i class="far fa-edit"></i> Edit</a>
+						@if ($diary->publish != '3')
+						<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning m-t-10"><i class="far fa-edit"></i> Edit</a>
+						@else
+						<a href="{{ route('diaries.restore', $diary->id) }}" class="btn btn-outline-warning m-t-10">Restore</a>
+						@endif
 					</div>
 					<div class="col-md-12 margin-auto" align="center">
+						@if ($diary->publish != '3')
+						<a href="{{ route('diaries.temp.delete', $diary->id) }}" class="btn btn-danger m-t-10">Move to Trash</a>
+						@else
 						{!! Form::open(['route' => ['diaries.destroy', $diary->id], 'method' => 'DELETE']) !!}
-						<button type="submit" class="btn btn-danger btn-h1-spacing"><i class="fas fa-trash"></i> Delete</button>
+						<button type="submit" class="btn btn-danger m-t-10"><i class="fas fa-trash"></i> Delete</button>
 						{!! Form::close() !!}
+						@endif
 					</div>
+					@if ($diary->publish != '3')
 					<div class="margin-auto">
 						<select id="publishFlag" class="form-control text-center m-t-20" type="select" name="flag">
 							<option disabled="disabled">Select Viewer</option>
-							<option value="2" {{ $diary->publish == '2' ? 'selected' : '' }}>Public</option>
-							<option value="1" {{ $diary->publish == '1' ? 'selected' : '' }}>Follower</option>
+							<option value="2" {{ $diary->publish == '2' ? 'selected' : '' }}>Subscriber only</option>
+							<option value="1" {{ $diary->publish == '1' ? 'selected' : '' }}>Public</option>
 							<option value="0" {{ $diary->publish == '0' ? 'selected' : '' }}>Private</option>
 						</select>
 					</div>
+					@endif
 				</div>
 				<hr>
 				@endif
@@ -166,10 +175,10 @@
 				dataType: 'json',
 				success: function(response) {
 					if (response.data == 2) {
-						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Published</p>')
+						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>')
 					}
 					else if(response.data == 1) {
-						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Follower</p>')
+						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>')
 					}
 					else if(response.data == 0) {
 						$('#showPublish').html('<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>')

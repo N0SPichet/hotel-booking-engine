@@ -15,7 +15,7 @@ class CreateDiariesTable extends Migration
     {
         Schema::create('diaries', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('publish')->default(0);
+            $table->enum('publish', ['0', '1', '2', '3'])->default(0);
             $table->string('title')->nullable();
             $table->text('message')->nullable();
             $table->integer('days')->nullable();
