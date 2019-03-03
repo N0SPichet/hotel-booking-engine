@@ -21,7 +21,7 @@ class RentalTableSeeder extends Seeder
     	$today = Carbon::today();
         $types_id = $this->getTypeId('room');
         $user = User::find(3);
-        $house = House::where('publish', '1')->whereIn('housetype_id', $types_id)->first();
+        $house = House::where('publish', '1')->whereIn('housetype_id', $types_id)->where('user_id', '!=', $user->id)->first();
         
     	// sample 1
     	$today = $today->addDays(3);

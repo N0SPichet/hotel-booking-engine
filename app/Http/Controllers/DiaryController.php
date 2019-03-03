@@ -556,24 +556,31 @@ class DiaryController extends Controller
     {
         $diaries = Diary::where('rental_id', $rentalId)->get();
         if (!is_null($diaries)) {
-            $comments = Comment::where('diary_id', $diaries[0]->id)->get();
-            foreach ($comments as $comment) {
-                $comment->delete();
-            }
-            $diaries[0]->tags()->detach();
-            foreach ($diaries as $diary) {
-                $images = DiaryImage::where('diary_id', $diary->id)->get();
-                foreach ($images as $image) {
-                    $filename = $image->image;
-                    $image->delete();
-                    $location = public_path('images/diaries/'.$filename);
-                    File::delete($location);
+            if (Auth::user()->id == $diaries[0]->user_id) {
+                $comments = Comment::where('diary_id', $diaries[0]->id)->get();
+                foreach ($comments as $comment) {
+                    $comment->delete();
                 }
-                $diary->delete();
+                $diaries[0]->tags()->detach();
+                foreach ($diaries as $diary) {
+                    $images = DiaryImage::where('diary_id', $diary->id)->get();
+                    foreach ($images as $image) {
+                        $filename = $image->image;
+                        $image->delete();
+                        $location = public_path('images/diaries/'.$filename);
+                        File::delete($location);
+                    }
+                    $diary->delete();
+                }
+                Session::flash('success', 'This diary is no longer available.');
+                if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
+                    return redirect()->route('manages.index', Auth::user()->id);
+                }
+                return redirect()->route('diaries.mydiaries', Auth::user()->id);
             }
-            Session::flash('success', 'This diary is no longer available.');
-            return redirect()->route('diaries.mydiaries', Auth::user()->id);
         }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     public function detroyimage($imageId)
@@ -601,6 +608,9 @@ class DiaryController extends Controller
             if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
                 return redirect()->route('manages.index', Auth::user()->id);
             }
+            if ($diary->days == '0') {
+                return redirect()->route('diaries.tripdiary', [$diary->rental_id, $diary->user_id]);
+            }
             return redirect()->route('diaries.single', $diary->id);
         }
         Session::flash('fail', 'Unauthorized access.');
@@ -615,6 +625,9 @@ class DiaryController extends Controller
             $diary->save();
             if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
                 return redirect()->route('manages.index', Auth::user()->id);
+            }
+            if ($diary->days == '0') {
+                return redirect()->route('diaries.tripdiary', [$diary->rental_id, $diary->user_id]);
             }
             return redirect()->route('diaries.single', $diary->id);
         }

@@ -593,7 +593,24 @@ img.img-responsive {
 .backend-comment {
     width: 100%;
 }
-
+.checkin-preview label {
+    margin-bottom: 0;
+}
+.checkin-preview .checkin-code {
+    width: 20%;
+}
+.checkin-preview .rental-id {
+    float:left;
+    width: 110px;
+}
+.checkin-preview .stay-date {
+    float:left;
+    width: 460px;
+}
+.checkin-preview .rental-payment {
+    float:left;
+    width: 180px;
+}
 span.use_as_home_thum {
     position: absolute;
     top: 8px;
@@ -638,4 +655,9 @@ span.use_as_home_thum {
 #map-canvas {
     width: 100%;
     height: 300px;
+}
+
+@media only screen and (max-width: 450px) {
+    .checkin-preview .rental-id, .checkin-preview .stay-date, .checkin-preview .rental-payment {
+        width: 100%;
 }

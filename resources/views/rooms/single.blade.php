@@ -4,6 +4,11 @@
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
+		<div class="col-sm-12">
+			{!! Html::linkRoute('rooms.index-myroom', 'Back to My Room', Auth::user()->id, ['class' => 'btn btn-outline-secondary']) !!}
+		</div>
+	</div>
+	<div class="row m-t-10">
 		<div class="col-md-8 float-left">
 			<h1>Review your settings</h1>
 			<h2 align="center">{{ $house->house_title }}
@@ -168,14 +173,11 @@
 				</div>
 		</div>
 		<div class="col-md-4 float-left">
-			<div class="well">
+			<div class="col-md-12">
 				<div class="dl-horizontal">
-					<dt>Created by</dt>
-					<dd>{{ $house->user->user_fname }} {{ $house->user->user_lname }}</dd>
-					<dt>Created at</dt>
-					<dd>{{ date("jS M, Y", strtotime($house->created_at)) }}</dd>
-					<dt>Date modified</dt>
-					<dd>{{ date("jS M, Y", strtotime($house->updated_at)) }}</dd>
+					<p><b>Created by</b> {{ $house->user->user_fname }} {{ $house->user->user_lname }}</p>
+					<p><b>Created at</b> {{ date("jS M, Y", strtotime($house->created_at)) }}</p>
+					<p><b>Date modified</b> {{ date("jS M, Y", strtotime($house->updated_at)) }}</p>
 				</div>
 				<div class="margin-content">
 				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
@@ -219,12 +221,6 @@
 					</div>
 				</div>
 				@endif
-				<hr>
-				<div class="row">
-					<div class="col-sm-6 float-left">
-						{!! Html::linkRoute('rooms.index-myroom', 'Back to My Room', array(Auth::user()->id), array('class' => 'btn btn-outline-secondary')) !!}
-					</div>
-				</div>
 			</div>
 		</div>
 	</div>

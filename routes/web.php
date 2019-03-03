@@ -54,7 +54,7 @@ Route::prefix('diaries')->name('diaries.')->group(function() {
 	Route::get('{rental}/trips/{user}', 'DiaryController@tripdiary')->name('tripdiary');
 	Route::get('{rental}/trips/{user}/day/{day}/edit', 'DiaryController@tripdiary_edit')->name('tripdiary.edit');
 	Route::put('trips-diary/{diary}/update', 'DiaryController@tripdiary_update')->name('tripdiary.update');
-	Route::get('trips-diary/{diary}/delete', 'DiaryController@tripdiary_destroy')->name('tripdiary.destroy');
+	Route::delete('trips-diary/{rental}/delete', 'DiaryController@tripdiary_destroy')->name('tripdiary.destroy');
 	Route::get('image/{image}/delete', 'DiaryController@detroyimage')->name('detroyimage');
 	Route::get('{diary}/temp-delete', 'DiaryController@temp_delete')->name('temp.delete');
 	Route::get('{diary}/restore', 'DiaryController@restore')->name('restore');
@@ -148,7 +148,8 @@ Route::prefix('rentals')->name('rentals.')->group(function() {
 	Route::post('{rental}/approve', 'RentalController@rental_approve')->name('approve');
 	Route::post('{rental}/cancel', 'RentalController@rental_cancel')->name('cancel');
 	Route::post('{rental}/reject', 'RentalController@rental_reject')->name('reject');
-	Route::post('checkin/check', 'RentalController@checkcode')->name('checkin.code');
+	Route::post('checkin/confirmed', 'RentalController@checkin_confirmed')->name('checkin.confirmed');
+	Route::post('checkin/check', 'RentalController@checkin_check')->name('checkin');
 	Route::get('trips/{user}/rentmyrooms/histories', 'RentalController@renthistories')->name('renthistories');
 });
 
@@ -161,7 +162,7 @@ Route::resource('maps', 'MapController');
 //Create resource route for HelpController
 Route::prefix('helps')->name('helps.')->group(function() {
 	Route::get('', 'HelpController@index')->name('index');
-	Route::get('checkin/code', 'HelpController@checkincode')->name('checkincode');
+	Route::get('checkin', 'HelpController@checkincode')->name('checkincode');
 	Route::get('contact', 'HelpController@getContact')->name('getcontact');
 	Route::post('contact', 'HelpController@postContact')->name('postcontact');
 	Route::get('contact/host/{house}', 'HelpController@getContactHost')->name('getcontacthost');

@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('manages.main')
 @section ('title', $diaries[0]->title. ' | ' .'My Diary')
 
 @section ('content')
@@ -34,14 +34,30 @@
 						<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>
 						@endif
 					</div>
-					<p><a href="{{ route('diaries.tripdiary.edit', [$rental->id, $rental->user_id, 0])}}" class="btn btn-default btn-md" style="width: 90%"><i class="far fa-edit"></i> Edit Topic</a></p>
-					<p><a href="{{ route('diaries.tripdiary.destroy', [$rental->id]) }}" class="btn btn-default btn-md" style="width: 90%"><i class="fas fa-trash"></i> Delete Diary</a></p>
-					<select id="publishFlag" class="form-control margin-auto" type="select" name="flag" style="width: 120px;">
+					<div class="col-md-12 margin-auto" align="center">
+					@if ($diaries[0]->publish != '3')
+					<a href="{{ route('diaries.tripdiary.edit', [$rental->id, $rental->user_id, 0])}}" class="btn btn-outline-warning m-t-10"><i class="far fa-edit"></i> Edit Topic</a>
+					@else
+					<a href="{{ route('diaries.restore', $diaries[0]->id) }}" class="btn btn-outline-warning m-t-10">Restore</a>
+					@endif
+					</div>
+					<div class="col-md-12 margin-auto" align="center">
+					@if ($diaries[0]->publish != '3')
+					<a href="{{ route('diaries.temp.delete', $diaries[0]->id) }}" class="btn btn-danger m-t-10">Move to Trash</a>
+					@else
+					{!! Form::open(['route' => ['diaries.tripdiary.destroy', $rental->id], 'method' => 'DELETE']) !!}
+					<button type="submit" class="btn btn-danger m-t-10"><i class="fas fa-trash"></i> Delete</button>
+					{!! Form::close() !!}
+					@endif
+					</div>
+					@if ($diaries[0]->publish != '3')
+					<select id="publishFlag" class="form-control margin-auto m-t-10" type="select" name="flag" style="width: 120px;">
 						<option disabled="disabled">Select Viewer</option>
 						<option value="2" {{ $diaries[0]->publish == '2' ? 'selected' : '' }}>Subscriber only</option>
 						<option value="1" {{ $diaries[0]->publish == '1' ? 'selected' : '' }}>Public</option>
 						<option value="0" {{ $diaries[0]->publish == '0' ? 'selected' : '' }}>Private</option>
 					</select>
+					@endif
 				</div>
 			</div>
 		</div>

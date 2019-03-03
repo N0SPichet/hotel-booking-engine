@@ -3,6 +3,7 @@
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
+
 @section ('content')
 <div class="container rentals">
 	<div class="row m-t-10">
@@ -13,8 +14,8 @@
 			@endif
 		</div>
 
-		<div class="col-md-3">
-			<h2>Check in Code</h2>
+		<div class="col-md-4 float-left">
+			<h2>Check in Section</h2>
 			<p><small>put checkin code here if it true, you will get granted status</small></p>
 			@if ($errors->any())
 			    <div class="alert alert-danger">
@@ -25,19 +26,16 @@
 			        </ul>
 			    </div>
 			@endif
-			{{ Form::open(array('route' => 'rentals.checkin.code', 'data-parsley-validate' => '')) }}
-				{{ Form::label('rent_id', 'Rent id') }}
-				{{ Form::text('rent_id', null, array('class' => 'form-control', 'required' => '')) }}
-
-				{{ Form::label('checkin_code', 'Code here') }}
-				{{ Form::text('checkin_code', null, array('class' => 'form-control', 'required' => '')) }}
+			{{ Form::open(array('route' => 'rentals.checkin', 'data-parsley-validate' => '')) }}
+				{{ Form::label('checkincode', 'Check in') }}
+				{{ Form::text('checkincode', null, array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
 				<div class="text-center">
 					{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
 				</div>
 			{{ Form::close() }}
 		</div>
 
-		<div class="col-md-9">
+		<div class="col-md-8 float-left">
 			<ul class="nav nav-tabs rental_info">
 	    		<li class="active"><a data-toggle="tab" href="#menu1">New Rental <span class="badge badge-danger">{{ $rental_new }}</span></a></li>
 	    		<li><a data-toggle="tab" href="#menu2">Waiting for Payment <span class="badge badge-danger">{{ $payment_waiting_badge }}</span></a></li>

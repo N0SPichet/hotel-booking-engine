@@ -21,11 +21,11 @@
 					<label>Booking Detail</label>
 					<p>@if($types == 'apartment') <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @else <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->house->house_title }}  </p>
 						
-					<p><i class="fas fa-user"></i> Hosted by : {{ $rental->house->user->user_fname }} {{ $rental->house->user->user_lname }}</p>
+					<p><i class="fas fa-user"></i> Hosted by : <a href="{{ route('users.show', $rental->user_id) }}" target="_blank" class="btn btn-outline-info">{{ $rental->house->user->user_fname }} {{ $rental->house->user->user_lname }}</a></p>
 						
 					<p><i class="fas fa-user"></i> Rented by : <a href="{{ route('users.show', $rental->user_id) }}" target="_blank" class="btn btn-outline-info">{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</a></p>
 						
-					<p><i class="far fa-calendar-alt"></i> Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} ({{$days}} {{$days > 1 ? 'nights' : 'nignt'}}) </p>
+					<p><i class="far fa-calendar-alt"></i> Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) </p>
 					@if ($types == 'apartment')
 						@if ($rental->no_type_single > 0)
 						<p><i class="fas fa-bed"></i> Single Room (Standard) : {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'Rooms':'Room' }}.</p>
@@ -52,8 +52,7 @@
 					@endif
 
 					@if ( Auth::user()->id == $rental->user->id && $rental->payment->payment_status == 'Approved' )
-					<p>Check in Code : <strong>{{ $rental->checkincode }}</strong></p>
-					<p class="margin-content">use this code to self check in</p>
+					<p>Check in Code : <b>{{ $rental->checkincode }}{{ $rental->id }}</b><span> use this code to check in</span></p>
 					@endif
 						
 					@if ( $rental->checkin_status == '1' )
@@ -265,6 +264,29 @@
 		</div>
 
 		<div class="col-md-4">
+			@if ($rental->checkin_status == '0')
+			<div class="row">
+				<h2>Check in Section</h2>
+				<p><small>put checkin code here if it true, you will get granted status</small></p>
+				@if ($errors->any())
+				    <div class="alert alert-danger">
+				        <ul>
+				            @foreach ($errors->all() as $error)
+				                <li>{{ $error }}</li>
+				            @endforeach
+				        </ul>
+				    </div>
+				@endif
+				{{ Form::open(array('route' => 'rentals.checkin', 'data-parsley-validate' => '')) }}
+					{{ Form::label('checkincode', 'Check in') }}
+					{{ Form::text('checkincode', null, array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
+					<div class="text-center">
+						{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+					</div>
+				{{ Form::close() }}
+			</div>
+			<hr>
+			@endif
 			<div class="well">
 				<div class="dl-horizontal">
 					<label>Rented by:</label>

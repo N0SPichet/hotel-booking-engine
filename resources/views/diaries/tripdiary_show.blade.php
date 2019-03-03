@@ -72,7 +72,7 @@
 						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
 						<div class="author-name">
 							<h4>{{ $diaries[0]->user->user_fname }}</h4>
-							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diaries[0]->created_at)) }}</p>
+							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diaries[0]->created_at)) }} (last update {{ $diaries[0]->updated_at->diffForHumans() }})</p>
 						</div>
 					</div>
 					@else

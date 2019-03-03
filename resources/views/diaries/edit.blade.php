@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('manages.main')
 @section ('title', 'Edit Diary')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}

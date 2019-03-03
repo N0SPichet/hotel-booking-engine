@@ -13,6 +13,7 @@ use App\Models\Payment;
 use App\Models\Rental;
 use App\Models\Review;
 use App\Models\Subscribe;
+use App\Models\UserVerification;
 use App\User;
 use Carbon\Carbon;
 use DateTime;
@@ -20,6 +21,7 @@ use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Input;
 use Image;
 use Mail;
 use Session;
@@ -31,7 +33,7 @@ class RentalController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        $this->middleware('crole:Admin')->except('create', 'show', 'store', 'edit', 'update', 'destroy', 'mytrip', 'rentmyrooms', 'rentals_agreement', 'accept_rentalrequest', 'reject_rentalrequest', 'rental_cancel', 'renthistories', 'checkcode', 'not_reviews');
+        $this->middleware('crole:Admin')->except('create', 'show', 'store', 'edit', 'update', 'destroy', 'mytrip', 'rentmyrooms', 'rentals_agreement', 'accept_rentalrequest', 'reject_rentalrequest', 'rental_cancel', 'renthistories', 'checkin_check', 'checkin_confirmed', 'not_reviews');
     }
 
     /**
@@ -383,7 +385,6 @@ class RentalController extends Controller
                     $review = Review::where('user_id', $rental->user_id)->where('rental_id', $rental->id)->first();
                     $map = Map::where('houses_id', $rental->house_id)->first();
                     $data = array(
-                        'days' => $days,
                         'type_single_price' => $type_single_price,
                         'type_deluxe_single_price' => $type_deluxe_single_price,
                         'type_double_room_price' => $type_double_room_price,
@@ -444,7 +445,6 @@ class RentalController extends Controller
                         $review = Review::where('user_id', $rental->user_id)->where('rental_id', $rental->id)->first();
                         $map = Map::where('houses_id', $rental->house_id)->first();
                         $data = array(
-                            'days' => $days,
                             'total_price' => $total_price,
                             'types' => 'room'
                         );
@@ -870,72 +870,127 @@ class RentalController extends Controller
         return redirect()->route('rentals.rentmyrooms', Auth::user()->id);
     }
 
-    public function checkcode(Request $request) {
+    public function checkin_check(Request $request) {
         $this->validate($request, array(
-            'rent_id' => 'required',
-            'checkin_code' => 'required',
+            'checkincode' => 'required',
         ));
-        $user_id = Auth::user()->id;
-        $rent_id = $request->rent_id;
-        $checkin_code = $request->checkin_code;
+        $request->checkincode = str_replace(' ', '', $request->checkincode);
+        $checkincode = substr($request->checkincode, 0, 10);
+        $rent_id = substr($request->checkincode, 10);
         $rental = Rental::find($rent_id);
-
+        if (strlen($checkincode) == 9) {
+            $reen_checkincode = substr($checkincode, 0, 3).substr($checkincode, 6, 3).substr($checkincode, 3, 3);
+            $verification = UserVerification::where('passport', 'like', '%'.$reen_checkincode.'%')->first();;
+            $user = User::where('user_verifications_id', $verification->id)->first();
+            $code = array();
+            $code[0] = substr($user->verification->passport, 9, 3);
+            $code[2] = substr($user->verification->passport, 12, 3);
+            $code[1] = substr($user->verification->passport, 15, 3);
+            $reen_code = $code[0].$code[1].$code[2];
+            if ($checkincode == $reen_code) {
+                $today = Carbon::today();
+                $rentals = Rental::where('rental_datein', '>=', $today)->where('user_id', $user->id)->get();
+                $checkinBy = 'renter';
+                return view('rentals.checkin-preview')->with('checkinBy', $checkinBy)->with('rentals', $rentals)->with('checkincode', $checkincode);
+            }
+        }
         if (!is_null($rental)) {
             if (Auth::user()->id == $rental->house->user_id){
-                if ($checkin_code == $rental->checkincode) {
+                if ($checkincode == $rental->checkincode) {
+                    $checkinBy = 'host';
+                    return view('rentals.checkin-preview')->with('checkinBy', $checkinBy)->with('rental', $rental)->with('checkincode', $request->checkincode);
+                }
+                else {
+                    Session::flash('fail', "Code invalid.");
+                    return redirect()->route('rentals.rentmyrooms', Auth::user()->id);
+                }
+            }
+        }
+        Session::flash('fail', 'code not found.');
+        return back();
+    }
+
+    public function checkin_confirmed(Request $request) {
+        $request->checkincode = str_replace(' ', '', $request->checkincode);
+        $checkincode = substr($request->checkincode, 0, 10);
+        $rental_id = substr($request->checkincode, 10);
+        $rental = Rental::find($request->select_rental);
+        if (strlen($checkincode) == 9) {
+            if ($request->current_code == $request->checkincode) {
+                if ($rental->payment->payment_status == 'Approved') {
                     $rental->checkin_status = '1';
                     $rental->save();
-                    $datetime1 = new DateTime($rental->rental_datein);
-                    $datetime2 = new DateTime($rental->rental_dateout);
-                    $interval = $datetime1->diff($datetime2);
-                    $years = $interval->format('%y');
-                    $months = $interval->format('%m');
-                    $days = $interval->format('%d');
-                    $days = $days + 1;
-                    for ($i=0; $i <= $days; $i++) {
-                        $diary = new Diary;
-                        $diary->publish = '0';
-                        if ($i == 0) {
-                            $diary->title = 'Diary Title';
-                            $diary->message = "Short story of this trip.";
+                    Session::flash('success', 'Granted.');
+                    return redirect()->route('rentals.show', $rental->id);
+                }
+            }
+            else {
+                $reen_checkincode = substr($checkincode, 0, 3).substr($checkincode, 6, 3).substr($checkincode, 3, 3);
+                $verification = UserVerification::where('passport', 'like', '%'.$reen_checkincode.'%')->first();;
+                $user = User::where('user_verifications_id', $verification->id)->first();
+                $code = array();
+                $code[0] = substr($user->verification->passport, 9, 3);
+                $code[2] = substr($user->verification->passport, 12, 3);
+                $code[1] = substr($user->verification->passport, 15, 3);
+                $reen_code = $code[0].$code[1].$code[2];
+                if ($checkincode == $reen_code) {
+                    $today = Carbon::today();
+                    $rentals = Rental::where('rental_datein', '>=', $today)->where('user_id', $user->id)->get();
+                    $checkinBy = 'renter';
+                    return view('rentals.checkin-preview')->with('checkinBy', $checkinBy)->with('rentals', $rentals)->with('checkincode', $checkincode);
+                }
+            }
+        }
+        if (!is_null($rental)) {
+            if (Auth::user()->id == $rental->house->user_id){
+                if ($checkincode == $rental->checkincode) {
+                    if ($rental->payment->payment_status == 'Approved') {
+                        $rental->checkin_status = '1';
+                        $rental->save();
+                        $days = Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))+1;
+                        for ($i = 0; $i <= $days; $i++) {
+                            $diary = new Diary;
+                            $diary->publish = '0';
+                            if ($i == 0) {
+                                $diary->title = 'Diary Title';
+                                $diary->message = "Short story of this trip.";
+                            }
+                            if ($i != 0) {
+                                $diary->message = 'Story about day '. $i;
+                            }
+                            $diary->days = $i;
+                            $diary->user_id = $rental->user_id;
+                            $diary->category_id = '1';
+                            $diary->rental_id = $rental->id;
+                            $diary->save();
                         }
-                        if ($i != 0) {
-                            $diary->message = 'Story about day '. $i;
+                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', $rental->house->user_id)->first();
+                        if (is_null($subscribe)) {
+                            $subscribe = new Subscribe;
                         }
-                        $diary->days = $i;
-                        $diary->user_id = $rental->user_id;
-                        $diary->category_id = '1';
-                        $diary->rental_id = $rental->id;
-                        $diary->save();
+                        $subscribe->writer = $diary->user_id;
+                        $subscribe->follower = $rental->house->user_id;
+                        $subscribe->save();
+                        return redirect()->route('rentals.show', $rental->id);
                     }
-                    $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                    if (is_null($subscribe)) {
-                        $subscribe = new Subscribe;
-                    }
-                    $subscribe->writer = $diary->user_id;
-                    $subscribe->follower = Auth::user()->id;
-                    $subscribe->save();
-
-                    $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', $diary->user_id)->first();
-                    if (is_null($subscribe)) {
-                        $subscribe = new Subscribe;
-                    }
-                    $subscribe->writer = $diary->user_id;
-                    $subscribe->follower = $diary->user_id;
-                    $subscribe->save();
-
-                    return redirect()->route('rentals.show', $rental->id)->with('rental', $rental);
                 }
                 else {
                     Session::flash('fail', "Code invalid");
-                    return back();
+                    if (Auth::user()->id == $rental->user_id) {
+                        return redirect()->route('rentals.show', $rental->id);
+                    }
+                    return redirect()->route('rentals.rentmyrooms', Auth::user()->id);
+
                 }
             }
             Session::flash('fail', 'Unauthorized access.');
-            return back();
+            if (Auth::user()->id == $rental->user_id) {
+                return redirect()->route('rentals.show', $rental->id);
+            }
+            return redirect()->route('rentals.rentmyrooms', Auth::user()->id);
         }
         else {
-            $error_m = $checkin_code . "Invalid code.";
+            $error_m = $request->checkincode . "Invalid code.";
             return view('pages._error')->with('error_m', $error_m);
         }
     }

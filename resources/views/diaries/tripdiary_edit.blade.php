@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('manages.main')
 @section ('title', 'Edit Trip Diary '. ($day != '0' ? 'Day '.$day: ''))
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}

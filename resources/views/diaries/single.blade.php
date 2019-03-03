@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('manages.main')
 @section ('title', $diary->title. ' | ' .'My Diary')
 
 @section ('content')
@@ -123,17 +123,17 @@
 				<div class="row">
 					<div class="col-md-12 margin-auto" align="center">
 						@if ($diary->publish != '3')
-						<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-h1-spacing"><i class="far fa-edit"></i> Edit</a>
+						<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning m-t-10"><i class="far fa-edit"></i> Edit</a>
 						@else
-						<a href="{{ route('diaries.restore', $diary->id) }}" class="btn btn-outline-warning btn-h1-spacing">Restore</a>
+						<a href="{{ route('diaries.restore', $diary->id) }}" class="btn btn-outline-warning m-t-10">Restore</a>
 						@endif
 					</div>
 					<div class="col-md-12 margin-auto" align="center">
 						@if ($diary->publish != '3')
-						<a href="{{ route('diaries.temp.delete', $diary->id) }}" class="btn btn-danger btn-h1-spacing">Move to Trash</a>
+						<a href="{{ route('diaries.temp.delete', $diary->id) }}" class="btn btn-danger m-t-10">Move to Trash</a>
 						@else
 						{!! Form::open(['route' => ['diaries.destroy', $diary->id], 'method' => 'DELETE']) !!}
-						<button type="submit" class="btn btn-danger btn-h1-spacing"><i class="fas fa-trash"></i> Delete</button>
+						<button type="submit" class="btn btn-danger m-t-10"><i class="fas fa-trash"></i> Delete</button>
 						{!! Form::close() !!}
 						@endif
 					</div>

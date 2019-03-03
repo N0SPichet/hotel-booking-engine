@@ -40,7 +40,7 @@
 					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>
 					@endif
 					<span style="font-size: 20px;"><b> {{ $diary->title }} </b></span>
-					@if ($diary->days == '0') <span>({{ $diary->rental->houses->house_title }} - {{ date('jS F, Y', strtotime($diary->rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rental->rental_dateout)) }})</span>
+					@if ($diary->days == '0') <span>({{ $diary->rental->house->house_title }} - {{ date('jS F, Y', strtotime($diary->rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rental->rental_dateout)) }})</span>
 					@endif
 					</a>
 					</div>

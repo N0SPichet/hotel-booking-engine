@@ -123,7 +123,7 @@
 			</div>
 
 			<div class="row">
-				{!! Form::model($payment, ['route' => ['rentals.update', $payment->id], 'files' => true, 'method' => 'PUT']) !!}
+				{!! Form::model($payment, ['route' => ['rentals.update', $payment->id], 'files' => true, 'method' => 'PUT', 'data-parsley-validate' => '']) !!}
 
 					<div class="col-md-12">
 						{{ Form::label('payment_bankaccount', 'Bank Account: ') }}
