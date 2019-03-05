@@ -1,9 +1,7 @@
 @extends ('main')
-
 @section ('title', 'Your Trip')
 
 @section ('content')
-
 <div class="container">
 	<div class="row">
 		<div class="col-md-12 col-sm-12">
@@ -57,25 +55,25 @@
 					<div class="col-md-2 float-left" align="center">
 						<p></p>
 						@if($rental->payment->payment_status == 'Waiting')
-						<button class="btn-h1-spacing btn btn-primary btn-sm" style="width: 60%">
+						<button class="m-t-20 btn btn-primary btn-sm" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payment->payment_status }}</div>
 							</div>
 						</button>
 						@elseif($rental->payment->payment_status == 'Cancel')
-						<button type="submit" class="btn-h1-spacing btn btn-warning btn-sm disabled" style="width: 60%">
+						<button type="submit" class="m-t-20 btn btn-warning btn-sm disabled" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payment->payment_status }}</div>
 							</div>
 						</button>
 						@elseif($rental->payment->payment_status == 'Reject')
-						<button type="button" class="btn-h1-spacing btn-danger btn-sm disabled" style="width: 60%">
+						<button type="button" class="m-t-20 btn-danger btn-sm disabled" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payment->payment_status }}</div>
 							</div>
 						</button>
 						@elseif($rental->payment->payment_status == 'Approved')
-						<button class="btn-h1-spacing btn btn-success btn-sm" style="width: 60%">
+						<button class="m-t-20 btn btn-success btn-sm" style="width: 60%">
 							<div class="text-white">
 								<div class="text-center">{{ $rental->payment->payment_status }}</div>
 							</div>
@@ -105,5 +103,4 @@
 		</div>
 	</div>
 </div>
-
 @endsection

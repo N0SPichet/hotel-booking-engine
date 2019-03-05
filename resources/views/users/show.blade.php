@@ -26,14 +26,14 @@
 			<div class="card margin-content">
 				<p><b>Name </b>{{ $user->user_fname }}</p>
 				<p><b>Last Name </b>{{ $user->user_lname }}</p>
-				<p><b>Gender </b>{{ $user->user_gender }}</p>
+				<p><b>Gender </b><span id="gender">{{ $user->user_gender }}</span></p>
 				@if($user->district_id !== null || $user->province_id !== null)
-				<p><b>District </b>{{ $user->district->name }}</p>
-				<p><b>Province</b>{{ $user->province->name }}</p>
+				<p><b>District </b> {{ $user->district->name }}</p>
+				<p><b>Province</b> {{ $user->province->name }}</p>
 				@endif
 				<p><b>Description </b>{!! $user->user_description !!}</p>
 				<p><b>Rating </b>{{ $user->user_score }}</p>
-				<p><b>Join Date</b>{{ date('jS F, Y', strtotime($user->created_at)) }}</p>
+				<p><b>Join Date</b> {{ date('jS F, Y', strtotime($user->created_at)) }} ({{ $user->created_at->diffForHumans() }})</p>
 			</div>
 		</div>
 
@@ -66,4 +66,7 @@
 		</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+<script type="text/javascript" src="{{ asset('js/main.js') }}" defer></script>
 @endsection

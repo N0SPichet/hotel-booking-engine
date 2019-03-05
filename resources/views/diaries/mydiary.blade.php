@@ -8,7 +8,7 @@
 			<h1>My Diaries</h1>
 		</div>
 		<div class="col-md-2 float-left">
-			<a href=" {{ route('diaries.create') }}" class="btn btn-lg btn-block btn-primary btn-h1-spacing">Create Diary</a>
+			<a href=" {{ route('diaries.create') }}" class="btn btn-lg btn-block btn-primary m-t-20">Create Diary</a>
 		</div>
 		<div class="col-md-12">
 			<hr>

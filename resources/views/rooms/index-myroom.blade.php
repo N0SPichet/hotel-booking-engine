@@ -1,5 +1,6 @@
 @extends ('manages.main')
 @section ('title', 'Your Rooms')
+
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">

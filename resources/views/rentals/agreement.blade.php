@@ -1,14 +1,11 @@
 @extends ('main')
-
 @section ('title', 'Room Detail | Agreement')
-
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
 
 @section ('content')
 <div class="container">
-
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<h1>Review house rules</h1>
@@ -63,10 +60,10 @@
 
 					<hr>
 
-					{{ Form::submit('Agree and continue', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+					{{ Form::submit('Agree and continue', array('class' => 'btn btn-success btn-md m-t-20')) }}
 				{!! Form::close() !!}
 		</div>
-	</div> <!-- end of detail row-->
+	</div>
 </div>
 @endsection
 @section('scripts')

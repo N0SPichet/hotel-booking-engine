@@ -28,9 +28,9 @@
 			@endif
 			{{ Form::open(array('route' => 'rentals.checkin', 'data-parsley-validate' => '')) }}
 				{{ Form::label('checkincode', 'Check in') }}
-				{{ Form::text('checkincode', null, array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
+				{{ Form::text('checkincode', old('checkincode'), array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
 				<div class="text-center">
-					{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+					{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md m-t-20')) }}
 				</div>
 			{{ Form::close() }}
 		</div>

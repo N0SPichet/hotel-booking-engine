@@ -10,6 +10,7 @@
 	});
 </script>
 @endsection
+
 @section ('content')
 <div class="container rooms">
 	<div class="row m-t-10">

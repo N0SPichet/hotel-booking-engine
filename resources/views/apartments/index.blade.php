@@ -31,7 +31,7 @@
 
 								{!! Form::open(['route' => ['rooms.destroy', $house->id], 'method' => 'DELETE']) !!}
 								
-								{!! Form::submit('Delete this room', ['class' => 'btn btn-danger btn-sm btn-h1-spacing', 'style' => 'width: 60%']) !!}
+								{!! Form::submit('Delete this room', ['class' => 'btn btn-danger btn-sm m-t-20', 'style' => 'width: 60%']) !!}
 
 								{!! Form::close() !!}
 								@endif
@@ -45,10 +45,8 @@
 			</div>
 		</div>
 		<div class="text-center">
-			<!-- generate link for houses item -->
 			{!! $houses->links() !!}
 		</div>
 	</div>
 </div>
-
 @endsection

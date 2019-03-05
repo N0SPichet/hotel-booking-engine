@@ -2,13 +2,14 @@
 @section ('title', $rental->house->province->name .' Trip')
 @section('stylesheets')
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
-	<script>
-		tinymce.init({ 
-			selector:'textarea',
-			menubar: false
-		});
-	</script>
+<script>
+	tinymce.init({ 
+		selector:'textarea',
+		menubar: false
+	});
+</script>
 @endsection
+
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
@@ -281,7 +282,7 @@
 					{{ Form::label('checkincode', 'Check in') }}
 					{{ Form::text('checkincode', null, array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
 					<div class="text-center">
-						{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+						{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md m-t-20')) }}
 					</div>
 				{{ Form::close() }}
 			</div>
@@ -292,9 +293,9 @@
 					<label>Rented by:</label>
 					<p> {{ $rental->user->user_fname }} {{ $rental->user->user_lname }} </p>
 					<label>Created at:</label>
-					<p> {{ date('M j, Y', strtotime($rental->created_at)) }} </p>
+					<p> {{ date('M j, Y H:m:s', strtotime($rental->created_at)) }} </p>
 					<label>Last update:</label>
-					<p> {{ date('M j, Y', strtotime($rental->updated_at)) }} </p>
+					<p> {{ date('M j, Y H:m:s', strtotime($rental->updated_at)) }} </p>
 				</div>
 
 				<hr>
@@ -369,7 +370,7 @@
 				lng: lng
 			},
 			map: map,
-			draggable: true
+			draggable: false
 		});
 
 		var circle = new google.maps.Circle({

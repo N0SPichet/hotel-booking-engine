@@ -22,6 +22,9 @@ ul.pagination li.active {
 ul.pagination li.disabled {
     display: none;
 }
+li.parsley-required {
+    color: orange;
+}
 header {
     background-color: #BCDEFA;
 }
@@ -273,9 +276,7 @@ a:hover {
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.btn-h1-spacing {
-    margin-top: 18px;
-}
+
 .form-spacing-top {
     margin-top: 30px;
 }
@@ -571,21 +572,19 @@ img.img-responsive {
 .rooms .create li .active:before {
     content: "* ";
 }
-
-.rentals .rental_info li {
+.rooms .room_info li, .rentals .rental_info li {
     margin: auto 5px;
     margin-block-end: 12px;
+}
+.room_info li.active, .rental_info li.active {
+    border-bottom: 1px solid #000;
+    padding-bottom: 2px;
 }
 .nav.myroom-lists li {
     width: 100%;
     background-color: #ccc;
     padding: 5px 5px;
     margin: 5px 0px;
-}
-
-.rental_info li.active {
-    border-bottom: 1px solid #000;
-    padding-bottom: 2px;
 }
 .diaries .mydiaries .card-title {
     padding-top: 5px;
@@ -597,7 +596,10 @@ img.img-responsive {
     margin-bottom: 0;
 }
 .checkin-preview .checkin-code {
-    width: 20%;
+    width: 200px;
+}
+.checkin-preview .checkin-form {
+    width: 300px;
 }
 .checkin-preview .rental-id {
     float:left;
@@ -609,7 +611,7 @@ img.img-responsive {
 }
 .checkin-preview .rental-payment {
     float:left;
-    width: 180px;
+    width: 190px;
 }
 span.use_as_home_thum {
     position: absolute;
@@ -656,8 +658,15 @@ span.use_as_home_thum {
     width: 100%;
     height: 300px;
 }
+.checkin-preview hr {
+    display: none;
+}
 
 @media only screen and (max-width: 450px) {
     .checkin-preview .rental-id, .checkin-preview .stay-date, .checkin-preview .rental-payment {
         width: 100%;
+    }
+    .checkin-preview hr {
+        display: block;
+    }
 }

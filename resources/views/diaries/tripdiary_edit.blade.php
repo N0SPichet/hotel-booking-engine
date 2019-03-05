@@ -15,7 +15,7 @@
 <div class="container diaries">
 	<div class="row m-t-10">
 		<div class="col">
-			{!! Form::model($diary, ['route' => ['diaries.tripdiary.update', $diary->id ], 'method' => 'PUT', 'files' => true]) !!}
+			{!! Form::model($diary, ['route' => ['diaries.tripdiary.update', $diary->id ], 'method' => 'PUT', 'data-parsley-validate' => '', 'files' => true]) !!}
 			<div class="col-md-9 float-left">
 				@if ($day != 0)
 				<h4>{{ $diary_title }} day {{ $day }}</h4>
@@ -50,13 +50,13 @@
 				{{ Form::label('message', 'Body:', ['class' => 'form-spacing-top']) }}
 				{{ Form::textarea('message', null, ['class' => 'form-control', 'rows' => '5']) }}
 			</div>
-			<div class="col-md-3 float-left btn-h1-spacing">
+			<div class="col-md-3 float-left m-t-20">
 				<div class="col-sm-6 float-left">
-				{!! Html::linkRoute('diaries.tripdiary', 'Cancel', array($diary->rental_id, $diary->rental->user_id), array('class' => 'btn btn-danger btn-block btn-h1-spacing')) !!}
+				{!! Html::linkRoute('diaries.tripdiary', 'Cancel', array($diary->rental_id, $diary->rental->user_id), array('class' => 'btn btn-danger btn-block m-t-20')) !!}
 				</div>
 
 				<div class="col-sm-6 float-left">
-				{{ Form::submit('Save Changes', ['class' => 'btn btn-success btn-h1-spacing']) }}
+				{{ Form::submit('Save Changes', ['class' => 'btn btn-success m-t-20']) }}
 				</div>
 			</div>
 			{!! Form::close() !!}

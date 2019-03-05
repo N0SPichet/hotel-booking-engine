@@ -228,7 +228,7 @@
 				<div class="dl-horizontal">
 					<p><b>Created by</b> {{ $house->user->user_fname }} {{ $house->user->user_lname }}</p>
 					<p><b>Created at</b> {{ date("jS M, Y", strtotime($house->created_at)) }}</p>
-					<p><b>Date modified</b> {{ date("jS M, Y", strtotime($house->updated_at)) }}</p>
+					<p><b>Date modified</b> {{ $house->updated_at->diffForHumans() }}</p>
 				</div>
 				<div class="margin-content">
 				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>
@@ -237,34 +237,34 @@
 				<div class="row">
 					<div class="margin-auto text-center">
 						<div class="col">
-							<a id="publish" class="btn btn-outline-info btn-h1-spacing">Publish</a>
+							<a id="publish" class="btn btn-outline-info m-t-20">Publish</a>
 						</div>
 						@if($house->publish == 2)
 						<div class="col">
-							{!! Html::linkRoute('rooms.restore', 'Restore', array($house->id), array('class' => 'btn btn-outline-warning btn-h1-spacing')) !!}
+							{!! Html::linkRoute('rooms.restore', 'Restore', array($house->id), array('class' => 'btn btn-outline-warning m-t-20')) !!}
 						</div>
 						@else
 						<div class="col">
-							{!! Html::linkRoute('apartments.edit', 'Edit', array($house->id), array('class' => 'btn btn-outline-warning btn-h1-spacing')) !!}
+							{!! Html::linkRoute('apartments.edit', 'Edit', array($house->id), array('class' => 'btn btn-outline-warning m-t-20')) !!}
 						</div>
 						@endif
 						@if($house->publish == 2)
 						@if($house->rentals->count() == 0)
 						<div class="col">
 							{!! Form::open(['route' => ['apartments.destroy', $house->id], 'method' => 'DELETE']) !!}
-								{!! Form::submit('Delete', ['class' => 'btn btn-danger btn-h1-spacing']) !!}
+								{!! Form::submit('Delete', ['class' => 'btn btn-danger m-t-20']) !!}
 							{!! Form::close() !!}
 						</div>
 						@else
 						<div class="col">
 							{!! Form::open(['route' => ['rooms.permanent.delete', $house->id], 'method' => 'PUT', 'style'=>'display:inline']) !!}
-								{!! Form::submit('Permanent Delete', ['class' => 'btn btn-danger btn-h1-spacing']) !!}
+								{!! Form::submit('Permanent Delete', ['class' => 'btn btn-danger m-t-20']) !!}
 							{!! Form::close() !!}
 						</div>
 						@endif
 						@else
 						<div class="col">
-							{!! Html::linkRoute('rooms.temp.delete', 'Move to Trash', [$house->id], ['class' => 'btn btn-danger btn-h1-spacing']) !!}
+							{!! Html::linkRoute('rooms.temp.delete', 'Move to Trash', [$house->id], ['class' => 'btn btn-danger m-t-20']) !!}
 						</div>
 						@endif
 					</div>

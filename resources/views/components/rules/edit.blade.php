@@ -13,7 +13,7 @@
 			{!! Form::model($rule, ['route' => ['comp.rules.update', $rule->id], 'method' => 'PUT']) !!}
 			{{ Form::label('name', 'Rule name') }}
 			{{ Form::text('name', null, ['class' => 'form-control']) }}
-			{{ Form::submit('Save Changes', ['class' => 'btn btn-success btn-h1-spacing']) }}
+			{{ Form::submit('Save Changes', ['class' => 'btn btn-success m-t-20']) }}
 			{!! Form::close() !!}
 		</div>
 	</div>
