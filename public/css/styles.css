@@ -290,7 +290,7 @@ a:hover {
     margin-right: 15px;
 }
 .comment {
-    margin-bottom: 45px;
+    margin-bottom: 10px;
 }
 .author-image {
     width: 50px;
@@ -528,6 +528,9 @@ img.img-responsive {
 .control-group.success .fileupload .thumbnail {
     border-color: #468847;
 }
+.home .show {
+    height: 330px;
+}
 .gallery {
     display: flex;
     flex-direction: row;
@@ -592,6 +595,9 @@ img.img-responsive {
 .backend-comment {
     width: 100%;
 }
+.checkin-preview hr {
+    display: none;
+}
 .checkin-preview label {
     margin-bottom: 0;
 }
@@ -623,7 +629,6 @@ span.use_as_home_thum {
     border-radius: 5px;
     padding: 8px;
 }
-
 .with-trash {
     position: absolute;
     top: 6%;
@@ -637,7 +642,6 @@ span.use_as_home_thum {
 }
 /*review star*/
 .star-rating {
-    padding: 20px;
     direction: rtl;
 }
 .star-rating input[type='radio'] {
@@ -657,9 +661,6 @@ span.use_as_home_thum {
 #map-canvas {
     width: 100%;
     height: 300px;
-}
-.checkin-preview hr {
-    display: none;
 }
 
 @media only screen and (max-width: 450px) {

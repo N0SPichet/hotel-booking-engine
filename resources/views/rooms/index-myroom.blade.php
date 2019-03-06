@@ -5,7 +5,7 @@
 <div class="container">
 	<div class="row m-t-10">
 		<div class="col-sm-12">
-			<a href="{{ route('manages.index', Auth::user()->id) }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Manages</a>
+			<a href="{{ route('manages.index', Auth::user()->id) }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Dashboard</a>
 		</div>
 	</div>
 	<div class="row m-t-10">

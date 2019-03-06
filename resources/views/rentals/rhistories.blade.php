@@ -31,7 +31,7 @@
 			<div class="card m-t-10">
 				<h2 class="text-danger margin-content">Rejected</h2>
 				@foreach ($rentals as $rental)
-				@if ($rental->payment->payment_status == 'Reject' || $rental->host_decision == 'REJECT')
+				@if ($rental->payment->payment_status == 'Reject' || $rental->host_decision == 'reject')
 				<div class="card m-t-10">
 					<div class="margin-content">
 						<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;">

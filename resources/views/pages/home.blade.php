@@ -1,14 +1,14 @@
 @extends('main')
 @section('title','HOME')
 @section('content')
-<div class="container">
+<div class="container home">
     <div class="row m-t-10">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-body">
                     @if ($houses->count() > 0)
                     @foreach ($houses as $house)
-                    <div class="col-sm-4 col-md-4 col-lg-4 float-left">
+                    <div class="col-sm-4 col-md-4 col-lg-4 float-left show">
                         <div class="margin-content box home">
                             <div class="img-box" style="margin-bottom: 5px;">
                             @if ($house->cover_image == NULL)

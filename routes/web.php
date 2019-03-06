@@ -21,7 +21,7 @@ Route::post('/search', 'PagesController@indexSearch')->name('search');
 //Create PagesController Route
 Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
-Route::prefix('manages')->name('manages.')->group(function() {
+Route::prefix('dashboard')->name('manages.')->group(function() {
 	Route::get('{user}', 'PagesController@manages_index')->name('index');
 	Route::get('{user}/rooms/online', 'PagesController@manages_rooms_online')->name('rooms.online');
 	Route::get('{user}/rooms/offline', 'PagesController@manages_rooms_offline')->name('rooms.offline');

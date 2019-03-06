@@ -18,6 +18,7 @@ class UserTableSeeder extends Seeder
         $role_user = Role::where('name', 'User')->first();
         $role_admin = Role::where('name', 'Admin')->first();
         $role_author = Role::where('name', 'Author')->first();
+        $genders = ['1', '2'];
 
         $user_verifiation = new UserVerification;
         $user_verifiation->save();
@@ -28,7 +29,7 @@ class UserTableSeeder extends Seeder
         $user->email = "admin@example.com";
         $user->password = bcrypt('admin');
         $user->user_verifications_id = $user_verifiation->id;
-        $user->user_gender = 1;
+        $user->user_gender = $genders[rand(0, count($genders)-1)];
         $user->user_description = $faker->text(300);
         $user->user_score = '10';
         $user->save();
@@ -43,7 +44,7 @@ class UserTableSeeder extends Seeder
         $user->email = "user1@example.com";
         $user->password = bcrypt('user');
         $user->user_verifications_id = $user_verifiation->id;
-        $user->user_gender = rand(1, 2);
+        $user->user_gender = $genders[rand(0, count($genders)-1)];
         $user->user_description = $faker->text(300);
         $user->user_score = '10';
         $user->save();
@@ -58,7 +59,7 @@ class UserTableSeeder extends Seeder
         $user->email = "user2@example.com";
         $user->password = bcrypt('user');
         $user->user_verifications_id = $user_verifiation->id;
-        $user->user_gender = rand(1, 2);
+        $user->user_gender = $genders[rand(0, count($genders)-1)];
         $user->user_description = $faker->text(300);
         $user->user_score = '10';
         $user->save();

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\CheckinList;
 use App\Models\Diary;
 use App\Models\House;
 use App\Models\Payment;
@@ -11,6 +12,11 @@ use Illuminate\Database\Eloquent\Model;
 class Rental extends Model
 {
     protected $table = 'rentals';
+
+    public function checkinlist()
+    {
+        return $this->hasOne(CheckinList::class);
+    }
 
     public function user(){
     	return $this->belongsTo(User::class);

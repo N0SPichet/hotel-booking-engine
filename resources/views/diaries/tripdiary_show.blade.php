@@ -1,5 +1,5 @@
 @extends ('main')
-@section ('title', $diaries[0]->title)
+@section ('title', $diaries[0]->title.' | '.$diaries[0]->user->user_fname. ' | ' .'Diary')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection

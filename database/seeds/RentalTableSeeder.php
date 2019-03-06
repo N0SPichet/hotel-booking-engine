@@ -62,7 +62,7 @@ class RentalTableSeeder extends Seeder
     	$payment->save();
 
         $rental = new Rental;
-        $rental->host_decision = 'ACCEPT';
+        $rental->host_decision = 'accept';
         $rental->rental_datein = $date_in;
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
@@ -113,7 +113,7 @@ class RentalTableSeeder extends Seeder
     	$payment->save();
 
         $rental = new Rental;
-        $rental->host_decision = 'ACCEPT';
+        $rental->host_decision = 'accept';
         $rental->rental_datein = $date_in;
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;

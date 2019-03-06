@@ -60,13 +60,13 @@
 							<div class="checkin-form margin-auto text-center">
 								<p><b>Checkin Form</b></p>
 								{{ Form::label('checkin_name') }}
-								{{ Form::text('checkin_name', null, ['class'=>'form-control text-center', 'required'=>'']) }}
+								{{ Form::text('checkin_name', old('checkin_name'), ['class'=>'form-control text-center', 'required'=>'']) }}
 								{{ Form::label('checkin_lastname') }}
-								{{ Form::text('checkin_lastname', null, ['class'=>'form-control text-center', 'required'=>'']) }}
+								{{ Form::text('checkin_lastname', old('checkin_lastname'), ['class'=>'form-control text-center', 'required'=>'']) }}
 								{{ Form::label('checkin_personal_id') }}
-								{{ Form::text('checkin_personal_id', null, ['class'=>'form-control text-center', 'required'=>'']) }}
+								{{ Form::text('checkin_personal_id', old('checkin_personal_id'), ['class'=>'form-control text-center', 'required'=>'']) }}
 								{{ Form::label('checkin_tel') }}
-								{{ Form::text('checkin_tel', null, ['class'=>'form-control text-center', 'required'=>'']) }}
+								{{ Form::text('checkin_tel', old('checkin_tel'), ['class'=>'form-control text-center', 'required'=>'']) }}
 							</div>
 							<hr>
 						</div>
@@ -93,6 +93,9 @@
 <script type="text/javascript">
 	var change;
 	$(document).ready(function() {
+		$( window ).load(function() {
+		  $('#checkincode_preview').val('{{$checkincode}}');
+		});
 		$('#use_another_code').on('click', function(event) {
 			event.preventDefault();
 			console.log(change);

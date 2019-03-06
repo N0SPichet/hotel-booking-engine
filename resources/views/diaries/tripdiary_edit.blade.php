@@ -33,7 +33,7 @@
 				{{ Form::label('tags', 'Tag: ', ['class' => 'form-spacing-top']) }}
 				<div class="row ">
 					@foreach ($tags as $tag)
-					<div class="col" >
+					<div class="col-sm-3 float-left" >
 						{{ Form::checkbox('tags[]', $tag->id, null, ['class' => 'field', 'multiple' => 'multiple', 'id' => "tag$tag->id"]) }}
 						{{ Form::label('tag' . $tag->id, $tag->name) }}
 					</div>
