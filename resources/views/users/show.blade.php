@@ -26,14 +26,14 @@
 			<div class="card margin-content">
 				<p><b>Name </b>{{ $user->user_fname }}</p>
 				<p><b>Last Name </b>{{ $user->user_lname }}</p>
-				<p><b>Gender </b>{{ $user->user_gender }}</p>
+				<p><b>Gender </b><span id="gender">{{ $user->user_gender }}</span></p>
 				@if($user->district_id !== null || $user->province_id !== null)
-				<p><b>District </b>{{ $user->district->name }}</p>
-				<p><b>Province</b>{{ $user->province->name }}</p>
+				<p><b>District </b> {{ $user->district->name }}</p>
+				<p><b>Province</b> {{ $user->province->name }}</p>
 				@endif
 				<p><b>Description </b>{!! $user->user_description !!}</p>
 				<p><b>Rating </b>{{ $user->user_score }}</p>
-				<p><b>Join Date</b>{{ date('jS F, Y', strtotime($user->created_at)) }}</p>
+				<p><b>Join Date</b> {{ date('jS F, Y', strtotime($user->created_at)) }} ({{ $user->created_at->diffForHumans() }})</p>
 			</div>
 		</div>
 
@@ -44,7 +44,7 @@
 			@foreach ($houses as $house)
 				<a href="{{ route('rooms.owner', $house->id) }}" class="btn btn-outline-secondary btn-md btn-block">
 					<div align="left">
-						<p>Title : {{ $house->house_title }}</p>
+						<p>Title : {{ $house->house_title }} @if ($house->rentals->count() >= 0) <span>, has {{ $house->rentals->count() }} {{ $house->rentals->count()>1?'rentals':'rental' }}</span>@endif</p>
 						<p>Last update : {{ date("jS F, Y", strtotime($house->updated_at)) }}</p>
 					</div>
 				</a>
@@ -53,11 +53,13 @@
 			@foreach ($houses as $house)
 				@if($house->checkType($house->id))
 				<a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-info btn-sm btn-block">
-					<h4>{{ $house->house_title }}</h4>
+					<p>{{ $house->house_title }}</p>
+					<p>@if ($house->rentals->count() >= 0) <span>has {{ $house->rentals->count() }} {{ $house->rentals->count()>1?'rentals':'rental' }}</span>@endif</p>
 				</a>
 				@else
 				<a href="{{ route('apartments.show', $house->id) }}" class="btn btn-outline-info btn-sm btn-block">
-					<h4>{{ $house->house_title }}</h4>
+					<p>{{ $house->house_title }}</p>
+					<p>@if ($house->rentals->count() >= 0) <span>has {{ $house->rentals->count() }} {{ $house->rentals->count()>1?'rentals':'rental' }}</span>@endif</p>
 				</a>
 				@endif
 			@endforeach
@@ -66,4 +68,7 @@
 		</div>
 	</div>
 </div>
+@endsection
+@section('scripts')
+<script type="text/javascript" src="{{ asset('js/main.js') }}" defer></script>
 @endsection

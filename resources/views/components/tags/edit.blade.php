@@ -13,7 +13,7 @@
 			{!! Form::model($tag, ['route' => ['comp.tags.update', $tag->id], 'method' => 'PUT']) !!}
 			{{ Form::label('name', 'Tag name') }}
 			{{ Form::text('name', null, ['class' => 'form-control']) }}
-			{{ Form::submit('Save Changes', ['class' => 'btn btn-success btn-h1-spacing']) }}
+			{{ Form::submit('Save Changes', ['class' => 'btn btn-success m-t-20']) }}
 			{!! Form::close() !!}
 		</div>
 	</div>

@@ -58,7 +58,7 @@
 						<div class="col-md-3 float-left" align="center">
 							{!! Html::linkRoute('rentals.show', 'View Detail', array($rental->id), array('class' => 'btn btn-info btn-sm', 'style' => 'width: 60%')) !!}
 							{!! Form::open(['route' => ['rentals.reject', $rental->id], 'method' => 'POST']) !!}
-							{!! Form::submit('Reject this rental', ['class' => 'btn btn-danger btn-sm btn-h1-spacing', 'style' => 'width: 60%']) !!}
+							{!! Form::submit('Reject this rental', ['class' => 'btn btn-danger btn-sm m-t-20', 'style' => 'width: 60%']) !!}
 							{!! Form::close() !!}
 						</div>
 					</div>
@@ -70,5 +70,4 @@
 		</div>
 	</div>
 </div>
-
 @endsection

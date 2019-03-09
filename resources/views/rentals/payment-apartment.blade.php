@@ -1,7 +1,5 @@
 @extends ('main')
-
 @section ('title', 'Room Detail | Payment')
-
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
@@ -180,7 +178,7 @@
 		            </div>
 						
 					<div class="col-md-12 text-center">
-						{{ Form::submit('Pay', array('class' => 'btn btn-primary btn-md btn-h1-spacing')) }}
+						{{ Form::submit('Pay', array('class' => 'btn btn-primary btn-md m-t-20')) }}
 					</div>
 						
 				{!! Form::close() !!}

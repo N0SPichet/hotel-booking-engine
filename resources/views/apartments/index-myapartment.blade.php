@@ -5,7 +5,7 @@
 <div class="container">
 	<div class="row m-t-10">
 		<div class="col-sm-12">
-			<a href="{{ route('manages.index', Auth::user()->id) }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Manages</a>
+			<a href="{{ route('manages.index', Auth::user()->id) }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Dashboard</a>
 		</div>
 	</div>
 	<div class="row m-t-10">
@@ -17,7 +17,7 @@
 			    </div>
 			@endif
 			<div class="card-body">
-				@if($houses->count())
+				@if ($houses->count())
 				@foreach($houses as $key => $house)
 				<div class="row m-t-10">
 					<div class="col-md-12">
@@ -32,7 +32,6 @@
 								<span class="text-danger"><i class="fas fa-eye-slash"></i> Private</span>
 								@endif
 								<b>Title</b> : {{ $house->house_title }} - {{ $house->sub_district->name }} {{ $house->district->name }}, {{ $house->province->name }}
-								<b>Title</b> : {{ $house->house_title }}
 							</p>
 							<p>Date Create : {{ date("jS F, Y", strtotime($house->created_at)) }}</p>
 							</a>
@@ -42,7 +41,7 @@
 						</div>
 					</div>
 				</div>
-				@if($houses->count() != $key+1)
+				@if ($houses->count() != $key+1)
 				<hr>
 				@endif
 				@endforeach

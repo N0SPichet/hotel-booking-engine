@@ -185,6 +185,7 @@ class UserController extends Controller
             $verification->title = $request->title;
             $verification->name = $request->name;
             $verification->lastname = $request->lastname;
+            $verification->secret = $request->secret;
             if ($request->hasFile('id_card')) {
                 $image = $request->file('id_card');
                 $filename = 'id_'.time() . '01' . Auth::user()->id . '.' . $image->getClientOriginalExtension();

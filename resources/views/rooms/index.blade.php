@@ -1,5 +1,6 @@
 @extends ('manages.main')
 @section ('title', 'Administrator | Rooms')
+
 @section ('content')
 <div class="container">
 	<div class="row col m-t-10">
@@ -30,7 +31,7 @@
 
 								{!! Form::open(['route' => ['rooms.destroy', $house->id], 'method' => 'DELETE']) !!}
 								
-								{!! Form::submit('Delete this room', ['class' => 'btn btn-danger btn-sm btn-h1-spacing', 'style' => 'width: 60%']) !!}
+								{!! Form::submit('Delete this room', ['class' => 'btn btn-danger btn-sm m-t-20', 'style' => 'width: 60%']) !!}
 
 								{!! Form::close() !!}
 								@endif

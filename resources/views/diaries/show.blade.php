@@ -1,5 +1,5 @@
 @extends ('main')
-@section ('title', $diary->user->user_fname. ' | ' .'Diary')
+@section ('title', $diary->title.' | '.$diary->user->user_fname. ' | ' .'Diary')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
@@ -107,7 +107,7 @@
 			@foreach ($diary->comments as $comment)
 			<div class="card m-t-10">
 				<div class="margin-content">
-					<div class="col-md-11">
+					<div class="col-md-11 float-left">
 						<div class="comment">
 							<div class="author-info">
 								<img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($comment->email))) . '?s=50&d=monsterid' }}" class="author-image">
@@ -121,7 +121,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-1">
+					<div class="col-md-1 float-left">
 						@if (Auth::check())
 						@if (Auth::user()->email == $comment->email)
 						{!! Form::open(['route' => ['comments.destroy', $comment->id], 'method' => 'DELETE', 'style'=>'display:inline']) !!}

@@ -35,7 +35,8 @@ class DiaryController extends Controller
     
     public function index()
     {
-        $diaries = Diary::where('publish', '1')->orWhere('publish', '2')->orderBy('id', 'desc')->paginate(8);
+        $publish = ['1', '2'];
+        $diaries = Diary::whereIn('publish', $publish)->orderBy('id', 'desc')->paginate(8);
         return view('diaries.index')->with('diaries', $diaries);
     }
 
@@ -232,31 +233,29 @@ class DiaryController extends Controller
                     }
                 }
             }
-            else if ($diary->rental_id == null) {
+            else {
                 $categories = Category::all();
+                if ($diary->publish == '1') {
+                    if (Auth::check()) {
+                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
+                        return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
+                    }
+                    return redirect()->route('login');
+                }
                 if ($diary->publish == '2') {
                     if (Auth::check()) {
                         $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
                         if ($subscribe) {
                             return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
                         }
-                    }
-                    else {
                         return view('diaries.subscribe')->with('diary', $diary);
                     }
-                }
-                elseif ($diary->publish == '1') {
-                    if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                        return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
-                    }
+                    return redirect()->route('login');
                 }
             }
         }
-        else {
-            Session::flash('fail', "This diary is no longer available.");
-            return back();
-        }
+        Session::flash('fail', "This diary is no longer available.");
+        return back();
     }
 
     public function subscribe($userId, Request $request)
@@ -298,19 +297,16 @@ class DiaryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($diaryId)
     {
-        $diary = Diary::find($id);
+        $diary = Diary::find($diaryId);
         if (Auth::user()->id == $diary->user_id) {
             $categories = Category::all();
-
             $tags = Tag::all();
             return view('diaries.edit')->with('diary', $diary)->with('tags', $tags)->with('categories', $categories);
         }
-        else {
-            Session::flash('fail', "Request not found, You don't have permission to see this files!");
-            return back();
-        }
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     public function tripdiary_edit($rentalId, $userId, $day){

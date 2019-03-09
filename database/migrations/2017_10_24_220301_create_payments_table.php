@@ -19,7 +19,7 @@ class CreatePaymentsTable extends Migration
             $table->string('payment_bankaccount', 50)->nullable();
             $table->string('payment_holder', 50)->nullable();
             $table->string('payment_transfer_slip', 50)->nullable();
-            $table->enum('payment_status', ['Approved', 'Cancel', 'Out of Date', 'Reject'])->nullable();
+            $table->enum('payment_status', ['Approved', 'Cancel', 'Out of Date', 'Waiting', 'Reject'])->nullable();
             $table->integer('payment_amount')->nullable();
             $table->timestamps();
         });

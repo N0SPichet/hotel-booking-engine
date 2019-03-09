@@ -61,6 +61,20 @@
                             </div>
                         </div>
 
+                        <div class="in-line form-group{{ $errors->has('secret') ? ' has-error' : '' }}">
+                            <label for="secret" class="col-md-4 control-label">Your secret</label>
+
+                            <div class="col-md-6">
+                                <input id="secret" type="text" class="form-control" name="secret" value="{{ Auth::user()->verification->secret}}" required autofocus>
+
+                                @if ($errors->has('secret'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('secret') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="form-group{{ $errors->has('id_card') ? ' has-error' : '' }}">
                             <label for="id_card" class="col-md-4 control-label">ID Card</label>
 

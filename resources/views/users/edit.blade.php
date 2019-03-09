@@ -79,13 +79,13 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12 center">
-			<div class="col-sm-6 col-md-6 float-left">
-				{!! Html::linkRoute('users.profile', 'Back to My Account', array($user->id), array('class' => 'btn btn-info btn-block btn-h1-spacing')) !!}
+		<div class="margin-auto center">
+			<div class="col ">
+				{!! Html::linkRoute('users.profile', 'Back to My Account', array($user->id), array('class' => 'btn btn-info m-t-20')) !!}
 			</div>
 
-			<div class="col-sm-6 col-md-6 float-left">
-				{{ Form::submit('Update', ['class' => 'btn btn-success btn-block btn-h1-spacing']) }}
+			<div class="col ">
+				{{ Form::submit('Update', ['class' => 'btn btn-success m-t-20']) }}
 			</div>
 		</div>
 

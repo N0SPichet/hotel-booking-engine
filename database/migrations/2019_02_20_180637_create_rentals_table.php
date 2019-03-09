@@ -15,7 +15,7 @@ class CreateRentalsTable extends Migration
     {
         Schema::create('rentals', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('host_decision', 50)->nullable();
+            $table->enum('host_decision', ['waiting', 'accept', 'reject'])->default('waiting');
             $table->date('rental_datein')->nullable();
             $table->date('rental_dateout')->nullable();
             $table->integer('rental_guest')->nullable();

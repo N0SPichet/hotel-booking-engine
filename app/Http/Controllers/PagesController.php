@@ -76,15 +76,15 @@ class PagesController extends Controller
         $rentals = Rental::whereIn('house_id', $h_id)->count();
 
         $rental_accept = Rental::whereIn('house_id', $h_id)->where(function ($query) {
-            $query->where('host_decision', 'ACCEPT');
+            $query->where('host_decision', 'accept');
         })->count();
 
         $rental_reject = Rental::whereIn('house_id', $h_id)->where(function ($query) {
-            $query->where('host_decision', 'REJECT');
+            $query->where('host_decision', 'reject');
         })->count();
 
         $rental_ignore = Rental::whereIn('house_id', $h_id)->where(function ($query) {
-            $query->where('host_decision', NULL)->where('rental_checkroom', '!=', '1');
+            $query->where('host_decision', 'waiting')->where('rental_checkroom', '!=', '1');
         })->count();
 
         $rental_id = Rental::whereIn('house_id', $h_id)->get();
@@ -111,7 +111,7 @@ class PagesController extends Controller
         }
 
         $rentals_id = Rental::whereIn('house_id', $h_id)->where(function ($query) {
-            $query->where('host_decision', 'ACCEPT');
+            $query->where('host_decision', 'accept');
         })->get();
         $p_id = array();
         foreach ($rentals_id as $key => $rental) {

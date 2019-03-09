@@ -17,6 +17,7 @@ class CreateUserVerificationsTable extends Migration
             $table->increments('id');
             $table->enum('verify', ['0', '1', '2'])->default('0');
             $table->string('passport')->nullable();
+            $table->string('secret')->default('secret');
             $table->string('title', 50)->nullable();
             $table->string('name', 100)->nullable();
             $table->string('lastname', 100)->nullable();

@@ -28,9 +28,9 @@
 			@endif
 			{{ Form::open(array('route' => 'rentals.checkin', 'data-parsley-validate' => '')) }}
 				{{ Form::label('checkincode', 'Check in') }}
-				{{ Form::text('checkincode', null, array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
+				{{ Form::text('checkincode', old('checkincode'), array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
 				<div class="text-center">
-					{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+					{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md m-t-20')) }}
 				</div>
 			{{ Form::close() }}
 		</div>
@@ -46,20 +46,20 @@
 	  		<div class="tab-content">
 	    		<div id="menu1" class="tab-pane fade show active in">
 	    			@if($houses->count())
-	    			<div class="col-md-3 float-left">
+	    			<div class="col-md-4 float-left">
 		    			<ul class="nav myroom-lists m-t-10">
 		      			@foreach ($houses as $key => $house)
 							<li><a data-toggle="pill" href="#room{{ $house->id }}" style="width: 140px;">{{ $house->house_title }} <span class="badge badge-danger float-right m-r-10">{{ $rent_count[$key] }}</span></a></li>
 						@endforeach
 						</ul>
 					</div>
-					<div class="col-md-9 float-left">
+					<div class="col-md-8 float-left">
 						<div class="tab-content m-t-10">
 							@foreach ($houses as $house)
 							<div id="room{{ $house->id }}" class="tab-pane fade">
 								@foreach ($rentals as $rental)
 		      					@if ($rental->house_id == $house->id)
-									@if ($rental->payment->payment_status == NULL  && $rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT')
+									@if ($rental->payment->payment_status == NULL  && $rental->host_decision == 'waiting')
 									<div class="card">
 										<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
 										<p>Rented by : {{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
@@ -83,7 +83,7 @@
 	    			@if($rentals_waiting->count())
 	    			<div class="tab-content m-t-10">
 	    				@foreach ($rentals_waiting as $rental)
-	    				<div class="card">
+	    				<div class="card m-t-10">
 		      				<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
 								<p>Rented by : {{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</p>
 								<p>Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }}</p>
@@ -101,7 +101,7 @@
 	    			@if($rentals_approved->count())
 	    			<div class="tab-content m-t-10">
 	    				@foreach ($rentals_approved as $rental)
-	    				<div class="card">
+	    				<div class="card m-t-10">
 			      			<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;" class="btn btn-default btn-block text-left">
 								<p>Rented by : {{ $rental->user->user_fname }} {{ $rental->user->user_lname }}
 									@if ($rental->checkin_status == '1') <span class="text-success"><i class="far fa-check-circle"></i> Checkin</span> @endif

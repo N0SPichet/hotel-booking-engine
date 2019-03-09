@@ -60,7 +60,7 @@
 							</div>
 						</div>
 		  			</div>
-					<button type="submit" class="btn btn-success btn-h1-spacing">Request to Book</button>
+					<button type="submit" class="btn btn-success m-t-20">Request to Book</button>
 				</div>
 			{!! Form::close() !!}
 		</div>
@@ -109,7 +109,7 @@
 			</div>
 		</div>
 		<div class="col-md-6 float-left show">
-			<ul class="nav nav-tabs">
+			<ul class="nav nav-tabs room_info">
 	    		<li class="active" ><a data-toggle="tab" href="#menu1">Details</a></li>
 	    		<li class=""><a data-toggle="tab" href="#menu2">Reviews</a></li>
 	  		</ul>

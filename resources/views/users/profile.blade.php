@@ -8,7 +8,7 @@
 		<div class="card col-12">
 			<div class="card-body">
 				<div class="card-title">
-					<h1>{{ $user->user_fname }} Account <small>Role:{{$user->roles[0]->name}}</small> @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</h1>
+					<h1>{{ $user->user_fname }} Account @if (Auth::user()->hasRole('Admin'))<small>Role:{{$user->roles[0]->name}}</small>@endif @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</h1>
 					@if ($user->verification->verify !== '1')
 					<p class="text-danger"><a href="{{ route('users.verify-user', $user->id) }}" class="btn btn-outline-danger">Verify</a> before become hosting or rent a room.</p>
 					@endif
@@ -17,6 +17,7 @@
 					@if ($user->verification->passport != null)
 					<div class="col-md-12">
 						<p>your passport : <b class="text-danger">{{ substr($user->verification->passport, 9, 3) }}{{ substr($user->verification->passport, 15, 3) }}{{ substr($user->verification->passport, 12, 3) }}</b> keep it's secret</p>
+						<p>your secret : <b class="text-danger">{{ $user->verification->secret }}</b> keep it's secret</p>
 						<p>passport code you can use to identify yourself when checkin. please keep it's secret and don't tell anyone or hosts that you has rent their's home.</p>
 					</div>
 					@endif
@@ -79,8 +80,6 @@
 							    	<span class="fileupload-exists">Change</span>
 							    	<input name="user_image" type="file" id="user_image">
 							    </span>
-							    <span class="fileupload-preview"></span>
-							    <a href="#" class="close fileupload-exists" data-dismiss="fileupload" style="float: none">×</a>
 							</div>
 
 							<div style="width: 50%;">

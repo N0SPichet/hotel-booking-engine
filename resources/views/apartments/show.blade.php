@@ -5,7 +5,7 @@
 @endsection
 
 @section ('content')
-<div class="container">
+<div class="container rooms">
 	<div class="row m-t-10">
 		<h2><img src="{{ asset('images/houses/apartment.png')}}" style="width: 35px; margin-bottom: 10px;"> Room : {{ $house->house_title }} <small class="text-danger">{{ $house->house_guestspace }} space</small></h2>
 	</div>
@@ -68,7 +68,7 @@
 		<div class="col-md-12" align="center">
 			<div class="form-group m-t-10">
 				{{ Form::hidden('id', $house->id, array('class' => 'form-control input-lg')) }}
-				<button type="submit" class="btn btn-success btn-h1-spacing">Request to Book</button>
+				<button type="submit" class="btn btn-success m-t-20">Request to Book</button>
 			{!! Form::close() !!}
 			</div>
 		</div>
@@ -116,8 +116,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6 float-left">
-			<ul class="nav nav-tabs">
+		<div class="col-md-6 float-left show">
+			<ul class="nav nav-tabs room_info">
 	    		<li class="active" ><a data-toggle="tab" href="#menu1">Details</a></li>
 	    		<li class=""><a data-toggle="tab" href="#menu2">Reviews</a></li>
 	  		</ul>
@@ -246,68 +246,50 @@
 @endsection
 
 @section('scripts')
-	<script type="text/javascript">
-		$(document).ready(function() {
-			/* This is basic - uses default settings */
-			$("a#single_image").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	200, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-			/* Using custom settings */
-			$("a#inline").fancybox({
-				'hideOnContentClick': true
-			});
-			/* Apply fancybox to multiple items */
-			$("a.group").fancybox({
-				'transitionIn'	:	'elastic',
-				'transitionOut'	:	'elastic',
-				'speedIn'		:	600, 
-				'speedOut'		:	200, 
-				'overlayShow'	:	false
-			});
-		});
+{!! Html::script('js/parsley.min.js') !!}
+<script type="text/javascript">
+	$(document).ready(function() {
+		
+	});
 
-		$(document).ready(function(){
-      		var datein=$('input[name="datein"]'); //our date input has the name "date"
-      		var dateout=$('input[name="dateout"]'); //our date input has the name "date"
-      		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
-      		var options={
-	        	format: 'yyyy-mm-dd',
-	        	container: container,
-	        	todayHighlight: true,
-	        	autoclose: true,
-	      	};
-	      	datein.datepicker(options);
-	      	dateout.datepicker(options);
-	    });
+	$(document).ready(function(){
+  		var datein=$('input[name="datein"]'); //our date input has the name "date"
+  		var dateout=$('input[name="dateout"]'); //our date input has the name "date"
+  		var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+  		var options={
+        	format: 'yyyy-mm-dd',
+        	container: container,
+        	todayHighlight: true,
+        	autoclose: true,
+      	};
+      	datein.datepicker(options);
+      	dateout.datepicker(options);
+    });
 
-	    var lat = {{ $map->map_lat }};
-		var lng = {{ $map->map_lng }};
+    var lat = {{ $map->map_lat }};
+	var lng = {{ $map->map_lng }};
 
-		var map = new google.maps.Map(document.getElementById('map-canvas'), {
-			center:{
-				lat: lat,
-				lng: lng
-			},
-			zoom: 15
-		});
+	var map = new google.maps.Map(document.getElementById('map-canvas'), {
+		center:{
+			lat: lat,
+			lng: lng
+		},
+		zoom: 15
+	});
 
-		var circle = new google.maps.Circle({
-			position:{
-				lat: lat,
-				lng: lng
-			},
-			strokeColor: '#FF0000',
-            strokeOpacity: 0.8,
-            strokeWeight: 2,
-            fillColor: '#0000FF',
-            fillOpacity: 1,
-            map: map,
-            center: {lat: lat, lng: lng},
-            radius: Math.sqrt(10) * 60
-		});
-	</script>
+	var circle = new google.maps.Circle({
+		position:{
+			lat: lat,
+			lng: lng
+		},
+		strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#0000FF',
+        fillOpacity: 1,
+        map: map,
+        center: {lat: lat, lng: lng},
+        radius: Math.sqrt(10) * 60
+	});
+</script>
 @endsection

@@ -30,7 +30,7 @@
 					</ul>
 				</li>
 				@endif
-				<li><a href="{{ route('rentals.rentmyrooms', Auth::user()->id) }}">Manage</a></li>
+				<li><a href="{{ route('rentals.rentmyrooms', Auth::user()->id) }}">Manage Rentals</a></li>
 				<li>
 					<a href="#">Hosting<i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">

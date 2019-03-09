@@ -1,19 +1,16 @@
 @extends ('main')
-
 @section ('title', 'Edit review')
-
 @section('stylesheets')
-	<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
-  	<script>
-  		tinymce.init({ 
-  			selector:'textarea',
-  			menubar: false
-  		});
-  	</script>
+<script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
+<script>
+	tinymce.init({ 
+		selector:'textarea',
+		menubar: false
+	});
+</script>
 @endsection
 
 @section ('content')
-
 <div class="container">
 	<div class="row">
 		<div class="col-md-12">
@@ -60,11 +57,10 @@
 			{{ Form::label('room_comment', 'Review') }}
 			{{ Form::textarea('room_comment', $review->room_comment, ['class' => 'form-control', 'rows' => '5']) }}
 
-			{{ Form::submit('Save Changes', ['class' => 'btn btn-success btn-h1-spacing']) }}
+			{{ Form::submit('Save Changes', ['class' => 'btn btn-success m-t-20']) }}
 
 		{!! Form::close() !!}
 		</div>
 	</div>
 </div>
-
 @endsection

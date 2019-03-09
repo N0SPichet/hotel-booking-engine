@@ -1,27 +1,54 @@
 @extends ('manages.main')
-@section ('title', $rental->house->province->name .' Trip')
+@section ('title', $rental->user->user_fname.' | '.$rental->house->district->name.' '.$rental->house->province->name.' | Trip')
 @section('stylesheets')
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>
-	<script>
-		tinymce.init({ 
-			selector:'textarea',
-			menubar: false
-		});
-	</script>
+<script>
+	tinymce.init({ 
+		selector:'textarea',
+		menubar: false
+	});
+</script>
 @endsection
+
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
+		@if (Auth::user()->id == $rental->house->user_id)
+		<div class="col-sm-12">
+			<a href="{{ route('rentals.rentmyrooms', $rental->house->user_id) }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back</a>
+		</div>
+		@elseif (Auth::user()->id == $rental->user_id)
+		<div class="col-sm-12">
+			<a href="{{ route('rentals.mytrips', $rental->user_id) }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back</a>
+		</div>
+		@elseif (Auth::user()->hasRole('Admin'))
+		<div class="col-sm-12">
+			<a href="{{ route('rentals.index') }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back</a>
+		</div>
+		@endif
+	</div>
+	<div class="row m-t-10">
 		<div class="col-md-12">
-			<p class="lead">Rental #ID {{ $rental->id }}</p>
+			<p class="lead">Rental #ID {{ $rental->id }} @if (!Auth::user()->hasRole('Admin'))(You're {{ Auth::user()->id == $rental->house->user_id? 'Host':'Renter' }})@elseif (Auth::user()->hasRole('Admin'))(You're Admin)@endif</p>
 		</div>
 		<div class="col-md-8">
+			@if (isset($rental->checkinlist))
+			<div class="m-b-20">
+				<div class="card margin-content">
+					<label>Checkin By Other</label>
+					<p><b>Name :</b> {{ $rental->checkinlist->checkin_name }}</p>
+					<p><b>Lastname :</b> {{ $rental->checkinlist->checkin_lastname }}</p>
+					<p><b>Personal_id :</b> {{ $rental->checkinlist->checkin_personal_id }}</p>
+					<p><b>Tel :</b> {{ $rental->checkinlist->checkin_tel }}</p>
+				</div>
+			</div>
+			@endif
 			<div class="card">
 				<div class="margin-content">
 					<label>Booking Detail</label>
 					<p>@if($types == 'apartment') <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @else <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->house->house_title }}  </p>
 						
-					<p><i class="fas fa-user"></i> Hosted by : <a href="{{ route('users.show', $rental->user_id) }}" target="_blank" class="btn btn-outline-info">{{ $rental->house->user->user_fname }} {{ $rental->house->user->user_lname }}</a></p>
+					<p><i class="fas fa-user"></i> Hosted by : <a href="{{ route('users.show', $rental->house->user_id) }}" target="_blank" class="btn btn-outline-info">{{ $rental->house->user->user_fname }} {{ $rental->house->user->user_lname }}</a></p>
 						
 					<p><i class="fas fa-user"></i> Rented by : <a href="{{ route('users.show', $rental->user_id) }}" target="_blank" class="btn btn-outline-info">{{ $rental->user->user_fname }} {{ $rental->user->user_lname }}</a></p>
 						
@@ -47,7 +74,7 @@
 					@endif
 					<br>
 
-					@if ($rental->host_decision == 'ACCEPT')
+					@if ($rental->host_decision == 'accept')
 					<p class="text-primary"><b>Host Accepted.</b></p>
 					@endif
 
@@ -62,13 +89,12 @@
 					@endif
 				</div>
 			</div>
-			
 			@if($rental->payment->payment_status != null)
 			<div class="m-t-20">
 				<div class="card">
 					@if($rental->payment->payment_status != 'Cancel')
+					@if($rental->payment->payment_status == 'Waiting')
 					<div class="margin-content">
-						@if($rental->payment->payment_status == 'Waiting')
 						@if(Auth::user()->hasRole('Admin'))
 						<b>Admin Section : click on waiting status if this payment is <span class="text-success">pass</span>.</b>
 						{!! Form::open(['route' => ['rentals.approve', $rental->id], 'method' => 'POST']) !!}
@@ -79,17 +105,17 @@
 							</button>
 						{!! Form::close() !!}
 						@endif
-						@endif
 					</div>
+					@endif
 					<div class="margin-content">
 						<label>Payment</label>
 						@if ($rental->payment->payment_status != 'Out of Date')
-						<p> Bank Name : {{ $rental->payment->payment_bankname }} </p>
-						<p> Bank Holder : {{ $rental->payment->payment_holder }} </p>
-						<p> Bank Account : {{ $rental->payment->payment_bankaccount }} </p>
-						<p> Amount : {{ $rental->payment->payment_amount }} Thai Baht</p>
+						<p><b>Bank Name :</b> {{ $rental->payment->payment_bankname }} </p>
+						<p><b>Bank Holder :</b> {{ $rental->payment->payment_holder }} </p>
+						<p><b>Bank Account :</b> {{ $rental->payment->payment_bankaccount }} </p>
+						<p><b>Amount :</b> {{ $rental->payment->payment_amount }} Thai Baht</p>
 						@endif
-						<p> Status : <b>{{ $rental->payment->payment_status }}</b> </p>
+						<p><b>Status :</b> {{ $rental->payment->payment_status }}</b> </p>
 						@if ($rental->payment->payment_status == 'Cancel')
 						<a href="#" class="btn btn-md btn-info">Refund</a>
 						@endif
@@ -115,38 +141,36 @@
 					@endif
 				</div>
 			</div>
-			@elseif ($rental->host_decision != null && $rental->host_decision != 'REJECT')
+			@elseif ($rental->host_decision == 'accept')
 			<div class="m-t-20">
 				<div class="card">
 					<div class="margin-content">
 						<label>{{ $rental->user->user_fname }} Not Paying Yet</label>
 						@if (Auth::user()->id == $rental->user->id)
 						<div>
-							@if ($rental->host_decision == 'ACCEPT')
-								@if ($rental->payment->payment_status == null)
-								{!! Html::linkRoute('rentals.edit', 'Payment', array($rental->id), array('class' => 'btn btn-success btn-sm form-spacing-top-8 m-b-20')) !!}
-								@else
-								<button type="button" class="btn btn-success btn-sm form-spacing-top-8 m-b-20 disabled">
-									<div class="text-center">Payment already submited</div>
-								</button>
+							@if ($rental->payment->payment_status == null)
+							{!! Html::linkRoute('rentals.edit', 'Payment', array($rental->id), array('class' => 'btn btn-success btn-sm form-spacing-top-8 m-b-20')) !!}
+							@else
+							<button type="button" class="btn btn-success btn-sm form-spacing-top-8 m-b-20 disabled">
+								<div class="text-center">Payment already submited</div>
+							</button>
+							@endif
+							<p>{{ $rental->user->user_fname }} must have a payment in time and exactly as payment page show.</p>
+							<p><b>Total price</b> <span class="text-danger">{{$total_price}}</span> Thai Bath!</p>
+							@if ($types == 'apartment')
+							<p>Details</p>
+								@if ($rental->no_type_single > 0)
+								<p><i class="fas fa-bed"></i> Single Room (Standard) : {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'Rooms':'Room' }} - {{ $type_single_price }} Thai Bath.</p>
 								@endif
-								<p>{{ $rental->user->user_fname }} must have a payment in time and exactly as payment page show.</p>
-								<p><b>Total price</b> <span class="text-danger">{{$total_price}}</span> Thai Bath!</p>
-								@if ($types == 'apartment')
-								<p>Details</p>
-									@if ($rental->no_type_single > 0)
-									<p><i class="fas fa-bed"></i> Single Room (Standard) : {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'Rooms':'Room' }} - {{ $type_single_price }} Thai Bath.</p>
-									@endif
-									
-									@if ($rental->no_type_deluxe_single > 0)
-									<p><i class="fas fa-bed"></i> Deluxe Single Room : {{ $rental->no_type_deluxe_single }} {{ $rental->no_type_deluxe_single > 1 ? 'Rooms':'Room' }} - {{ $type_deluxe_single_price }} Thai Bath.</p>
-									@endif
+								
+								@if ($rental->no_type_deluxe_single > 0)
+								<p><i class="fas fa-bed"></i> Deluxe Single Room : {{ $rental->no_type_deluxe_single }} {{ $rental->no_type_deluxe_single > 1 ? 'Rooms':'Room' }} - {{ $type_deluxe_single_price }} Thai Bath.</p>
+								@endif
 
-									@if ($rental->no_type_double_room > 0 )
-									<p><i class="fas fa-bed"></i> Double Room (Standard) : {{ $rental->no_type_double_room }} {{ $rental->no_type_double_room > 1 ? 'Rooms':'Room' }} - {{ $type_double_room_price }} Thai Bath.</p>
-									@endif
-									<p>Service fee {{ $fee}} Thai Bath.</p>
+								@if ($rental->no_type_double_room > 0 )
+								<p><i class="fas fa-bed"></i> Double Room (Standard) : {{ $rental->no_type_double_room }} {{ $rental->no_type_double_room > 1 ? 'Rooms':'Room' }} - {{ $type_double_room_price }} Thai Bath.</p>
 								@endif
+								<p>Service fee {{ $fee}} Thai Bath.</p>
 							@endif
 						</div>
 						@endif
@@ -155,7 +179,7 @@
 			</div>
 			@endif
 
-			@if ($rental->host_decision == 'ACCEPT' && $rental->checkin_status == '1')
+			@if ($rental->host_decision == 'accept' && $rental->checkin_status == '1')
 				@if ($rental->payment->payment_status != 'Out of Date' && $rental->payment->payment_status != 'Cancel' && $rental->payment->payment_status != 'Reject')
 				<div class="m-t-20">
 					<div class="card">
@@ -201,13 +225,11 @@
 									@elseif ( $rental->user->id == Auth::user()->id )
 									<label>Write a Review</label>
 									{!! Form::open(array('route' => 'reviews.store', 'data-parsley-validate' => '')) !!}
-										<!-- <div class="col-md-6 col-sm-6"> -->
 										{{ Form::hidden('house_id', $rental->house_id) }}
 										{{ Form::hidden('rental_id', $rental->id) }}
 
 										{{ Form::label('name', 'Review as') }}
 										{{ Form::text('name', Auth::user()->user_fname . " " . Auth::user()->user_lname, ['class' => 'form-control', 'required' => '', 'readonly' => '']) }}
-										<!-- </div> -->
 										{{ Form::label('clean', 'Clean') }}
 										<div class="star-rating" align="center">
 											@for ($i = 5; $i > 0; $i--)
@@ -264,7 +286,7 @@
 		</div>
 
 		<div class="col-md-4">
-			@if ($rental->checkin_status == '0')
+			@if ($rental->checkin_status == '0' && $rental->payment->payment_status == 'Approved' && Auth::user()->id == $rental->user_id)
 			<div class="row">
 				<h2>Check in Section</h2>
 				<p><small>put checkin code here if it true, you will get granted status</small></p>
@@ -281,7 +303,7 @@
 					{{ Form::label('checkincode', 'Check in') }}
 					{{ Form::text('checkincode', null, array('class' => 'form-control', 'required' => '', 'placeholder' => 'Renter Passport or Checkin Code')) }}
 					<div class="text-center">
-						{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md btn-h1-spacing')) }}
+						{{ Form::submit('Check in', array('class' => 'btn btn-success btn-md m-t-20')) }}
 					</div>
 				{{ Form::close() }}
 			</div>
@@ -292,19 +314,16 @@
 					<label>Rented by:</label>
 					<p> {{ $rental->user->user_fname }} {{ $rental->user->user_lname }} </p>
 					<label>Created at:</label>
-					<p> {{ date('M j, Y', strtotime($rental->created_at)) }} </p>
+					<p> {{ date('M j, Y H:m:s', strtotime($rental->created_at)) }} </p>
 					<label>Last update:</label>
-					<p> {{ date('M j, Y', strtotime($rental->updated_at)) }} </p>
+					<p> {{ date('M j, Y H:m:s', strtotime($rental->updated_at)) }} </p>
 				</div>
 
 				<hr>
 				@if (Auth::user()->id == $rental->house->user_id)
 				<div class="row">
-					<div class="col-sm-4 float-left">
-						<a href="{{ route('rentals.rentmyrooms', $rental->house->user_id) }}" class="btn btn btn-outline-secondary btn-md"><i class="fas fa-chevron-left"></i> Back</a>
-					</div>
 					<div class="col-sm-8 float-left">
-						@if ($rental->host_decision != 'ACCEPT' && $rental->host_decision != 'REJECT'  && $rental->payment->payment_status != 'Cancel')
+						@if ($rental->host_decision == 'waiting' && $rental->payment->payment_status != 'Cancel')
 						{!! Form::open(['route' => ['rentals.accept-rentalrequest', $rental->id]]) !!}
 							<button type="submit" class="btn btn-primary btn-block btn-sm"><i class="far fa-check-circle"></i> Accept</button>
 						{!! Form::close() !!}
@@ -312,9 +331,9 @@
 						{!! Form::open(['route' => ['rentals.reject-rentalrequest', $rental->id]]) !!}
 							<button type="submit" class="btn btn-danger btn-block btn-sm form-spacing-top-8"><i class="far fa-times-circle"></i> Reject</button>
 						{!! Form::close() !!}
-						@elseif ($rental->host_decision == 'ACCEPT' && $rental->payment->payment_status != 'Cancel')
+						@elseif ($rental->host_decision == 'accept' && $rental->payment->payment_status != 'Cancel')
 							<button class="btn btn-default btn-success btn-block btn-sm disabled"><i class="fas fa-check"></i> Accepted</button>
-						@elseif ($rental->host_decision == 'REJECT' && $rental->payment->payment_status != 'Cancel')
+						@elseif ($rental->host_decision == 'reject' && $rental->payment->payment_status != 'Cancel')
 							<button class="btn btn-default btn-danger btn-block btn-sm disabled"><i class="fas fa-check"></i> Rejected</button>
 						@endif
 					</div>
@@ -369,7 +388,7 @@
 				lng: lng
 			},
 			map: map,
-			draggable: true
+			draggable: false
 		});
 
 		var circle = new google.maps.Circle({
