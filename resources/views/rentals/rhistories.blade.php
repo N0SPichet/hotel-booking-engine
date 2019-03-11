@@ -1,5 +1,6 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'Rentals | History')
+
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">

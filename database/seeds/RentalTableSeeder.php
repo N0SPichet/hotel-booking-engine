@@ -7,6 +7,7 @@ use App\Models\Rental;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Mail;
 
 class RentalTableSeeder extends Seeder
 {
@@ -45,6 +46,7 @@ class RentalTableSeeder extends Seeder
         $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
+        $this->sentMail($rental);
 
     	// sample 2
     	$today = $today->subDays(3);
@@ -74,6 +76,7 @@ class RentalTableSeeder extends Seeder
         $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
+        $this->sentMail($rental);
 
         // sample 3
     	$today = $today->addDays(3);
@@ -96,6 +99,7 @@ class RentalTableSeeder extends Seeder
         $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
+        $this->sentMail($rental);
 
         // sample 4
     	$today = $today->addDays(3);
@@ -129,5 +133,43 @@ class RentalTableSeeder extends Seeder
         $rental->house_id = $house->id;
         $rental->payment_id = $payment->id;
         $rental->save();
+        $this->sentMail($rental);
+    }
+
+    public function sentMail($rental)
+    {
+        $message = null;
+        $endmessage = "Please check Rentals page to accept this request";
+
+        $data = array(
+            'email' => $rental->house->user->email,
+            'subject' => "LTT - You have new customer for rental #".$rental->id,
+            'bodyMessage' => $message,
+            'endmessage' => $endmessage,
+            'rental' => $rental
+        );
+
+        Mail::send('emails.booking_request', $data, function($message) use ($data){
+            $message->from('noreply@ltt.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
+        
+        $message =  null;
+        $endmessage = "Now, wait for host accept your booking and have a payment!";
+
+        $data = array(
+            'email' => $rental->user->email,
+            'subject' => "LTT - Booking Confirmation for rental #".$rental->id,
+            'bodyMessage' => $message,
+            'endmessage' => $endmessage,
+            'rental' => $rental
+        );
+
+        Mail::send('emails.booking_confirm', $data, function($message) use ($data){
+            $message->from('noreply@ltt.com');
+            $message->to($data['email']);
+            $message->subject($data['subject']);
+        });
     }
 }

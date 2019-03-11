@@ -1,5 +1,6 @@
-@extends ('main')
+@extends (Auth::user()->hasRole('Admin')==true?'dashboard.main':'main')
 @section ('title', $user->user_fname . ' Profile')
+
 @section ('content')
 <div class="container">
 	@if (Auth::user()->hasRole('Admin'))
@@ -32,7 +33,7 @@
 				<p><b>Province</b> {{ $user->province->name }}</p>
 				@endif
 				<p><b>Description </b>{!! $user->user_description !!}</p>
-				<p><b>Rating </b>{{ $user->user_score }}</p>
+				<p><b>Rating <span class="@if ($user->user_score >= 8) text-success @elseif ($user->user_score >= 5) text-warning @else text-danger @endif">{{ $user->user_score }}</span></b></p>
 				<p><b>Join Date</b> {{ date('jS F, Y', strtotime($user->created_at)) }} ({{ $user->created_at->diffForHumans() }})</p>
 			</div>
 		</div>
@@ -41,28 +42,34 @@
 			<p class="lead">Hosting List</p>
 			@if (Auth::check())
 			@if (Auth::user()->id == $user->id || Auth::user()->hasRole('Admin'))
+			@if (count($user->houses))
 			@foreach ($houses as $house)
 				<a href="{{ route('rooms.owner', $house->id) }}" class="btn btn-outline-secondary btn-md btn-block">
 					<div align="left">
-						<p>Title : {{ $house->house_title }} @if ($house->rentals->count() >= 0) <span>, has {{ $house->rentals->count() }} {{ $house->rentals->count()>1?'rentals':'rental' }}</span>@endif</p>
-						<p>Last update : {{ date("jS F, Y", strtotime($house->updated_at)) }}</p>
+						<p>Title : {{ $house->house_title }} ( rating @if ($house->rentals->count()>0) {{$house->rentals->where('checkin_status', '1')->count()/$house->rentals->count()}} @else 0 @endif)</p>
+						<p>Last update : {{ date("jS F, Y", strtotime($house->updated_at)) }} ({{ $house->updated_at->diffForHumans() }})</p>
 					</div>
 				</a>
 			@endforeach
 			@else
+			<p>No result</p>
+			@endif
+			@else
+			@if (count($user->houses))
 			@foreach ($houses as $house)
 				@if($house->checkType($house->id))
-				<a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-info btn-sm btn-block">
-					<p>{{ $house->house_title }}</p>
-					<p>@if ($house->rentals->count() >= 0) <span>has {{ $house->rentals->count() }} {{ $house->rentals->count()>1?'rentals':'rental' }}</span>@endif</p>
+				<a href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-info btn-md btn-block">
+					<p>{{ $house->house_title }} ( rating @if ($house->rentals->count()>0) {{$house->rentals->where('checkin_status', '1')->count()/$house->rentals->count()}} @else 0 @endif)</p>
 				</a>
 				@else
-				<a href="{{ route('apartments.show', $house->id) }}" class="btn btn-outline-info btn-sm btn-block">
-					<p>{{ $house->house_title }}</p>
-					<p>@if ($house->rentals->count() >= 0) <span>has {{ $house->rentals->count() }} {{ $house->rentals->count()>1?'rentals':'rental' }}</span>@endif</p>
+				<a href="{{ route('apartments.show', $house->id) }}" class="btn btn-outline-info btn-md btn-block">
+					<p>{{ $house->house_title }} ( rating @if ($house->rentals->count()>0) {{$house->rentals->where('checkin_status', '1')->count()/$house->rentals->count()}} @else 0 @endif)</p>
 				</a>
 				@endif
 			@endforeach
+			@else
+			<p>No result</p>
+			@endif
 			@endif
 			@endif
 		</div>

@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('dashboard.main')
 @section ('title', 'Edit My Account')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
@@ -13,6 +13,11 @@
 
 @section ('content')
 <div class="container">
+	<div class="row m-t-10">
+		<div class="col-sm-12">
+			<a href="{{route('dashboard.account.index')}}" class="btn btn-outline-secondary">Back to My Account</a>
+		</div>
+	</div>
 	<div class="row m-t-10">
 		{!! Form::model($user, ['route' => ['users.update', $user->id], 'method' => 'PUT']) !!}
 			{{ csrf_field() }}		
@@ -69,7 +74,7 @@
 		<div class="col-md-6 float-left">
 			{{ Form::label('user_gender', 'Gender', array('class' => 'm-t-10')) }}
 			<select class="form-control input-md" name="user_gender">
-				<option value="0" {{ $user->user_gender===null ? 'selected':'' }}>Select Gender</option>
+				<option disabled="">Select Gender</option>
 				<option value="1" {{ $user->user_gender==='1' ? 'selected'  : '' }}>Male</option>
 				<option value="2" {{ $user->user_gender==='2' ? 'selected'  : '' }}>Female</option>
 			</select>
@@ -80,10 +85,6 @@
 	</div>
 	<div class="row">
 		<div class="margin-auto center">
-			<div class="col ">
-				{!! Html::linkRoute('users.profile', 'Back to My Account', array($user->id), array('class' => 'btn btn-info m-t-20')) !!}
-			</div>
-
 			<div class="col ">
 				{{ Form::submit('Update', ['class' => 'btn btn-success m-t-20']) }}
 			</div>

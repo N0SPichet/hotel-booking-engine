@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'Edit Apartment')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}

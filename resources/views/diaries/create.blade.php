@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'My Diary | Create')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
@@ -27,6 +27,7 @@
 
 				{{ Form::label('category_name', 'Category:', ['class' => 'm-t-20']) }}
 				<select class="form-control form-spacing-top-8" name="category_id">
+					<option value="0" disabled="">Select category</option>
 					@foreach ($categories as $category)
 					<option value="{{ $category->id }}">{{ $category->name }}</option>
 					@endforeach
@@ -35,7 +36,7 @@
 				{{ Form::label('tags', 'Tag: ', ['class' => 'm-t-20']) }}
 				<div class="row ">
 					@foreach ($tags as $tag)
-					<div class="col" >
+					<div class="col-md-6 col-sm-6 float-left" >
 						{{ Form::checkbox('tags[]', $tag->id, null, ['class' => 'field', 'multiple' => 'multiple', 'id' => "tag$tag->id"]) }}
 						{{ Form::label('tag' . $tag->id, $tag->name) }}
 					</div>
@@ -48,7 +49,7 @@
 				{{ Form::label('message', 'Message: ', ['class' => 'm-t-20']) }}
 				{{ Form::textarea('message', null, array('class' => 'form-control input-lg', 'rows' => '5')) }}
 				
-				{{ Form::submit('Create Post', array('class' => 'btn btn-success btn-lg form-spacing-top')) }}
+				{{ Form::submit('Create Post', array('class' => 'btn btn-success form-spacing-top')) }}
 			{!! Form::close() !!}
 		</div>
 	</div>

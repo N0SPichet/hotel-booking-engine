@@ -1,4 +1,9 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand');
+html, body{ height:100%; margin:0; }
+body{ 
+  display:flex; 
+  flex-direction:column; 
+}
 body {
     font-family: 'Quicksand', sans-serif;
     font-size: 16px;
@@ -181,7 +186,8 @@ a:hover {
 }
 
 .footer {
-    margin-top: 20px;
+    /*margin-top: 20px;*/
+    margin-top: auto;
     width: 100%;
     padding: 10px 0;
     color: #000;
@@ -190,6 +196,7 @@ a:hover {
 }
 .footer.manage {
     background-color: #03363e;
+    color: #fff;
 }
 .footer a {
     text-decoration: underline;
@@ -402,6 +409,9 @@ img.img-responsive {
 .p-r-40 {
     float: right!important;
     right: 40px;
+}
+.help-block {
+    color: red;
 }
 .btn-submit-green-color {
     width: 100%;
@@ -662,7 +672,22 @@ span.use_as_home_thum {
     width: 100%;
     height: 300px;
 }
-
+.dashboard-index li.nav-item a {
+    padding: 10px;
+    line-height: 20px;
+    color: #000;
+    display: block;
+}
+.dashboard-index li.nav-item {
+    border-bottom: solid 1px #0000;
+}
+.dashboard-index li.nav-item.active, .dashboard-index li.nav-item:hover {
+    background: #87b9c1;
+    border-bottom: solid 1px #000;
+}
+.dashboard-index .text-title {
+    text-transform: capitalize;
+}
 @media only screen and (max-width: 450px) {
     .checkin-preview .rental-id, .checkin-preview .stay-date, .checkin-preview .rental-payment {
         width: 100%;

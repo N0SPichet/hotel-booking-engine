@@ -1,5 +1,4 @@
-@extends ('main')
-
+@extends ('dashboard.main')
 @section ('title', $user->user_fname . ' ' . 'Profile')
 
 @section ('content')
@@ -8,10 +7,7 @@
 		<div class="card col-12">
 			<div class="card-body">
 				<div class="card-title">
-					<h1>{{ $user->user_fname }} Account @if (Auth::user()->hasRole('Admin'))<small>Role:{{$user->roles[0]->name}}</small>@endif @if ($user->verification->verify === '1') <small style="color: green;"><i class="far fa-check-circle"></i>verifired</small> @endif</h1>
-					@if ($user->verification->verify !== '1')
-					<p class="text-danger"><a href="{{ route('users.verify-user', $user->id) }}" class="btn btn-outline-danger">Verify</a> before become hosting or rent a room.</p>
-					@endif
+					<h1>{{ Auth::user()->user_fname }}'s Account @if (Auth::user()->hasRole('Admin'))<small>Role:{{Auth::user()->roles[0]->name}}</small>@endif @if (Auth::user()->verification->verify === '1') <small class="text-success"><i class="far fa-check-circle"></i> verifired</small> @else <small class="text-danger"><a href="{{ route('users.verify-user', Auth::user()->id) }}" class="btn btn-outline-danger"><i class="fa fa-exclamation-circle"></i> unverify</a></small>@endif</h1>
 				</div>
 				<div class="card-text">
 					@if ($user->verification->passport != null)
@@ -21,6 +17,13 @@
 						<p>passport code you can use to identify yourself when checkin. please keep it's secret and don't tell anyone or hosts that you has rent their's home.</p>
 					</div>
 					@endif
+					<div class="col-md-4 col-sm-4 float-left" align="center">
+						@if ($user->user_image == null)
+						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="rounded-circle img-responsive">
+						@else
+						<img src="{{ asset('images/users/'. $user->id . '/' . $user->user_image) }}" class="rounded-circle img-responsive">
+						@endif
+					</div>
 					<div class="col-md-8 col-sm-8 float-left">
 						<dl class="dl-horizontal">
 							<dt>Name</dt>
@@ -63,37 +66,13 @@
 							@endif
 						</dl>
 					</div>
-
-					<div class="col-md-4 col-sm-4 float-left" align="center">
-						@if ($user->user_image == null)
-						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="rounded-circle" style="width:150px; height: 150px; ">
-						@else
-						<img src="{{ asset('images/users/'. $user->id . '/' . $user->user_image) }}" class="rounded-circle" style="width:150px; height: 150px;">
-						@endif
-
-						{!! Form::open(['route' => ['users.updateimage', $user->id], 'files' => true]) !!}
-							{{ Form::label('user_image', 'Profile Photo', array('class' => 'form-spacing-top-8 text-center')) }}
-								
-							<div class="fileupload fileupload-new text-center" data-provides="fileupload">
-							    <span class="btn btn-primary btn-file">
-							    	<span class="fileupload-new">Select file</span>
-							    	<span class="fileupload-exists">Change</span>
-							    	<input name="user_image" type="file" id="user_image">
-							    </span>
-							</div>
-
-							<div style="width: 50%;">
-								{{ Form::submit('Update image', ['class' => 'btn btn-success btn-block']) }}
-							</div>
-						{!! Form::close() !!}
-					</div>
 				</div>
 			</div>
 		</div>
 		<div class="card col-12 m-t-10">
 			<div class="margin-content">
 				<div class="col-md-3 col-sm-3 float-left">
-					{!! Html::linkRoute('users.edit', 'Update Account', array($user->id), array('class' => 'btn btn-info btn-block')) !!}
+					{!! Html::linkRoute('dashboard.account.index', 'Update', null, array('class' => 'btn btn-info btn-block')) !!}
 				</div>
 
 				<div class="col-md-3 col-sm-3 float-left">

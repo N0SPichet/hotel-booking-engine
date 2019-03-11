@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'Delete comment')
 
 @section ('content')

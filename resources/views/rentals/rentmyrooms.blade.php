@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'Rentals')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
@@ -6,6 +6,11 @@
 
 @section ('content')
 <div class="container rentals">
+	<div class="row m-t-10">
+		<div class="col-sm-12">
+			<a href="{{route('dashboard.index')}}" class="btn btn-outline-secondary">Back to Dashboard</a>
+		</div>
+	</div>
 	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h1>Rentals</h1>

@@ -19,14 +19,19 @@ Route::get('/home', 'PagesController@index')->name('home');
 Route::post('/search', 'PagesController@indexSearch')->name('search');
 
 //Create PagesController Route
-Route::get('summary', 'PagesController@summary')->name('summary');
 Route::get('about-us', 'PagesController@aboutus')->name('aboutus');
-Route::prefix('dashboard')->name('manages.')->group(function() {
-	Route::get('{user}', 'PagesController@manages_index')->name('index');
-	Route::get('{user}/rooms/online', 'PagesController@manages_rooms_online')->name('rooms.online');
-	Route::get('{user}/rooms/offline', 'PagesController@manages_rooms_offline')->name('rooms.offline');
-	Route::get('{user}/apartments/online', 'PagesController@manages_apartments_online')->name('apartments.online');
-	Route::get('{user}/apartments/offline', 'PagesController@manages_apartments_offline')->name('apartments.offline');
+Route::prefix('dashboard')->name('dashboard.')->group(function() {
+	Route::get('', 'PagesController@dashboard_index')->name('index');
+	Route::get('diaries', 'PagesController@dashboard_diaries_index')->name('diaries.index');
+	Route::get('trips', 'PagesController@dashboard_trips_index')->name('trips.index');
+	Route::get('hosts', 'PagesController@dashboard_hosts_index')->name('hosts.index');
+	Route::get('rentals', 'PagesController@dashboard_rentals_index')->name('rentals.index');
+	Route::get('summary', 'PagesController@dashboard_summary_index')->name('summary.index');
+	Route::get('account', 'PagesController@dashboard_account_index')->name('account.index');
+	Route::get('{user}/rooms/online', 'PagesController@dashboard_rooms_online')->name('rooms.online');
+	Route::get('{user}/rooms/offline', 'PagesController@dashboard_rooms_offline')->name('rooms.offline');
+	Route::get('{user}/apartments/online', 'PagesController@dashboard_apartments_online')->name('apartments.online');
+	Route::get('{user}/apartments/offline', 'PagesController@dashboard_apartments_offline')->name('apartments.offline');
 });
 
 //Create resource route for UserController

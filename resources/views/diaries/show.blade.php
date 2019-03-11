@@ -58,18 +58,18 @@
 				<div class="col-md-10 m-t-50">
 					@if ($diary->user->user_image == NULL)
 					<div class="author-info">
-						<img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image">
+						<a href="{{route('users.show', $diary->user_id)}}"><img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image"></a>
 						<div class="author-name">
-							<h4>{{ $diary->user->user_fname }}</h4>
-							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }} (last update {{ $diary->updated_at->diffForHumans() }})</p>
+							<a href="{{route('users.show', $diary->user_id)}}"><h4>{{ $diary->user->user_fname }}</h4>
+							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }} (last update {{ $diary->updated_at->diffForHumans() }})</p></a>
 						</div>
 					</div>
 					@else
 					<div class="author-info">
-						<img src="{{ asset('images/users/' . $diary->user->user_image) }}" class="author-image">
+						<a href="{{route('users.show', $diary->user_id)}}"><img src="{{ asset('images/users/'.$diary->user_id.'/'.$diary->user->user_image) }}" class="author-image"></a>
 						<div class="author-name">
-							<h4>{{ $diary->user->user_fname }}</h4>
-							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }}</p>
+							<a href="{{route('users.show', $diary->user_id)}}"><h4>{{ $diary->user->user_fname }}</h4>
+							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }}</p></a>
 						</div>
 
 					</div>

@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', $rental->user->user_fname.' | '.$rental->house->district->name.' '.$rental->house->province->name.' | Trip')
 @section('stylesheets')
 <script src="https://cloud.tinymce.com/stable/tinymce.min.js?apiKey=qei14aeigd6p0lkquybi330fte0vp7ne9ullaou6d5ti437y"></script>

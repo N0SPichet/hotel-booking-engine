@@ -89,7 +89,7 @@ class HelpController extends Controller
         });
 
         Session::flash('success', 'Your Email was sent');
-        return redirect()->route('rooms.show', $request->houseId);
+        return back();
     }
 
     public function getmaps ()

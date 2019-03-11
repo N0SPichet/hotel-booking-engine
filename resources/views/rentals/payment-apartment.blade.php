@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('dashboard.main')
 @section ('title', 'Room Detail | Payment')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}

@@ -240,6 +240,7 @@
 					@endforeach
 					<a id="readMoreReviews" href="#" class="btn btn-info btn-sm form-spacing-top-8">Read more reviews</a>
 	    		</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -248,10 +249,6 @@
 @section('scripts')
 {!! Html::script('js/parsley.min.js') !!}
 <script type="text/javascript">
-	$(document).ready(function() {
-		
-	});
-
 	$(document).ready(function(){
   		var datein=$('input[name="datein"]'); //our date input has the name "date"
   		var dateout=$('input[name="dateout"]'); //our date input has the name "date"

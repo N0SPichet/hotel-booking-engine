@@ -1,5 +1,4 @@
-@extends('main')
-
+@extends('dashboard.main')
 @section('title','User Verification')
 
 @section('content')
@@ -15,7 +14,7 @@
                         <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
                             <label for="title" class="col-md-4 control-label">Title</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <select id="title" type="select" class="form-control" name="title" value="{{ old('title') }}" required autofocus>
                                     <option value="Mr." {{ Auth::user()->verification->title === 'Mr.' ? 'selected':'' }}>Mr.</option>
                                     <option value="Mrs." {{ Auth::user()->verification->title === 'Mrs.' ? 'selected':'' }}>Mrs.</option>
@@ -36,7 +35,7 @@
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
                             <label for="name" class="col-md-4 control-label">Name</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <input id="name" type="text" class="form-control" name="name" value="{{ Auth::user()->verification->name}}" required autofocus>
 
                                 @if ($errors->has('name'))
@@ -50,7 +49,7 @@
                         <div class="in-line form-group{{ $errors->has('lastname') ? ' has-error' : '' }}">
                             <label for="lastname" class="col-md-4 control-label">Last Name</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <input id="lastname" type="text" class="form-control" name="lastname" value="{{ Auth::user()->verification->lastname}}" required autofocus>
 
                                 @if ($errors->has('lastname'))
@@ -64,7 +63,7 @@
                         <div class="in-line form-group{{ $errors->has('secret') ? ' has-error' : '' }}">
                             <label for="secret" class="col-md-4 control-label">Your secret</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <input id="secret" type="text" class="form-control" name="secret" value="{{ Auth::user()->verification->secret}}" required autofocus>
 
                                 @if ($errors->has('secret'))
@@ -78,7 +77,7 @@
                         <div class="form-group{{ $errors->has('id_card') ? ' has-error' : '' }}">
                             <label for="id_card" class="col-md-4 control-label">ID Card</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <input id="id_card" type="file" class="" name="id_card" value="{{ old('id_card') }}" required autofocus>
 
                                 @if ($errors->has('id_card'))
@@ -92,7 +91,7 @@
                         <div class="form-group{{ $errors->has('census_registration') ? ' has-error' : '' }}">
                             <label for="census_registration" class="col-md-4 control-label">Census Registration</label>
 
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <input id="census_registration" type="file" class="" name="census_registration" value="{{ old('census_registration') }}" required autofocus>
 
                                 @if ($errors->has('census_registration'))

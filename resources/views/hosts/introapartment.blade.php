@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'Introduction to Hosting Apartment')
 @section ('content')
 <div class="container">

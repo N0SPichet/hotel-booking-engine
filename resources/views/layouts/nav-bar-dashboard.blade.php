@@ -4,7 +4,7 @@
 		<nav>
 			<h2>Main Navigation</h2>
 			<ul>
-				<li><a href="{{ route('manages.index', Auth::user()->id) }}">Dashboard</a></li>
+				<li><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
 				@if(Auth::check())
 				@if (Auth::user()->hasRole('Admin'))
 				<li>
@@ -30,21 +30,12 @@
 					</ul>
 				</li>
 				@endif
-				<li><a href="{{ route('rentals.rentmyrooms', Auth::user()->id) }}">Manage Rentals</a></li>
-				<li>
-					<a href="#">Hosting<i class="material-icons">keyboard_arrow_down</i></a>
-					<ul class="hav-sub-nav">
-						<li><a href="{{ route('hosts.introroom') }}">Room</a></li>
-						<li><a href="{{ route('hosts.introapartment') }}">Apartment</a></li>
-					</ul>
-				</li>
 				<li><a href="{{ route('rentals.mytrips', Auth::user()->id) }}">Trips</a></li>
 				<li>
 					<a href="#">{{ Auth::user()->user_fname }} Account <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
 						<li><a href="{{ route('users.profile', Auth::user()->id) }}">Profile</a></li>
 						<li><a href="{{ route('diaries.mydiaries', Auth::user()->id) }}">My Diaries</a></li>
-						<li><a href="{{ route('summary') }}">Rental Summary</a></li>
 						<li><a href="{{ route('helps.index') }}">Help</a></li>
 						<li class="dropdown-divider"></li>
 						<li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
