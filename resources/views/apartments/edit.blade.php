@@ -57,7 +57,7 @@
 						<h2>Basic</h2>
 						{{ Form::label('housetype_id', '* What type of property is this?', ['class' => 'm-t-10']) }}
 						<select id="housetype_id" class="form-control m-t-10" name="housetype_id">
-							<option value="0" disabled="">Select Types</option>
+							<option value="0" disabled="">Select Type</option>
 							@foreach ($types as $type)
 							@if($house->housetype_id !== null)
 							<option value="{{ $type->id }}" {{ $type->id==$house->housetype_id? 'selected':'' }}>{{ $type->name }}</option>

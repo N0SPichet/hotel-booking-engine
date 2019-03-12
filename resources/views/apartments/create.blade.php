@@ -60,6 +60,7 @@
 						
 						{{ Form::label('housetype_id', '* What type of property is this?') }}
 						<select class="form-control m-t-10" name="housetype_id">
+							<option value="0" disabled="">Select Type</option>
 							@foreach ($types as $type)
 							<option value="{{ $type->id }}">{{ $type->name }}</option>
 							@endforeach
