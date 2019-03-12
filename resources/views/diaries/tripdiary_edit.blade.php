@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'Edit Trip Diary '. ($day != '0' ? 'Day '.$day: ''))
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
@@ -25,6 +25,7 @@
 
 				{{ Form::label('category_id', 'Category:', ['class' => 'form-spacing-top']) }}
 				<select class="form-control form-spacing-top-8" name="category_id">
+					<option value="0" disabled="">Select category</option>
 					@foreach ($categories as $category)
 					<option value="{{ $category->id }}" {{ $diary->category_id==$category->id? 'selected':'' }}>{{ $category->name }}</option>
 					@endforeach
@@ -33,7 +34,7 @@
 				{{ Form::label('tags', 'Tag: ', ['class' => 'form-spacing-top']) }}
 				<div class="row ">
 					@foreach ($tags as $tag)
-					<div class="col-sm-3 float-left" >
+					<div class="col-md-6 col-sm-6 float-left" >
 						{{ Form::checkbox('tags[]', $tag->id, null, ['class' => 'field', 'multiple' => 'multiple', 'id' => "tag$tag->id"]) }}
 						{{ Form::label('tag' . $tag->id, $tag->name) }}
 					</div>

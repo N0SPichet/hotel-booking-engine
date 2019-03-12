@@ -41,8 +41,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($userId)
     {
+        $user = User::find($userId);
         if (!is_null($user)) {
             $houses = House::where('user_id', $user->id)->get();
             return view('users.show')->with('user', $user)->with('houses', $houses);
@@ -59,19 +60,22 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(User $user)
+    public function edit($userId)
     {
-        if (Auth::user()->id === $user->id) {
-            $provinces = Province::all();
-            $districts = District::where('province_id', $provinces[0]->id)->get();
-            $sub_districts = SubDistrict::where('district_id', $districts[0]->id)->get();
-            if ($user->province_id !== null) {
-                $districts = District::where('province_id', $user->province_id)->get();
+        $user = User::find($userId);
+        if (!is_null($user)) {
+            if (Auth::user()->id == $user->id) {
+                $provinces = Province::all();
+                $districts = District::where('province_id', $provinces[0]->id)->get();
+                $sub_districts = SubDistrict::where('district_id', $districts[0]->id)->get();
+                if ($user->province_id !== null) {
+                    $districts = District::where('province_id', $user->province_id)->get();
+                }
+                if ($user->district_id !== null) {
+                    $sub_districts = SubDistrict::where('district_id', $user->district_id)->get();
+                }
+                return view('users.edit')->with('sub_districts', $sub_districts)->with('districts', $districts)->with('provinces', $provinces)->with('user', $user);
             }
-            if ($user->district_id !== null) {
-                $sub_districts = SubDistrict::where('district_id', $user->district_id)->get();
-            }
-            return view('users.edit')->with('sub_districts', $sub_districts)->with('districts', $districts)->with('provinces', $provinces)->with('user', $user);
         }
         Session::flash('fail', 'Unauthorized access.');
         return back();
@@ -86,7 +90,7 @@ class UserController extends Controller
      */
     public function update(User $user, Request $request)
     {
-        if (Auth::user()->id === $user->id) {
+        if (Auth::user()->id == $user->id) {
             if ($request->user_gender !== 0) {
                 $user['user_gender'] = $request->user_gender;
             }
@@ -110,7 +114,7 @@ class UserController extends Controller
             $user->update($request->all());
             Session::flash('success', 'Profile updated successfully.');
             $user->save();
-            return redirect()->route('users.profile', $user->id);
+            return redirect()->route('dashboard.account.index');
         }
         Session::flash('fail', 'Unauthorized access.');
         return back();
@@ -224,11 +228,8 @@ class UserController extends Controller
             }
             $verification->save();
             Session::flash('success', "Thank you, It will be considered shortly after, the maximum time of consideration being 24 hours. In case your request is declined, you will receive a notification to your e-mail address.");
-            return redirect()->route('users.profile', Auth::user()->id);
         }
-        else {
-            return redirect()->route('users.profile', Auth::user()->id);
-        }
+        return redirect()->route('dashboard.account.index');
     }
 
     public function verify_approve(User $user)
@@ -320,7 +321,7 @@ class UserController extends Controller
 
             $user->save();
             Session::flash('success', 'Your profile picture has been updated.');
-            return redirect()->route('users.profile', $user->id);
+            return redirect()->route('dashboard.account.index');
         }
         else {
             Session::flash('fail', 'This user is no longer available.');

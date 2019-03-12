@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', $diaries[0]->title. ' | ' .'My Diary')
 
 @section ('content')
@@ -120,7 +120,7 @@
 			</div>
 			@else
 			<div class="author-info">
-				<img src="{{ asset('images/users/' . $diaries[0]->user->user_image) }}" class="author-image">
+				<img src="{{ asset('images/users/'.$diaries[0]->user_id.'/'.$diaries[0]->user->user_image) }}" class="author-image">
 				<div class="author-name">
 					<h4>{{ $diaries[0]->user->user_fname }}</h4>
 					<p class="author-time">Published on {{ date('jS F, Y', strtotime($diaries[0]->created_at)) }}</p>

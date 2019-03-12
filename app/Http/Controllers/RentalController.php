@@ -311,15 +311,15 @@ class RentalController extends Controller
         $rental->payment_id = $payment->id;
         $rental->save();
 
-        $premessage = "Dear " . $rental->house->user->user_fname;
-        $detailmessage = $rental->user->user_fname . " " . $rental->user->user_lname . " request to booking your room. Please check Rentals page for accept this request";
+        $message = null;
+        $endmessage = "Please check Rentals page to accept this request";
 
         $data = array(
             'email' => $rental->house->user->email,
-            'subject' => "LTT - You have new customer",
-            'bodyMessage' => $premessage,
-            'detailmessage' => $detailmessage,
-            'ownerId' => $rental->house_id
+            'subject' => "LTT - You have new customer for rental #".$rental->id,
+            'bodyMessage' => $message,
+            'endmessage' => $endmessage,
+            'rental' => $rental
         );
 
         Mail::send('emails.booking_request', $data, function($message) use ($data){
@@ -328,18 +328,15 @@ class RentalController extends Controller
             $message->subject($data['subject']);
         });
 
-        $premessage = "Dear " . $rental->user->user_fname;
-        $detailmessage = $rental->user->user_fname . " " . $rental->user->user_lname . " you was succussfully booking stay date " . date('jS F, Y', strtotime($rental->rental_datein)) . " to " . date('jS F, Y', strtotime($rental->rental_dateout));
+        $message =  null;
         $endmessage = "Now, wait for host accept your booking and have a payment!";
 
         $data = array(
             'email' => $rental->user->email,
-            'subject' => "LTT - Booking request confirm",
-            'bodyMessage' => $premessage,
-            'detailmessage' => $detailmessage,
-            'guest' => $rental->rental_guest,
+            'subject' => "LTT - Booking Confirmation for rental #".$rental->id,
+            'bodyMessage' => $message,
             'endmessage' => $endmessage,
-            'rentlUserId' => $rental->user_id
+            'rental' => $rental
         );
 
         Mail::send('emails.booking_confirm', $data, function($message) use ($data){
@@ -348,9 +345,7 @@ class RentalController extends Controller
             $message->subject($data['subject']);
         });
 
-
         Session::flash('success', 'You was succussfully booking, Now wait for host accept your booking and have a payment!');
-
         return redirect()->route('rentals.mytrips', Auth::user()->id);
     }
 
@@ -908,7 +903,7 @@ class RentalController extends Controller
                     return view('rentals.checkin-preview')->with('checkinBy', $checkinBy)->with('rental', $rental)->with('checkincode', $request->checkincode);
                 }
                 else {
-                    Session::flash('fail', "Code invalid.");
+                    Session::flash('fail', "code is invalid.");
                     return redirect()->route('rentals.rentmyrooms', Auth::user()->id)->withInput();
                 }
             }
@@ -979,7 +974,7 @@ class RentalController extends Controller
                     }
                 }
             }
-            Session::flash('fail', $request->checkincode . " is invalid code.");
+            Session::flash('fail', $request->checkincode . " is invalid.");
             return redirect()->route('rentals.show', $rental->id);
         }
         if (!is_null($rental)) {
@@ -1042,7 +1037,7 @@ class RentalController extends Controller
                 }
             }
         }
-        Session::flash('fail', $request->checkincode . " is invalid code.");
+        Session::flash('fail', $request->checkincode . " is invalid.");
         return redirect()->route('rentals.rentmyrooms', Auth::user()->id)->withInput();
     }
 }

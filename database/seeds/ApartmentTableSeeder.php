@@ -53,7 +53,12 @@ class ApartmentTableSeeder extends Seeder
             $food->save();
 
             $house = new House;
-            $house->publish = $publish[rand(0, count($publish)-1)];
+            if ($i == 1) {
+                $house->publish = '1';
+            }
+            else {
+                $house->publish = $publish[rand(0, count($publish)-1)];
+            }
             $house->house_title = $faker->text(16);
             $house->house_capacity = rand(1, 2);
             $house->house_property = 'Hotel';

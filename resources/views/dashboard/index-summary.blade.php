@@ -6,9 +6,9 @@ $earningdataPoints = array(
 );
 
 $hostdataPoints = array( 
-	array("label"=>"Accepted", "symbol" => "Accepted","y"=> ($rentals != 0 ? number_format((float)(($rental_accept/$rentals)*100), 2, '.', '') : 0) ),
-	array("label"=>"Rejected", "symbol" => "Rejected","y"=> ($rentals != 0 ? number_format((float)(($rental_reject/$rentals)*100), 2, '.', '') : 0) ),
-	array("label"=>"Ignored", "symbol" => "Ignored","y"=> ($rentals != 0 ? number_format((float)(($rental_ignore/$rentals)*100), 2, '.', '') : 0) ),
+	array("label"=>"Accepted", "symbol" => "Accepted","y"=> ($rentals->count() != 0 ? number_format((float)(($rental_accept/$rentals->count())*100), 2, '.', '') : 0) ),
+	array("label"=>"Rejected", "symbol" => "Rejected","y"=> ($rentals->count() != 0 ? number_format((float)(($rental_reject/$rentals->count())*100), 2, '.', '') : 0) ),
+	array("label"=>"Ignored", "symbol" => "Ignored","y"=> ($rentals->count() != 0 ? number_format((float)(($rental_ignore/$rentals->count())*100), 2, '.', '') : 0) ),
 );
 
 $cusdataPoints = array( 
@@ -21,10 +21,16 @@ $cusdataPoints = array(
  
 ?>
 
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'SUMMARY')
+
 @section ('content')
 <div class="container">
+	<div class="row m-t-10">
+		<div class="col-sm-12">
+			<a href="{{route('dashboard.index')}}" class="btn btn-outline-secondary">Back to Dashboard</a>
+		</div>
+	</div>
 	<div class="row m-t-10">
 		<div class="col-md-12">
 			<h1>Summary</h1>

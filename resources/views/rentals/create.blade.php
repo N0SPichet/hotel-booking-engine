@@ -1,5 +1,4 @@
 @extends ('main')
-
 @section ('title', 'Rental Detail')
 
 @section ('content')

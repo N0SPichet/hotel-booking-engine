@@ -273,6 +273,7 @@
 					@endforeach
 					<a id="readMoreReviews" href="#" class="btn btn-info btn-sm form-spacing-top-8">Read more reviews</a>
 	    		</div>
+			</div>
 		</div>
 	</div>
 </div>

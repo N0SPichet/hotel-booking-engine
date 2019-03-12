@@ -15,9 +15,9 @@
     {{ Html::style('css/styles.css') }}
   </head>
   <body>
-    @include('manages.nav-bar')
+    @include('layouts.nav-bar-dashboard')
     @include('pages._messages')
-    <div class="clearfix">
+    <div class="clearfix m-b-20">
         @yield('content')
     </div>
     @include('layouts.footer')

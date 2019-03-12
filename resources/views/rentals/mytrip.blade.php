@@ -1,4 +1,4 @@
-@extends ('main')
+@extends ('dashboard.main')
 @section ('title', 'Your Trip')
 
 @section ('content')
@@ -26,14 +26,16 @@
 					<div class="col-md-6 float-left">
 						<a href="{{ route('rentals.show', $rental->id) }}" style="text-decoration-line: none;">
 						@if ($rental->payment->payment_status == 'Approved' && $rental->checkin_status == '0' )
-						<p class="text-primary"><b>Payment Complete.</b></p>
-						@elseif ( $rental->host_decision == 'accept' && $rental->checkin_status == '0' )
-						<p class="text-primary"><b>Host Accepted.</b></p>
+						<p class="text-primary"><b>payment complete.</b></p>
 						@elseif ( $rental->payment->payment_status == 'Approved' && $rental->checkin_status == '1' )
-						<p class="text-success"><b>Confirmed.</b></p>
+						<p class="text-success"><b>checkin confirmed.</b></p>
+						@elseif ( $rental->host_decision == 'accept' && $rental->checkin_status == '0' )
+						<p class="text-primary"><b>host accepted.</b></p>
+						@else
+						<p class="text-danger">{{$rental->payment->payment_status!=null?"payment ".$rental->payment->payment_status:"host ".$rental->host_decision}}</p>
 						@endif
 						<p>@if($rental->house->checkType($rental->house_id)) <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @else <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->house->house_title }}  </p>
-						<p><i class="far fa-calendar-alt"></i> Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))+1 }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))+1>'1'?'days':'day' }}) </p>
+						<p><i class="far fa-calendar-alt"></i> Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))+1 }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))+1>'1'?'days':'day' }}) </p>
 						<p><i class="far fa-user"></i> {{ $rental->rental_guest }} guest</p>
 						</a>
 					</div>

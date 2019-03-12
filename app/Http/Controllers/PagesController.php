@@ -65,35 +65,85 @@ class PagesController extends Controller
         return view('hosts.introapartment');
     }
 
-    public function summary()
+    public function aboutus()
     {
-        $house_id = House::where('user_id', Auth::user()->id)->get();
-        $h_id = array();
-        foreach ($house_id as $key => $house) {
-            $h_id[$key] = $house->id;
+    	return view('pages.about');
+    }
+
+    public function dashboard_index()
+    {
+        $types_room_id = $this->getTypeId('room');
+        $types_apartment_id = $this->getTypeId('apartment');
+        $apartments = House::where('publish', '!=', '3')->whereIn('housetype_id', $types_apartment_id)->where('user_id', Auth::user()->id)->get();
+        $rooms = House::where('publish', '!=', '3')->whereIn('housetype_id', $types_room_id)->where('user_id', Auth::user()->id)->get();
+        $houses = Auth::user()->houses()->where('publish', '!=', '3')->get();
+        $houses_id = array();
+        foreach ($houses as $key => $house) {
+            array_push($houses_id, $house->id);
+        }
+        $rentals = Rental::whereIn('house_id', $houses_id)->where('host_decision', 'waiting')->get();
+        return view('dashboard.index')->with('apartments', $apartments)->with('rooms', $rooms)->with('rentals', $rentals);
+    }
+
+    public function dashboard_diaries_index()
+    {
+        $diaries = Auth::user()->diaries()->orderBy('id', 'desc')->take(5)->get();
+        return view('dashboard.index-diaries')->with('diaries', $diaries);
+    }
+
+    public function dashboard_trips_index()
+    {
+        $rentals = Auth::user()->rentals()->orderBy('id', 'desc')->take(5)->get();
+        return view('dashboard.index-trips')->with('rentals', $rentals);
+    }
+
+    public function dashboard_hosts_index()
+    {
+        $types_apartment_id = $this->getTypeId('apartment');
+        $types_room_id = $this->getTypeId('room');
+        $apartments = Auth::user()->houses()->where('publish', '!=', '3')->whereIn('housetype_id', $types_apartment_id)->orderBy('id', 'desc')->take(5)->get();
+        $rooms = Auth::user()->houses()->where('publish', '!=', '3')->whereIn('housetype_id', $types_room_id)->orderBy('id', 'desc')->take(5)->get();
+        $apartments_total = Auth::user()->houses()->where('publish', '!=', '3')->whereIn('housetype_id', $types_apartment_id)->count();
+        $rooms_total = Auth::user()->houses()->where('publish', '!=', '3')->whereIn('housetype_id', $types_room_id)->count();
+        $data = [
+            'apartments_total'=>$apartments_total,
+            'rooms_total'=>$rooms_total
+        ];
+        return view('dashboard.index-hosts')->with('apartments', $apartments)->with('rooms', $rooms)->with($data);
+    }
+
+    public function dashboard_rentals_index()
+    {
+        return redirect()->route('rentals.rentmyrooms', Auth::user()->id);
+    }
+
+    public function dashboard_summary_index()
+    {
+        $houses = Auth::user()->houses;
+        $houses_id = array();
+        foreach ($houses as $key => $house) {
+            array_push($houses_id, $house->id);
         }
 
-        $rentals = Rental::whereIn('house_id', $h_id)->count();
-
-        $rental_accept = Rental::whereIn('house_id', $h_id)->where(function ($query) {
+        $rental_accept = Rental::whereIn('house_id', $houses_id)->where(function ($query) {
             $query->where('host_decision', 'accept');
         })->count();
 
-        $rental_reject = Rental::whereIn('house_id', $h_id)->where(function ($query) {
+        $rental_reject = Rental::whereIn('house_id', $houses_id)->where(function ($query) {
             $query->where('host_decision', 'reject');
         })->count();
 
-        $rental_ignore = Rental::whereIn('house_id', $h_id)->where(function ($query) {
+        $rental_ignore = Rental::whereIn('house_id', $houses_id)->where(function ($query) {
             $query->where('host_decision', 'waiting')->where('rental_checkroom', '!=', '1');
         })->count();
 
-        $rental_id = Rental::whereIn('house_id', $h_id)->get();
-        $p_id = array();
-        foreach ($rental_id as $key => $rental) {
-            $p_id[$key] = $rental->payment_id;
+        $rentals = Rental::whereIn('house_id', $houses_id)->get();
+        $payments_id = array();
+        foreach ($rentals as $key => $rental) {
+            array_push($payments_id, $rental->payment_id);
         }
 
-        $payment_approved = Payment::whereIn('id', $p_id)->where(function ($query) {
+        $payment_approved = Payment::whereIn('id', $payments_id)->where(function ($query) {
             $query->where('payment_status', 'Approved');
         })->get();
         $total_payment = 0;
@@ -101,7 +151,7 @@ class PagesController extends Controller
             $total_payment += $payment->payment_amount * 0.9;
         }
 
-        $payment_approved = Payment::whereIn('id', $p_id)->where(function ($query) {
+        $payment_approved = Payment::whereIn('id', $payments_id)->where(function ($query) {
             $lastmonth =  new Carbon('last month');
             $query->where('payment_status', 'Approved')->where('created_at', '>=', $lastmonth);
         })->get();
@@ -110,31 +160,31 @@ class PagesController extends Controller
             $payment_lastmonth += $payment->payment_amount * 0.9;
         }
 
-        $rentals_id = Rental::whereIn('house_id', $h_id)->where(function ($query) {
+        $rentals_accept = Rental::whereIn('house_id', $houses_id)->where(function ($query) {
             $query->where('host_decision', 'accept');
         })->get();
-        $p_id = array();
-        foreach ($rentals_id as $key => $rental) {
-            $p_id[$key] = $rental->payment_id;
+        $payments_id = array();
+        foreach ($rentals_accept as $key => $rental) {
+            array_push($payments_id, $rental->payment_id);
         }
 
-        $approved = Payment::whereIn('id', $p_id)->where(function ($query) {
+        $approved = Payment::whereIn('id', $payments_id)->where(function ($query) {
             $query->where('payment_status', 'Approved');
         })->count();
 
-        $waiting = Payment::whereIn('id', $p_id)->where(function ($query) {
+        $waiting = Payment::whereIn('id', $payments_id)->where(function ($query) {
             $query->where('payment_status', 'Waiting');
         })->count();
 
-        $reject = Payment::whereIn('id', $p_id)->where(function ($query) {
+        $reject = Payment::whereIn('id', $payments_id)->where(function ($query) {
             $query->where('payment_status', 'Reject');
         })->count();
 
-        $cancel = Payment::whereIn('id', $p_id)->where(function ($query) {
+        $cancel = Payment::whereIn('id', $payments_id)->where(function ($query) {
             $query->where('payment_status', 'Cancel');
         })->count();
 
-        $ofd = Payment::whereIn('id', $p_id)->where(function ($query) {
+        $ofd = Payment::whereIn('id', $payments_id)->where(function ($query) {
             $query->where('payment_status', 'Out of Date');
         })->count();
 
@@ -148,35 +198,18 @@ class PagesController extends Controller
             'waiting' => $waiting,
             'reject' => $reject,
             'cancel' => $cancel,
-            'ofd' => $ofd,
-            'rental_id' => $rental_id
+            'ofd' => $ofd
         );
 
-        return view('pages.summary')->with('rentals', $rentals)->with($data);
+        return view('dashboard.index-summary')->with('rentals', $rentals)->with($data);
     }
 
-    public function aboutus()
+    public function dashboard_account_index()
     {
-    	return view('pages.about');
+        return view('dashboard.index-account');
     }
 
-    public function manages_index($userId)
-    {
-        if (Auth::user()->id == $userId) {
-            $types_room_id = $this->getTypeId('room');
-            $types_apartment_id = $this->getTypeId('apartment');
-            $apartments = House::where('publish', '!=', '3')->whereIn('housetype_id', $types_apartment_id)->where('user_id', $userId)->get();
-            $rooms = House::where('publish', '!=', '3')->whereIn('housetype_id', $types_room_id)->where('user_id', $userId)->get();
-            $diaries = Diary::whereIn('publish', ['0', '1', '2', '3'])->where(function($query) {
-                $query->whereNull('days')->orWhere('days', '0');
-            })->where('user_id', $userId)->get();
-            return view('manages.index')->with('apartments', $apartments)->with('rooms', $rooms)->with('diaries', $diaries);
-        }
-        Session::flash('fail', 'Unauthorized access.');
-        return redirect()->route('manages.index', Auth::user()->id);
-    }
-
-    public function manages_rooms_online($userId)
+    public function dashboard_rooms_online($userId)
     {
         if (Auth::user()->id == $userId) {
             $types_room_id = $this->getTypeId('room');
@@ -184,10 +217,10 @@ class PagesController extends Controller
             return view('rooms.index-myroom')->with('houses', $houses);
         }
         Session::flash('fail', 'Unauthorized access.');
-        return redirect()->route('manages.index', Auth::user()->id);
+        return redirect()->route('dashboard.index', Auth::user()->id);
     }
 
-    public function manages_rooms_offline($userId)
+    public function dashboard_rooms_offline($userId)
     {
         if (Auth::user()->id == $userId) {
             $types_room_id = $this->getTypeId('room');
@@ -195,10 +228,10 @@ class PagesController extends Controller
             return view('rooms.index-myroom')->with('houses', $houses);
         }
         Session::flash('fail', 'Unauthorized access.');
-        return redirect()->route('manages.index', Auth::user()->id);
+        return redirect()->route('dashboard.index', Auth::user()->id);
     }
 
-    public function manages_apartments_online($userId)
+    public function dashboard_apartments_online($userId)
     {
         if (Auth::user()->id == $userId) {
             $types_room_id = $this->getTypeId('apartment');
@@ -206,10 +239,10 @@ class PagesController extends Controller
             return view('apartments.index-myapartment')->with('houses', $houses);
         }
         Session::flash('fail', 'Unauthorized access.');
-        return redirect()->route('manages.index', Auth::user()->id);
+        return redirect()->route('dashboard.index', Auth::user()->id);
     }
 
-    public function manages_apartments_offline($userId)
+    public function dashboard_apartments_offline($userId)
     {
         if (Auth::user()->id == $userId) {
             $types_room_id = $this->getTypeId('apartment');
@@ -217,6 +250,6 @@ class PagesController extends Controller
             return view('apartments.index-myapartment')->with('houses', $houses);
         }
         Session::flash('fail', 'Unauthorized access.');
-        return redirect()->route('manages.index', Auth::user()->id);
+        return redirect()->route('dashboard.index', Auth::user()->id);
     }
 }

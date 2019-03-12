@@ -1,9 +1,7 @@
 @extends('main')
-
 @section('title','About' . ' ' . $user->user_fname)
 
 @section('content')
-
 <div class="container">
 	<div class="row m-t-10">
 		<div class="card col">

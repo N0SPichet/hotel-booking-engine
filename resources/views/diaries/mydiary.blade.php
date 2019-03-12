@@ -1,14 +1,14 @@
-@extends ('main')
+@extends ('dashboard.main')
 @section ('title', 'My Diary')
 
 @section ('content')
 <div class="container diaries">
 	<div class="row m-t-10">
-		<div class="col-md-10 float-left">
+		<div class="col-md-9 float-left">
 			<h1>My Diaries</h1>
 		</div>
-		<div class="col-md-2 float-left">
-			<a href=" {{ route('diaries.create') }}" class="btn btn-lg btn-block btn-primary m-t-20">Create Diary</a>
+		<div class="col-md-3 float-left">
+			<a href=" {{ route('diaries.create') }}" class="btn btn-md btn-block btn-primary m-t-10">Create Diary</a>
 		</div>
 		<div class="col-md-12">
 			<hr>
@@ -26,37 +26,35 @@
 			@if (Auth::user()->id == $diary->user_id)
 			<div class="card col m-t-10">
 				<div class="card-title">
-					<div class="col-md-10 float-left">
+					<div class="col-md-12">
 					@if ($diary->days != '0')
 					<a href="{{ route('diaries.single', $diary->id) }}" style="text-decoration-line: none;">
 					@elseif ($diary->days == '0')
 					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" style="text-decoration-line: none;">
 					@endif
-					@if ($diary->publish == '2')
-					<span class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</span>
+					@if ($diary->publish == '3')
+					<span class="text-danger m-t-20"><i class="fa fa-trash"></i> in trash</span>
+					@elseif ($diary->publish == '2')
+					<span class="text-success m-t-20"><i class="fas fa-eye"></i> subscriber only</span>
 					@elseif ($diary->publish == '1')
-					<span class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</span>
+					<span class="text-primary m-t-20"><i class="fas fa-eye"></i> published</span>
 					@elseif ($diary->publish == '0')
-					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</span>
+					<span class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> private</span>
 					@endif
 					<span style="font-size: 20px;"><b> {{ $diary->title }} </b></span>
 					@if ($diary->days == '0') <span>({{ $diary->rental->house->house_title }} - {{ date('jS F, Y', strtotime($diary->rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($diary->rental->rental_dateout)) }})</span>
 					@endif
 					</a>
 					</div>
-					<div class="col-md-2 float-left">
-						<div class="margin-auto" align="center">
+				</div>
+				<div class="card-body" style="padding-top: 0px;">
+					<p style="color: #7e7e7e; font-size: 14px; letter-spacing: .04em;">Date modified {{ date('jS F, Y - g:iA', strtotime($diary->updated_at)) }}
 					@if ($diary->days != '0')
-					<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-primary btn-sm m-t-10">Read More</a>
-					<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-sm m-t-10"><i class="far fa-edit"></i> Edit</a>
+					<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Read More</a>
+					<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-sm"><i class="far fa-edit"></i> Edit</a>
 					@elseif ($diary->days == '0')
 					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" class="btn btn-primary btn-sm">Read More</a>
-					@endif
-						</div>
-					</div>
-				</div>
-				<div class="card-body">
-					<p style="color: #7e7e7e; font-size: 14px; letter-spacing: .04em;">Date modified {{ date('jS F, Y - g:iA', strtotime($diary->updated_at)) }}</p>
+					@endif</p>
 					<div class="text-over-flow-ellipsis"> {!! $diary->message !!} </div>
 				</div>
 			</div>

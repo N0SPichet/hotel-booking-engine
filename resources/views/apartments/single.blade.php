@@ -1,11 +1,15 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', 'Review your settings | Apartments')
 
 @section ('content')
 <div class="container">
 	<div class="row m-t-10">
 		<div class="col-sm-12">
+			@if (Auth::user()->id == $house->user_id)
 			{!! Html::linkRoute('apartments.index-myapartment', 'Back to My Apartment', Auth::user()->id, ['class' => 'btn btn-outline-secondary']) !!}
+			@else
+			<a href="{{route('apartments.index')}}" class="btn btn-outline-secondary">Back</a>
+			@endif
 		</div>
 	</div>
 	<div class="row m-t-10">

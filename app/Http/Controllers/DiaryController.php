@@ -536,8 +536,8 @@ class DiaryController extends Controller
                 }
                 $diary->delete();
                 Session::flash('success', 'This diary is no longer available.');
-                if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
-                    return redirect()->route('manages.index', Auth::user()->id);
+                if (back()->getTargetUrl() == route('dashboard.index', Auth::user()->id)) {
+                    return redirect()->route('dashboard.index', Auth::user()->id);
                 }
                 return redirect()->route('diaries.mydiaries', Auth::user()->id);
             }
@@ -569,8 +569,8 @@ class DiaryController extends Controller
                     $diary->delete();
                 }
                 Session::flash('success', 'This diary is no longer available.');
-                if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
-                    return redirect()->route('manages.index', Auth::user()->id);
+                if (back()->getTargetUrl() == route('dashboard.index', Auth::user()->id)) {
+                    return redirect()->route('dashboard.index', Auth::user()->id);
                 }
                 return redirect()->route('diaries.mydiaries', Auth::user()->id);
             }
@@ -601,8 +601,8 @@ class DiaryController extends Controller
         if (Auth::user()->id == $diary->user_id) {
             $diary->publish = '3';
             $diary->save();
-            if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
-                return redirect()->route('manages.index', Auth::user()->id);
+            if (back()->getTargetUrl() == route('dashboard.diaries.index')) {
+                return redirect()->route('dashboard.diaries.index');
             }
             if ($diary->days == '0') {
                 return redirect()->route('diaries.tripdiary', [$diary->rental_id, $diary->user_id]);
@@ -619,8 +619,8 @@ class DiaryController extends Controller
         if (Auth::user()->id == $diary->user_id) {
             $diary->publish = '0';
             $diary->save();
-            if (back()->getTargetUrl() == route('manages.index', Auth::user()->id)) {
-                return redirect()->route('manages.index', Auth::user()->id);
+            if (back()->getTargetUrl() == route('dashboard.diaries.index')) {
+                return redirect()->route('dashboard.diaries.index');
             }
             if ($diary->days == '0') {
                 return redirect()->route('diaries.tripdiary', [$diary->rental_id, $diary->user_id]);

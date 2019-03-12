@@ -4,7 +4,7 @@
 @section('content')
 <div class="container">
     <div class="row m-t-10">
-        <div class="col-md-8 float-left" style="margin: auto">
+        <div class="col-md-8 margin-auto">
             <div class="card col">
                 <div class="card-title">Login</div>
                 <div class="card-body">
@@ -14,7 +14,7 @@
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail Address</label>
 
-                            <div class="col-md-6 float-left">
+                            <div class="col-md-6 margin-auto">
                                 <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required autofocus>
 
                                 @if ($errors->has('email'))
@@ -28,7 +28,7 @@
                         <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label">Password</label>
 
-                            <div class="col-md-6 float-left">
+                            <div class="col-md-6 margin-auto">
                                 <input id="password" type="password" class="form-control" name="password" required>
 
                                 @if ($errors->has('password'))
@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-6 float-left" style="margin: auto">
+                            <div class="col-md-6 margin-auto">
                                 <div class="checkbox">
                                     <label>
                                         <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}> Remember Me
@@ -50,7 +50,7 @@
                         </div>
 
                         <div class="form-group">
-                            <div class="col-md-8 float-left" style="margin: auto">
+                            <div class="col-md-8 margin-auto">
                                 <button type="submit" class="btn btn-primary">
                                     Login
                                 </button>

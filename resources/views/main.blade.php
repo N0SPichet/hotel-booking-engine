@@ -17,7 +17,7 @@
   <body>
     @include('layouts.nav-bar')
     @include('pages._messages')
-    <div class="clearfix">
+    <div class="clearfix m-b-20">
         @yield('content')
     </div>
     @include('layouts.footer')

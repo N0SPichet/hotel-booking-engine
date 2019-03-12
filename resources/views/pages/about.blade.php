@@ -1,5 +1,6 @@
 @extends('main')
 @section('title','ABOUT US')
+
 @section('content')
 <div class="container">
 	<div class="row m-t-10">

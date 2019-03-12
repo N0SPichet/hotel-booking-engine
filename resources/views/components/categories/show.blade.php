@@ -1,4 +1,4 @@
-@extends ('manages.main')
+@extends ('dashboard.main')
 @section ('title', "Administrator | $category->name Category")
 
 @section('content')
