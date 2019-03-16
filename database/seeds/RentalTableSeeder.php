@@ -19,7 +19,7 @@ class RentalTableSeeder extends Seeder
      */
     public function run()
     {
-    	$today = Carbon::today();
+    	$today = Carbon::yesterday();
         $types_id = $this->getTypeId('room');
         $user = User::find(3);
         $house = House::where('publish', '1')->whereIn('housetype_id', $types_id)->where('user_id', '!=', $user->id)->first();
@@ -39,6 +39,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
+        $rental->room_price = $house->houseprices->price;
         $rental->select_food = '1';
         $rental->discount = 0;
         $rental->rental_checkroom = 0;
@@ -69,6 +70,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
+        $rental->room_price = $house->houseprices->price;
         $rental->select_food = '1';
         $rental->discount = 0;
         $rental->rental_checkroom = 0;
@@ -92,6 +94,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
+        $rental->room_price = $house->houseprices->price;
         $rental->select_food = '1';
         $rental->discount = 0;
         $rental->rental_checkroom = 0;
@@ -122,6 +125,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
+        $rental->room_price = $house->houseprices->price;
         $rental->select_food = '1';
         $rental->discount = 0;
         $code = Hash::make($user->id.$user->email.$house->id);

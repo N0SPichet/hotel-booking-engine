@@ -284,12 +284,12 @@
 						<h2>Price</h2>
 						<p class="m-t-10"><b>* This price for per person or for a day?</b></p>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" id="inlineprice_perperson1" name="price_perperson" value="1">
-							<label class="form-check-label" for="inlineprice_perperson1">Per Person</label>
+							<input class="form-check-input" type="checkbox" id="inlinetype_price1" name="type_price" value="1">
+							<label class="form-check-label" for="inlinetype_price1">Per Person</label>
 						</div>
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" id="inlineprice_perperson2" name="price_perperson" value="2">
-							<label class="form-check-label" for="inlineprice_perperson2">Per Day</label>
+							<input class="form-check-input" type="checkbox" id="inlinetype_price2" name="type_price" value="2">
+							<label class="form-check-label" for="inlinetype_price2">Per Day</label>
 						</div>
 						{{ Form::label('price', '* Room price (THB)', ['class' => 'm-t-10']) }}
 						{{ Form::text('price', null, ['class' => 'form-control m-t-10', 'placeholder' => '1234', 'required' => '']) }}

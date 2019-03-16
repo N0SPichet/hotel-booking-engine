@@ -29,7 +29,7 @@
 				{{ Form::hidden('dateout', $dateout, []) }}
 				{{ Form::hidden('types', $types, []) }}
 				@if ($types == 'room')
-				<p>Guest <i class="fa fa-user" aria-hidden="true"></i> <b>{{ $guest }} {{ $guest>1? 'peoples':'people' }}</b></p>
+				<p>Guest <i class="fa fa-user" aria-hidden="true"></i> <b>{{ $guest }} {{ $guest>1? 'peoples':'people' }}/room</b></p>
 				<p>Price <i class="fa fa-credit-card" aria-hidden="true"></i> <b>{{ $house->houseprices->price }} </b>Thai baht/room/night (<b>{{ $no_rooms }} {{ $no_rooms>1?'rooms':'room' }}</b>)</p>
 				<p>Food service <i class="fas fa-utensils"></i> <b>{{ $food==1?'yes':'no' }}</b></p>
 				{{ Form::hidden('guest', $guest, []) }}

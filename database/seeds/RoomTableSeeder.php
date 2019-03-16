@@ -36,7 +36,7 @@ class RoomTableSeeder extends Seeder
             $guestarrive->save();
 
             $price = new Houseprice;
-            $price->price_perperson = 2;
+            $price->type_price = '2';
             $price->price = rand(800, 2000);
             $price->food_price = rand(100, 300);
             $price->welcome_offer = rand(0, 1);
@@ -62,7 +62,7 @@ class RoomTableSeeder extends Seeder
             $house->house_property = 'home';
             $house->no_rooms = 1;
             $house->house_guestspace = 'Entrie';
-            $house->house_bedrooms = rand(1, 2);
+            $house->house_bedrooms = rand(1, 4);
             $house->house_beds = rand(1, 2);
             $house->house_bathroom = rand(1, 2);
             $house->house_bathroomprivate = rand(0, 1);

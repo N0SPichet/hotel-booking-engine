@@ -50,8 +50,8 @@
 						
 					<p><i class="far fa-calendar-alt"></i> Stay Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) </p>
 					@if ($rental->house->checkType($rental->house_id))
-					<p><i class="far fa-user"></i> Total guest : {{ $rental->rental_guest }} guest</p>
-					<p><i class="fas fa-bed"></i> Room number : {{ $rental->no_rooms }}</p>
+					<p><i class="far fa-user"></i> Total guest : {{ $rental->rental_guest*$rental->no_rooms }} {{ $rental->rental_guest*$rental->no_rooms>1?'peoples':'people' }}</p>
+					<p><i class="fas fa-bed"></i> Room : {{ $rental->no_rooms }} {{ $rental->no_rooms>1?'rooms':'room' }}</p>
 					@else
 						@if ($rental->no_type_single > 0)
 						<p><i class="fas fa-bed"></i> Single Room (Standard) : {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'Rooms':'Room' }}.</p>
@@ -151,25 +151,25 @@
 							<p>{{ $rental->user->user_fname }}'s must have a payment in time and exactly as payment page show.</p>
 							@if ($rental->house->checkType($rental->house_id))
 							<p>Details</p>
-							<p><i class="fas fa-bed"></i> <b>Room</b> {{ $rental->no_rooms }} {{ $rental->no_rooms > 1 ? 'Rooms':'Room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $room_price }} Thai Bath ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}).</p>
-							<p><i class="fas fa-utensils"></i> <b>Food</b> {{ $rental->select_food=='1'?'yes':'no' }} - {{ $food_price }} Thai Bath ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}).</p>
+							<p><i class="fas fa-bed"></i> <b>Room</b> {{ $rental->no_rooms }} {{ $rental->no_rooms > 1 ? 'rooms':'room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $room_price }} Thai baht ({{ $rental->room_price }} {{ $rental->house->houseprices->type_price=='1'?'Thai baht/person':'Thai baht/day' }}).</p>
+							<p><i class="fas fa-utensils"></i> <b>Food</b> {{ $rental->select_food=='1'?'yes':'no' }} - {{ $food_price }} Thai baht ({{ $rental->house->houseprices->food_price }} {{ $rental->house->houseprices->type_price=='1'?'Thai baht/person':'Thai baht/day' }}).</p>
 							@else
 							<p>Details</p>
 								@if ($rental->no_type_single > 0)
-								<p><i class="fas fa-bed"></i> Single Room (Standard) : {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'Rooms':'Room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $type_single_price }} Thai Bath.</p>
+								<p><i class="fas fa-bed"></i> Single Room (Standard) : {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'rooms':'room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $type_single_price }} Thai baht.</p>
 								@endif
 								
 								@if ($rental->no_type_deluxe_single > 0)
-								<p><i class="fas fa-bed"></i> Deluxe Single Room : {{ $rental->no_type_deluxe_single }} {{ $rental->no_type_deluxe_single > 1 ? 'Rooms':'Room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $type_deluxe_single_price }} Thai Bath.</p>
+								<p><i class="fas fa-bed"></i> Deluxe Single Room : {{ $rental->no_type_deluxe_single }} {{ $rental->no_type_deluxe_single > 1 ? 'rooms':'room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $type_deluxe_single_price }} Thai baht.</p>
 								@endif
 
 								@if ($rental->no_type_double_room > 0 )
-								<p><i class="fas fa-bed"></i> Double Room (Standard) : {{ $rental->no_type_double_room }} {{ $rental->no_type_double_room > 1 ? 'Rooms':'Room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $type_double_room_price }} Thai Bath.</p>
+								<p><i class="fas fa-bed"></i> Double Room (Standard) : {{ $rental->no_type_double_room }} {{ $rental->no_type_double_room > 1 ? 'rooms':'room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $type_double_room_price }} Thai baht.</p>
 								@endif
 							@endif
-							<p><i class="fas fa-concierge-bell"></i> <b>Service fee</b> {{ $fee}} Thai Bath.</p>
-							<p><i class="fas fa-hand-holding-usd"></i> <b>Discount</b> {{ $discount }} Thai Bath ({{ $rental->discount }}%)</p>
-							<p><i class="fas fa-money-check"></i> <b>Total price</b> <span class="text-danger">{{$total_price}}</span> Thai Bath!</p>
+							<p><i class="fas fa-concierge-bell"></i> <b>Service fee</b> {{ $fee}} Thai baht.</p>
+							<p><i class="fas fa-hand-holding-usd"></i> <b>Discount</b> {{ $discount }} Thai baht ({{ $rental->discount }}%)</p>
+							<p><i class="fas fa-money-check"></i> <b>Total price</b> <span class="text-danger">{{$total_price}}</span> Thai baht!</p>
 							@if ($rental->payment->payment_status == null)
 							{!! Html::linkRoute('rentals.edit', 'Payment', array($rental->id), array('class' => 'btn btn-success btn-sm m-t-10 m-b-20')) !!}
 							@else

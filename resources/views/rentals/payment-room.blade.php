@@ -18,7 +18,7 @@
 					</div>
 					<hr>
 					<div class="col-md-12">
-						<span><i class="fas fa-bed"></i> Room price ฿{{ $rental->house->houseprices->price }} ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}) x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
+						<span><i class="fas fa-bed"></i> Room price ฿{{ $rental->house->houseprices->price }} ({{ $rental->house->houseprices->type_price=='1'?'price/person':'price/day' }}) x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
 						</span>
 						<span class="float-right"> ฿{{ $rental->house->houseprices->price*$days }} </span>
 					</div>
@@ -28,7 +28,7 @@
 					</div>
 					@if ($rental->select_food == '1')
 					<div class="col-md-12">
-						<span><i class="fas fa-utensils"></i> Food included ฿{{ $rental->house->houseprices->food_price }} ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}) x {{ $days }} {{ $days > 1 ? "days" : "day" }}
+						<span><i class="fas fa-utensils"></i> Food included ฿{{ $rental->house->houseprices->food_price }} ({{ $rental->house->houseprices->type_price=='1'?'price/person':'price/day' }}) x {{ $days }} {{ $days > 1 ? "days" : "day" }}
 						</span>
 						<span class="float-right"> ฿{{ $rental->house->houseprices->food_price*$days }} </span>
 					</div>
@@ -53,7 +53,7 @@
 					@endif
 					<hr>
 					<div class="col-md-12">
-						<span><i class="fas fa-money-check"></i> Total (Thai Baht)  </span>
+						<span><i class="fas fa-money-check"></i> Total (Thai baht)  </span>
 						<span class="float-right"> ฿{{ $total_price }} </span>
 					</div>
 				</div>

@@ -44,14 +44,16 @@ class UserController extends Controller
     {
         $user = User::find($userId);
         if (!is_null($user)) {
-            return view('users.show')->with('user', $user);
+            $houses = $user->houses()->where('publish', '1')->get();
+            return view('users.show')->with('user', $user)->with('houses', $houses);
         }
         else {
             $name_str = explode("@", $userId);
             $name_str = explode("_", $name_str[1]);
             $user = User::where('user_fname', 'like', '%'.$name_str[0].'%')->where('user_lname', 'like', '%'.$name_str[1].'%')->first();
             if (!is_null($user)) {
-                return view('users.show')->with('user', $user);
+                $houses = $user->houses()->where('publish', '1')->get();
+                return view('users.show')->with('user', $user)->with('houses', $houses);
             }
         }
         Session::flash('fail', 'This user is no longer available.');

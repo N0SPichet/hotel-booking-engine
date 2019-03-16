@@ -69,9 +69,9 @@
 				<h4>Bedroom</h4>
 				<div class="card">
 					<div style="margin-left: 10px; margin-right: 10px;">
-						<p> How many guests can your place accommodate : {{ $house->house_capacity }} guest </p>
-						<p> How many bedrooms : {{ $house->house_bedrooms }} room </p>
-						<p> How many beds : {{ $house->house_beds }} bed </p>
+						<p> How many guests can your place accommodate : {{ $house->house_capacity }} {{ $house->house_capacity>1?'guests':'guest' }}/room </p>
+						<p> How many bedrooms : {{ $house->house_bedrooms }} {{ $house->house_bedrooms>1?'rooms':'room' }}</p>
+						<p> How many beds : {{ $house->house_beds }} bed/room </p>
 					</div>
 				</div>
 
@@ -144,9 +144,9 @@
 				<h4>Pricing</h4>
 				<div class="card">
 					<div style="margin-left: 10px; margin-right: 10px;">
-						<p>Base price: ฿{{ $house->houseprices->price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+						<p>Base price: {{ $house->houseprices->price }} Thai baht/night{{ $house->houseprices->type_price=='1'?'/person':'' }}</p>
 						@if ($house->houseprices->food_price)
-						<p>Food included : ฿{{ $house->houseprices->food_price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+						<p>Food included : {{ $house->houseprices->food_price }} Thai baht/night{{ $house->houseprices->type_price=='1'?'/person':'' }}</p>
 						<div class="alert alert-info" role="alert">
   							@if ($house->foods->breakfast == '1')Breakfast
 	  							@if ($house->foods->lunch == '1')/ Lunch

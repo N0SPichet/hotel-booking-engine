@@ -44,7 +44,7 @@
 					</div>
 				</div>
 				<div class="col-md-8 col-sm-8 float-left">
-					<p class="full-name">Hosting List</p>
+					<p class="full-name">Hosting List ({{count($user->houses)}} public)</p>
 					@if (count($user->houses))
 					@foreach ($user->houses as $house)
 						<a href="{{ route('rooms.owner', $house->id) }}">

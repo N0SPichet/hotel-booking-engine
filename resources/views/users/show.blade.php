@@ -23,10 +23,10 @@
 				@endif
 				<div class="col-md-6 float-left m-t-10">
 					@if (Auth::check())
-					<p class="full-name">Hosting List</p>
+					<p class="full-name">Hosting List ({{count($houses)}} public)</p>
 					@if (Auth::user()->id == $user->id)
-					@if (count($user->houses))
-					@foreach ($user->houses as $house)
+					@if (count($houses))
+					@foreach ($houses as $house)
 						<a href="{{ route('rooms.owner', $house->id) }}">
 							<p>Title : {{ $house->house_title }} - {{ $house->district->name }}, {{ $house->province->name }} <span class="room-rating">( rating @if ($house->rentals->count()>0) {{ ($house->rentals->where('checkin_status', '1')->count()/$house->rentals->count()) * 100 }} @else 0 @endif %)</span></p>
 						</a>
@@ -35,8 +35,8 @@
 					<p>No result</p>
 					@endif
 					@else
-					@if (count($user->houses))
-					@foreach ($user->houses as $house)
+					@if (count($houses))
+					@foreach ($houses as $house)
 						@if($house->checkType($house->id))
 						<a href="{{ route('rooms.show', $house->id) }}">
 							<p>{{ $house->house_title }} - {{ $house->district->name }}, {{ $house->province->name }} <span class="room-rating">( rating @if ($house->rentals->count()>0) {{ ($house->rentals->where('checkin_status', '1')->count()/$house->rentals->count()) * 100 }} @else 0 @endif  %)</span></p>

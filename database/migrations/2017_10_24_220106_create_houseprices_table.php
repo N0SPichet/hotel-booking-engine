@@ -15,7 +15,7 @@ class CreateHousepricesTable extends Migration
     {
         Schema::create('houseprices', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('price_perperson')->nullable();
+            $table->enum('type_price', ['1', '2'])->default('2');
             $table->integer('price')->nullable();
             $table->integer('food_price')->nullable();
             $table->integer('welcome_offer')->nullable();

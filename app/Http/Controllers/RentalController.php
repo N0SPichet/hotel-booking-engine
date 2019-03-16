@@ -441,7 +441,7 @@ class RentalController extends Controller
                         $food_price = 0;
                         $guest = 1;
                         $guest_food = 1;
-                        if ($house->houseprices->price_perperson == '1') {
+                        if ($house->houseprices->type_price == '1') {
                             $guest = $rental->rental_guest;
                             $guest_food = $rental->rental_guest;
                         }
@@ -570,7 +570,7 @@ class RentalController extends Controller
                             $food_price = 0;
                             $guest = 1;
                             $guest_food = 1;
-                            if ($house->houseprices->price_perperson == '1') {
+                            if ($house->houseprices->type_price == '1') {
                                 $guest = $rental->rental_guest;
                                 $guest_food = $rental->rental_guest;
                             }

@@ -129,9 +129,9 @@
 				<h4>Bedroom</h4>
 				<div class="card">
 					<div class="margin-content">
-						<p> How many guests can your place accommodate : {{ $house->house_capacity }} guest </p>
-						<p> How many bedrooms : {{ $house->house_bedrooms }} room </p>
-						<p> How many beds : {{ $house->house_beds }} bed </p>
+						<p> How many guests can your place accommodate : {{ $house->house_capacity }} {{ $house->house_capacity>1?'guests':'guest' }}/room </p>
+						<p> How many bedrooms : {{ $house->house_bedrooms }} {{ $house->house_bedrooms>1?'rooms':'room' }}</p>
+						<p> How many beds : {{ $house->house_beds }} bed/room </p>
 					</div>
 				</div>
 
@@ -215,9 +215,9 @@
 				<h4>Pricing</h4>
 				<div class="card">
 					<div class="margin-content">
-						<p>Single Room (Standard) : {{ $house->apartmentprices->single_price }} Thai Baht/Night</p>
-						<p>Deluxe Single Room : {{ $house->apartmentprices->deluxe_single_price }} Thai Baht/Night</p>
-						<p>Double Room (Standard) : {{ $house->apartmentprices->double_price }} Thai Baht/Night</p>
+						<p>Single Room (Standard) : {{ $house->apartmentprices->single_price }} Thai baht/night</p>
+						<p>Deluxe Single Room : {{ $house->apartmentprices->deluxe_single_price }} Thai baht/night</p>
+						<p>Double Room (Standard) : {{ $house->apartmentprices->double_price }} Thai baht/night</p>
 						<p>Discount: {{ $house->apartmentprices->discount }}%</p>
 					</div>
 				</div>

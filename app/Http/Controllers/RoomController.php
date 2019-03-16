@@ -129,7 +129,7 @@ class RoomController extends Controller
         $house->guestarrives_id = $guestarrive->id;
 
         $price = new Houseprice;
-        $price->price_perperson = $request->price_perperson;
+        $price->type_price = $request->type_price;
         $price->price = $request->price;
         $price->food_price = $request->food_price;
         $price->welcome_offer = $request->welcome_offer;
@@ -372,7 +372,7 @@ class RoomController extends Controller
             $guestarrive->notice = $request->notice;
 
             $houseprice = Houseprice::find($house->houseprices_id);
-            $houseprice->price_perperson = $request->price_perperson;
+            $houseprice->type_price = $request->type_price;
             $houseprice->price = $request->price;
             $houseprice->food_price = $request->food_price;
 

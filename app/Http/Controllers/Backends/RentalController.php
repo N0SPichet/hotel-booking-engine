@@ -26,7 +26,7 @@ class RentalController extends Controller
 
 	public function index()
     {
-        $rentals = Rental::where('rental_datein', '>=', Carbon::today())->orderBy('rental_datein', 'asc')->paginate(10);
+        $rentals = Rental::where('rental_datein', '>=', Carbon::today())->orderBy('updated_at', 'asc')->paginate(10);
         return view('admin.rentals.index')->with('rentals', $rentals);
     }
 
@@ -70,7 +70,7 @@ class RentalController extends Controller
                     $food_price = 0;
                     $guest = 1;
                     $guest_food = 1;
-                    if ($house->houseprices->price_perperson == '1') {
+                    if ($house->houseprices->type_price == '1') {
                         $guest = $rental->rental_guest;
                         $guest_food = $rental->rental_guest;
                     }

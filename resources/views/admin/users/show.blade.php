@@ -27,9 +27,9 @@
 				<span class="description">{!! $user->user_description !!}</span>
 				@endif
 				<div class="col-md-6 float-left m-t-10">
-					<p class="full-name">Hosting List</p>
-					@if (count($user->houses))
-					@foreach ($user->houses as $house)
+					<p class="full-name">Hosting List ({{count($houses)}} public)</p>
+					@if (count($houses))
+					@foreach ($houses as $house)
 						<a href="{{ route('admin.rooms.as-owner', $house->id) }}">
 							<div align="left">
 								<p>Title : {{ $house->house_title }} - {{ $house->district->name }}, {{ $house->province->name }} <span class="room-rating">( rating @if ($house->rentals->count()>0) {{ ($house->rentals->where('checkin_status', '1')->count()/$house->rentals->count()) * 100 }} @else 0 @endif %)</span></p>

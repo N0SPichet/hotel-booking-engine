@@ -78,9 +78,13 @@
 						{{ Form::number('house_capacity', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
 
 						{{ Form::label('house_bedrooms', 'How many bedrooms can guests use?') }}
-						{{ Form::number('house_bedrooms', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
+						<select id="house_bedrooms" name="house_bedrooms" class="form-control m-t-10" required="">
+							@for ($i = 1; $i <= 4; $i++)
+							<option value="{{ $i }}" {{ $house->house_bedrooms==$i?'selected':'' }}>{{ $i }}</option>
+							@endfor
+						</select>
 
-						{{ Form::label('house_beds', 'How many beds can guests use?') }}
+						{{ Form::label('house_beds', 'How many beds each room can guests use?') }}
 						{{ Form::number('house_beds', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
 
 						{{ Form::label('house_bathroom', 'How many bathrooms?') }}
@@ -258,12 +262,12 @@
 
 		    			<p class="m-t-10"><b>This price for per person or for a day?</b></p>
 						<div class="form-check form-check-inline">
-		  					<input class="form-check-input" type="radio" id="inlineprice_perperson1" name="price_perperson" value="1" {{ $house->houseprices->price_perperson=='1' ? 'checked'  : '' }}>
-		  					<label class="form-check-label" for="inlineprice_perperson1">Per Person</label>
+		  					<input class="form-check-input" type="radio" id="inlinetype_price1" name="type_price" value="1" {{ $house->houseprices->type_price=='1' ? 'checked'  : '' }}>
+		  					<label class="form-check-label" for="inlinetype_price1">Per Person</label>
 						</div>
 						<div class="form-check form-check-inline">
-		 					<input class="form-check-input" type="radio" id="inlineprice_perperson2" name="price_perperson" value="2" {{ $house->houseprices->price_perperson=='2' ? 'checked'  : '' }}>
-		  					<label class="form-check-label" for="inlineprice_perperson2">Per Day</label>
+		 					<input class="form-check-input" type="radio" id="inlinetype_price2" name="type_price" value="2" {{ $house->houseprices->type_price=='2' ? 'checked'  : '' }}>
+		  					<label class="form-check-label" for="inlinetype_price2">Per Day</label>
 						</div>
 						<br>
 

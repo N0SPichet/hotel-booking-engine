@@ -39,7 +39,7 @@
 						<option value="{{ $i }}">{{ $i }}</option>
 						@endfor
 					</select>
-					<span class="margin-content">{{$house->apartmentprices->single_price}} Thai Baht/Night</span>
+					<span class="margin-content">{{$house->apartmentprices->single_price}} Thai baht/night</span>
 					@endif
 				</div>
 				<div class="form-inline" class="m-t-10">
@@ -50,7 +50,7 @@
 						<option value="{{ $i }}">{{ $i }}</option>
 						@endfor
 					</select>
-					<span class="margin-content">{{$house->apartmentprices->deluxe_single_price}} Thai Baht/Night</span>
+					<span class="margin-content">{{$house->apartmentprices->deluxe_single_price}} Thai baht/night</span>
 					@endif
 				</div>
 				<div class="form-inline" class="m-t-10">
@@ -61,7 +61,7 @@
 						<option value="{{ $i }}">{{ $i }}</option>
 						@endfor
 					</select>
-					<span class="margin-content">{{$house->apartmentprices->double_price}} Thai Baht/Night</span>
+					<span class="margin-content">{{$house->apartmentprices->double_price}} Thai baht/night</span>
 					@endif
 				</div>
 			</div>
@@ -118,8 +118,8 @@
 		</div>
 		<div class="col-md-6 float-left show">
 			<ul class="nav nav-tabs room_info">
-	    		<li class="active" ><a data-toggle="tab" href="#menu1">Details</a></li>
-	    		<li class=""><a data-toggle="tab" href="#menu2">Reviews @if ($house->reviews->count() > 0)({{ $avg }}/5)@endif</a></li>
+	    		<li class="active"><a data-toggle="tab" href="#menu1">Details</a></li>
+	    		<li><a data-toggle="tab" href="#menu2">Reviews @if ($house->reviews->count() > 0)({{ $avg }}/5)@endif</a></li>
 	  		</ul>
 
 	  		<div class="tab-content">

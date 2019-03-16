@@ -110,8 +110,8 @@
 		</div>
 		<div class="col-md-6 float-left show">
 			<ul class="nav nav-tabs room_info">
-	    		<li class="active" ><a data-toggle="tab" href="#menu1">Details</a></li>
-	    		<li class=""><a data-toggle="tab" href="#menu2">Reviews @if ($house->reviews->count() > 0)({{ $avg }}/5)@endif</a></li>
+	    		<li class="active"><a data-toggle="tab" href="#menu1">Details</a></li>
+	    		<li><a data-toggle="tab" href="#menu2">Reviews @if ($house->reviews->count() > 0)({{ $avg }}/5)@endif</a></li>
 	  		</ul>
 
 	  		<div class="tab-content">
@@ -126,9 +126,9 @@
 					        <h3 class="card-title">There are {{ $house->no_rooms }} {{ $house->no_rooms > 1 ? 'rooms':'room' }} available</h3>
 					    </div>
 					    <div class="card-body">
-					        <p>Room Price: ฿{{ $house->houseprices->price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+					        <p>Room Price: {{ $house->houseprices->price }} Thai baht/night{{ $house->houseprices->type_price=='1'?'/person':'' }}</p>
 							@if ($house->houseprices->food_price)
-							<p>Food included : ฿{{ $house->houseprices->food_price }}/Day/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+							<p>Food included : {{ $house->houseprices->food_price }} Thai baht/night{{ $house->houseprices->type_price=='1'?'/person':'' }}</p>
 			  				<div class="alert alert-info" role="alert">
 	  							@if ($house->foods->breakfast == '1')Breakfast
 		  							@if ($house->foods->lunch == '1')/ Lunch
@@ -201,9 +201,9 @@
 						<div class="card">
 							<div class="margin-content">
 								<ul>
-									<li>Weekly discount: {{ $house->houseprices->weekly_discount }}%</li>
-									<li>Monthly discount: {{ $house->houseprices->monthly_discount }}%</li>
-									<li>Weekend Price ฿{{ ($house->houseprices->price)*1.2 }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</li>
+									<li>Weekly discount {{ $house->houseprices->weekly_discount }}%</li>
+									<li>Monthly discount {{ $house->houseprices->monthly_discount }}%</li>
+									<li>Weekend Price {{ floor(($house->houseprices->price)*1.2) }} Thai baht/night{{ $house->houseprices->type_price=='1'?'/person':'' }}</li>
 								</ul>
 							</div>
 						</div>
