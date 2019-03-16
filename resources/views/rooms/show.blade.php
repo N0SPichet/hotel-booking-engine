@@ -49,13 +49,13 @@
 		  				<p class="m-t-10"><b style="color: red;">Extra</b><b> <i class="fas fa-utensils"></i> include food</b></p>
 						<div class="col-md-6 col-sm-6">
 							<div class="form-check form-check-inline">
-					  			<input class="form-check-input" type="radio" id="foodyes" name="food" value="1" checked>
+					  			<input class="form-check-input" type="radio" id="foodyes" name="food" value="1">
 					  			<label class="form-check-label" for="foodyes">Yes</label>
 							</div>
 						</div>
 						<div class="col-md-6 col-sm-6">
 							<div class="form-check form-check-inline">
-					 			<input class="form-check-input" type="radio" id="foodno" name="food" value="0">
+					 			<input class="form-check-input" type="radio" id="foodno" name="food" value="0" checked>
 					  			<label class="form-check-label" for="foodno">No</label>
 							</div>
 						</div>

@@ -63,7 +63,7 @@
 						<p><i class="fas fa-bed"></i> Double Room (Standard) : {{ $rental->no_type_double_room }} {{ $rental->no_type_double_room > 1 ? 'Rooms':'Room' }}.</p>
 						@endif
 					@endif
-					@if ($rental->inc_food == '1')<p><i class="fas fa-utensils"></i> Food included</p> @elseif ($rental->inc_food == '0')<p> <i class="fas fa-utensils"></i> Food are <span class="text-danger">not included</span></p> @endif
+					@if ($rental->select_food == '1')<p><i class="fas fa-utensils"></i> Food included</p> @else<p> <i class="fas fa-utensils"></i> Food are <span class="text-danger">not included</span></p> @endif
 					@if ($rental->payment->payment_status == 'Approved')
 					<p>Address : {{ $rental->house->house_address }} {{ $rental->house->sub_district->name }} {{ $rental->house->district->name }}, {{ $rental->house->province->name }}</p>
 					<div id="map-canvas"></div>
@@ -152,7 +152,7 @@
 							@if ($rental->house->checkType($rental->house_id))
 							<p>Details</p>
 							<p><i class="fas fa-bed"></i> <b>Room</b> {{ $rental->no_rooms }} {{ $rental->no_rooms > 1 ? 'Rooms':'Room' }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) - {{ $room_price }} Thai Bath ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}).</p>
-							<p><i class="fas fa-utensils"></i> <b>Food</b> {{ $rental->inc_food!=null?'yes':'no' }} - {{ $food_price }} Thai Bath ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}).</p>
+							<p><i class="fas fa-utensils"></i> <b>Food</b> {{ $rental->select_food=='1'?'yes':'no' }} - {{ $food_price }} Thai Bath ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}).</p>
 							@else
 							<p>Details</p>
 								@if ($rental->no_type_single > 0)

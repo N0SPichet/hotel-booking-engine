@@ -39,7 +39,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
-        $rental->inc_food = 1;
+        $rental->select_food = '1';
         $rental->discount = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
@@ -69,7 +69,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
-        $rental->inc_food = 1;
+        $rental->select_food = '1';
         $rental->discount = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
@@ -92,7 +92,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
-        $rental->inc_food = 1;
+        $rental->select_food = '1';
         $rental->discount = 0;
         $rental->rental_checkroom = 0;
         $rental->user_id = $user->id;
@@ -122,7 +122,7 @@ class RentalTableSeeder extends Seeder
         $rental->rental_dateout = $date_out;
         $rental->rental_guest = 1;
         $rental->no_rooms = 1;
-        $rental->inc_food = 1;
+        $rental->select_food = '1';
         $rental->discount = 0;
         $code = Hash::make($user->id.$user->email.$house->id);
         $code = str_replace(' ', '-', $code);

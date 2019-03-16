@@ -26,7 +26,7 @@
 						<span> {{ $rental->no_rooms }} {{ $rental->no_rooms > 1 ? 'rooms' : 'room' }}</span>
 						<span class="float-right">{{ $rental->no_rooms }}</span>
 					</div>
-					@if ($rental->inc_food == '1')
+					@if ($rental->select_food == '1')
 					<div class="col-md-12">
 						<span><i class="fas fa-utensils"></i> Food included ฿{{ $rental->house->houseprices->food_price }} ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}) x {{ $days }} {{ $days > 1 ? "days" : "day" }}
 						</span>

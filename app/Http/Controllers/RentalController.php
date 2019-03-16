@@ -347,7 +347,7 @@ class RentalController extends Controller
             $rental->rental_guest = $request->guest;
             $rental->no_rooms = $request->no_rooms;
             $rental->room_price = $house->houseprices->price;
-            $rental->inc_food = $request->food;
+            $rental->select_food = $request->food;
         }
         $rental->rental_datein = $request->datein;
         $rental->rental_dateout = $request->dateout;
@@ -447,7 +447,7 @@ class RentalController extends Controller
                         }
                         if ($days < 7) {
                             $room_price = $rental->room_price*$guest*$days;
-                            if ($rental->inc_food == '1') {
+                            if ($rental->select_food == '1') {
                                 $food_price = $rental->house->houseprices->food_price*$guest_food*$days;
                             }
                             $total_price = floor(($room_price + $food_price));
@@ -459,7 +459,7 @@ class RentalController extends Controller
                         }
                         elseif ($days/7 >= 1 && $days < 30) {
                             $room_price = $rental->room_price*$guest*$days;
-                            if ($rental->inc_food == '1') {
+                            if ($rental->select_food == '1') {
                                 $food_price = $rental->house->houseprices->food_price*$guest_food*$days;
                             }
                             $total_price = floor($room_price + $food_price);
@@ -472,7 +472,7 @@ class RentalController extends Controller
                         }
                         else {
                             $room_price = $rental->room_price*$guest*$days;
-                            if ($rental->inc_food == '1') {
+                            if ($rental->select_food == '1') {
                                 $food_price = $rental->house->houseprices->food_price*$guest_food*$days;
                             }
                             $total_price = floor($room_price + $food_price);
@@ -576,7 +576,7 @@ class RentalController extends Controller
                             }
                             if ($days < 7) {
                                 $room_price = $rental->room_price*$guest*$days;
-                                if ($rental->inc_food == '1') {
+                                if ($rental->select_food == '1') {
                                     $food_price = $rental->house->houseprices->food_price*$guest_food*$days;
                                 }
                                 $total_price = floor(($room_price + $food_price));
@@ -589,7 +589,7 @@ class RentalController extends Controller
                             }
                             elseif ($days/7 >= 1 && $days < 30) {
                                 $room_price = $rental->room_price*$guest*$days;
-                                if ($rental->inc_food == '1') {
+                                if ($rental->select_food == '1') {
                                     $food_price = $rental->house->houseprices->food_price*$guest_food*$days;
                                 }
                                 $total_price = floor($room_price + $food_price);
@@ -602,7 +602,7 @@ class RentalController extends Controller
                             }
                             else {
                                 $room_price = $rental->room_price*$guest*$days;
-                                if ($rental->inc_food == '1') {
+                                if ($rental->select_food == '1') {
                                     $food_price = $rental->house->houseprices->food_price*$guest_food*$days;
                                 }
                                 $total_price = floor($room_price + $food_price);
