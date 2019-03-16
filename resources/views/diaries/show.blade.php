@@ -8,7 +8,7 @@
 <div class="container">
 	<div class="row m-t-10">
 		<div class="col-sm-12">
-			<a href="{{ route('diaries.index') }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
+			<a href="{{ route('diaries.index') }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Explore diaries</a>
 		</div>
 	</div>
 	<div class="row m-t-10">
@@ -55,41 +55,41 @@
 			</div>
 			@endif
 			<div class="row">
-				<div class="col-md-10 m-t-50">
+				<div class="col-md-10 m-t-10">
 					@if ($diary->user->user_image == NULL)
 					<div class="author-info">
-						<a href="{{route('users.show', $diary->user_id)}}"><img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image"></a>
+						<a target="_blank" href="{{route('users.show', $diary->user_id)}}"><img src="{{ asset('images/users/blank-profile-picture.png') }}" class="author-image"></a>
 						<div class="author-name">
-							<a href="{{route('users.show', $diary->user_id)}}"><h4>{{ $diary->user->user_fname }}</h4>
+							<a target="_blank" href="{{route('users.show', $diary->user_id)}}"><h4>{{ $diary->user->user_fname }}</h4>
 							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }} (last update {{ $diary->updated_at->diffForHumans() }})</p></a>
 						</div>
 					</div>
 					@else
 					<div class="author-info">
-						<a href="{{route('users.show', $diary->user_id)}}"><img src="{{ asset('images/users/'.$diary->user_id.'/'.$diary->user->user_image) }}" class="author-image"></a>
+						<a target="_blank" href="{{route('users.show', $diary->user_id)}}"><img src="{{ asset('images/users/'.$diary->user_id.'/'.$diary->user->user_image) }}" class="author-image"></a>
 						<div class="author-name">
-							<a href="{{route('users.show', $diary->user_id)}}"><h4>{{ $diary->user->user_fname }}</h4>
+							<a target="_blank" href="{{route('users.show', $diary->user_id)}}"><h4>{{ $diary->user->user_fname }}</h4>
 							<p class="author-time">Published on {{ date('jS F, Y', strtotime($diary->created_at)) }}</p></a>
 						</div>
 
 					</div>
 					@endif
 				</div>
-				<div class="col-md-2">
+				<div class="col-md-2 float-left text-center m-t-10 m-b-10">
 					@if (Auth::check())
-						@if ($subscribe)
-							@if ($subscribe->writer == Auth::user()->id)
+					@if (Auth::user()->subscribe($diary->id))
+						@if (Auth::user()->subscribe($diary->id)->writer == Auth::user()->id)
 
-							@elseif ($subscribe->writer != Auth::user()->id)
-							{!! Form::open(['route'=> ['diaries.unsubscribe', $diary->user_id]]) !!}
-							<button class="btn btn-warning btn-sm m-t-50 pull-right">Unfollow {{ $diary->user->user_fname }}</button>
-							{!! Form::close() !!}
-							@endif
 						@else
-						{!! Form::open(['route'=> ['diaries.subscribe', $diary->user_id]]) !!}
-						<button class="btn btn-info btn-sm m-t-50 pull-right">Follow {{ $diary->user->user_fname }}</button>
+						{!! Form::open(['route'=> ['diaries.unsubscribe', $diary->user_id]]) !!}
+						<button class="btn btn-warning btn-sm m-t-50 pull-right">Unfollow {{ $diary->user->user_fname }}</button>
 						{!! Form::close() !!}
 						@endif
+					@else
+					{!! Form::open(['route'=> ['diaries.subscribe', $diary->user_id]]) !!}
+					<button class="btn btn-info btn-sm pull-right">Follow {{ $diary->user->user_fname }}</button>
+					{!! Form::close() !!}
+					@endif
 					@endif
 				</div>
 			</div>
@@ -148,33 +148,31 @@
 			@endif
 		<div id="comment-form" class="margin-auto m-t-50">
 			{!! Form::open(['route' => 'comments.store','data-parsley-validate']) !!}
-				<div class="row">
-					<div class="col-md-6">
-						{{ Form::hidden('diary_id', $diary->id) }}
+				<div class="col-md-6">
+					{{ Form::hidden('diary_id', $diary->id) }}
 
-						{{ Form::label('name', 'Name:') }}
-						@if (Auth::check())
-						{{ Form::text('name', Auth::user()->user_fname, ['class' => 'form-control', 'required' => '', 'readonly' => '']) }}
-						@else
-						{{ Form::text('name', null, ['class' => 'form-control', 'required' => '']) }}
-						@endif
-					</div>
-					<div class="col-md-6">
-						@if (Auth::check())
-						<br><br>
-						<p style="color: red;">login as {{ Auth::user()->user_fname }}</p>
-						{{ Form::hidden('email', Auth::user()->email) }}
-						@else
-						{{ Form::label('email', 'Email:') }}
-						{{ Form::text('email', null, ['class' => 'form-control', 'required' => '']) }}
-						@endif
-					</div>
-					<div class="col-md-12">
-						{{ Form::label('comment', 'Comment:') }}
-						{{ Form::textarea('comment', null, ['class' => 'form-control', 'rows' => '5', 'required' => '']) }}
+					{{ Form::label('name', 'Name:') }}
+					@if (Auth::check())
+					{{ Form::text('name', Auth::user()->user_fname, ['class' => 'form-control', 'required' => '', 'readonly' => '']) }}
+					@else
+					{{ Form::text('name', null, ['class' => 'form-control', 'required' => '']) }}
+					@endif
+				</div>
+				<div class="col-md-6">
+					@if (Auth::check())
+					<br><br>
+					<p style="color: red;">login as {{ Auth::user()->user_fname }}</p>
+					{{ Form::hidden('email', Auth::user()->email) }}
+					@else
+					{{ Form::label('email', 'Email:') }}
+					{{ Form::text('email', null, ['class' => 'form-control', 'required' => '']) }}
+					@endif
+				</div>
+				<div class="col-md-12">
+					{{ Form::label('comment', 'Comment:') }}
+					{{ Form::textarea('comment', null, ['class' => 'form-control', 'rows' => '5', 'required' => '']) }}
 
-						{{ Form::submit('Add comment', ['class' => 'btn btn-success pull-right form-spacing-top-8']) }}
-					</div>
+					{{ Form::submit('Add comment', ['class' => 'btn btn-success pull-right form-spacing-top-8']) }}
 				</div>
 			{!! Form::close() !!}
 		</div>

@@ -1,5 +1,5 @@
 @extends ('dashboard.main')
-@section ('title', 'Rentals')
+@section ('title', 'Rental')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
@@ -43,8 +43,8 @@
 		<div class="col-md-8 float-left">
 			<ul class="nav nav-tabs rental_info">
 	    		<li class="active"><a data-toggle="tab" href="#menu1">New Rental <span class="badge badge-danger">{{ $rental_new }}</span></a></li>
-	    		<li><a data-toggle="tab" href="#menu2">Waiting for Payment <span class="badge badge-danger">{{ $payment_waiting_badge }}</span></a></li>
-	    		<li><a data-toggle="tab" href="#menu3">Arrive Confirmed <span class="badge badge-danger">{{ $payment_approved_badge }}</span></a></li>
+	    		<li><a data-toggle="tab" href="#menu2">Payment (Waiting) <span class="badge badge-danger">{{ $payment_waiting_badge }}</span></a></li>
+	    		<li><a data-toggle="tab" href="#menu3">Payment (Success) <span class="badge badge-danger">{{ $payment_approved_badge }}</span></a></li>
 	    		<li><a data-toggle="tab" href="#menu4">History</a></li>
 	  		</ul>
 

@@ -79,7 +79,7 @@ class RoomTableSeeder extends Seeder
             $faker = Faker::create();
             $house->about_neighborhood = '<p>'.$faker->text(128).'</p>';
             $house->cover_image = '1551026527712.jpg';
-            $house->user_id = rand(2, 3);
+            $house->user_id = rand(1, 3);
             $house->housetype_id = $types_id[rand(0, count($types_id)-1)];
             $house->sub_district_id = 3348;
             $house->district_id = 434;

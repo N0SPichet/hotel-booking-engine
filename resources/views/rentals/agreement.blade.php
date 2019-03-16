@@ -1,5 +1,5 @@
 @extends ('main')
-@section ('title', 'Room Detail | Agreement')
+@section ('title', 'Agreement')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
@@ -31,7 +31,7 @@
 				</div>
 				<hr>
 
-				{!! Form::open(array('route' => 'rentals.store', 'data-parsley-validate' => '')) !!}
+				{!! Form::open(array('route' => 'rentals.booking.preview', 'data-parsley-validate' => '', 'method'=>'GET')) !!}
 
 					<div class="form-check">
 				    	<label class="form-check-label">
@@ -40,7 +40,7 @@
 				      	</label>
 				    </div>
 
-					{{ Form::hidden('id', $id, []) }}
+					{{ Form::hidden('house_id', $house_id, []) }}
 					{{ Form::hidden('datein', $datein, []) }}
 					{{ Form::hidden('dateout', $dateout, []) }}
 					{{ Form::hidden('types', $types, []) }}

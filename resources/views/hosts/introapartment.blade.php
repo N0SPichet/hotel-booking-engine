@@ -25,7 +25,7 @@
 		</div>
 		<div class="col-md-12">
 			<h4>Your listing</h4>
-			<a href="{{ route('apartments.index-myapartment', Auth::user()->id) }}" class="btn btn-lg btn-info m-t-10" style="width: 200px;">Apartment</a>
+			<a href="{{ route('apartments.index') }}" class="btn btn-lg btn-info m-t-10" style="width: 200px;">Apartment</a>
 		</div>
 	</div>
 </div>

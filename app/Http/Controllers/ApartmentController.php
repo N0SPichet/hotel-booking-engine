@@ -36,8 +36,7 @@ class ApartmentController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth', ['except' => ['index', 'show']]);
-        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'index_myapartment', 'owner', 'detroyimage');
+        $this->middleware('auth', ['except' => ['show']]);
     }
     
     /**
@@ -48,21 +47,8 @@ class ApartmentController extends Controller
     public function index()
     {
         $types_id = $this->getTypeId('apartment');
-        $houses = House::where('publish', '!=', '3')->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
+        $houses = Auth::user()->houses()->where('publish', '!=', '3')->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
         return view('apartments.index')->with('houses', $houses);
-    }
-
-    public function index_myapartment($userId) {
-        $user = User::find($userId);
-        if (!is_null($user)) {
-            if (Auth::user()->id === $user->id) {
-                $types_id = $this->getTypeId('apartment');
-                $houses = House::where('publish', '!=', '3')->where('user_id', $user->id)->whereIn('housetype_id', $types_id)->orderBy('id')->paginate(10);
-                return view('apartments.index-myapartment')->with('houses', $houses);
-            }
-        }
-        Session::flash('fail', 'Unauthorized access.');
-        return redirect()->route('apartments.index-myapartment', Auth::user()->id);
     }
 
     /**
@@ -301,7 +287,7 @@ class ApartmentController extends Controller
                 return view('apartments.single')->with('house', $house)->with('map', $map);
             }
             Session::flash('fail', 'Unauthorized access.');
-            return redirect()->route('apartments.index-myapartment', Auth::user()->id);
+            return redirect()->route('apartments.index');
         }
         else {
             $types_id = $this->getTypeId('room');
@@ -310,7 +296,7 @@ class ApartmentController extends Controller
                 return redirect()->route('rooms.owner', $houseId);
             }
             Session::flash('fail', 'Unauthorized access.');
-            return redirect()->route('apartments.index-myapartment', Auth::user()->id);
+            return redirect()->route('apartments.index');
         }
     }
 
@@ -629,7 +615,7 @@ class ApartmentController extends Controller
             else {
                 $alt = 'Can not delete Room #ID ' . $house->id . ' because someone has rented.';
             }
-            return redirect()->route('apartments.index-myapartment', Auth::user()->id)->with('alert', $alt);
+            return redirect()->route('apartments.index')->with('alert', $alt);
         }
         Session::flash('fail', 'Unauthorized access.');
         return back();

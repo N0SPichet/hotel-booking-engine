@@ -51,9 +51,9 @@
 		
 		<div class="col-md-8 float-left">
 			<div class="tab-content">
-		    	<div id="menu1" class="tab-pane fade active show in">
+		    	<div id="menu1" class="tab-pane fade show active in">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
-						{!! Form::model($house, ['route' => ['apartments.update', $house->id], 'files' => true, 'method' => 'PUT']) !!}
+						{!! Form::model($house, ['route' => ['apartments.update', $house->id], 'data-parsley-validate' => '', 'files' => true, 'method' => 'PUT']) !!}
 						<h2>Basic</h2>
 						{{ Form::label('housetype_id', '* What type of property is this?', ['class' => 'm-t-10']) }}
 						<select id="housetype_id" class="form-control m-t-10" name="housetype_id">
@@ -139,7 +139,7 @@
 						</div>
 					</div>
 				</div>
-				<div id="menu2" class="tab-pane fade">
+				<div id="menu2" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Address and Map</h2>
 						{{ Form::label('province_id', 'Provinces', ['class' => 'm-t-10']) }}
@@ -185,7 +185,7 @@
 						{{ Form::text('house_address', null, array('class' => 'form-control m-t-10', 'required' => '')) }}
 					</div>
 		    	</div>
-		    	<div id="menu3" class="tab-pane fade">
+		    	<div id="menu3" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Amenities</h2>
 						{{ Form::label('houseamenities', '* What amenities do you offer?', ['class' => 'm-t-10']) }}
@@ -210,11 +210,11 @@
 						</div>
 		    		</div>
 		    	</div>
-		    	<div id="menu4" class="tab-pane fade">
+		    	<div id="menu4" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Title</h2>
 						{{ Form::label('house_title', '* House Title: ', ['class' => 'm-t-10']) }}
-						{{ Form::text('house_title', null, ['class' => 'form-control', 'required' => '']) }}
+						{{ Form::text('house_title', null, ['class' => 'form-control', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"8", "data-parsley-maxlength"=>"100", "data-parsley-minlength-message"=>"Title should be 8 characters long."]) }}
 
 						<h2>Description</h2>
 						{{ Form::label('house_description', '* Short description of your house', ['class' => 'm-t-10']) }}
@@ -234,7 +234,7 @@
 						{{ Form::textarea('about_neighborhood', null, ['class' => 'form-control m-t-10']) }}
 					</div>
 		    	</div>
-		    	<div id="menu5" class="tab-pane fade">
+		    	<div id="menu5" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			{{ Form::label('image_name', '* Cover Images', ['class' => 'm-t-10']) }}
 						<div class="row">
@@ -273,7 +273,7 @@
 						</div>
 		    		</div>
 		    	</div>
-		    	<div id="menu6" class="tab-pane fade">
+		    	<div id="menu6" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Rules</h2>
 	    				{{ Form::label('houserules', '* Rules', ['class' => 'm-t-10']) }}
@@ -300,7 +300,7 @@
 						</div>
 					</div>
 		    	</div>
-		    	<div id="menu7" class="tab-pane fade">
+		    	<div id="menu7" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Availability</h2>
 		    			{{ Form::label('notice', '* How much notice do you need before a guest arrives?', ['class' => 'm-t-10']) }}

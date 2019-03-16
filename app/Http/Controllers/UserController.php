@@ -20,8 +20,7 @@ class UserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->middleware('crole:Admin')->except('show', 'edit', 'update', 'userprofile', 'updateimage', 'description', 'verify_user', 'verify_show', 'verify_request', 'verify_show');
+        $this->middleware('auth', ['except' => ['show']]);
     }
 
     /**
@@ -31,8 +30,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
-        return view('users.index', compact('users'));
+        Session::flash('fail', 'Unauthorized access.');
+        return back();
     }
 
     /**
@@ -45,13 +44,18 @@ class UserController extends Controller
     {
         $user = User::find($userId);
         if (!is_null($user)) {
-            $houses = House::where('user_id', $user->id)->get();
-            return view('users.show')->with('user', $user)->with('houses', $houses);
+            return view('users.show')->with('user', $user);
         }
         else {
-            Session::flash('fail', 'This user is no longer available.');
-            return back();
+            $name_str = explode("@", $userId);
+            $name_str = explode("_", $name_str[1]);
+            $user = User::where('user_fname', 'like', '%'.$name_str[0].'%')->where('user_lname', 'like', '%'.$name_str[1].'%')->first();
+            if (!is_null($user)) {
+                return view('users.show')->with('user', $user);
+            }
         }
+        Session::flash('fail', 'This user is no longer available.');
+        return back();
     }
 
     /**
@@ -139,38 +143,6 @@ class UserController extends Controller
         return back();
     }
 
-    public function verify_index()
-    {
-        $verifications = UserVerification::where('verify', '0')->get();
-        $vrf_id = array();
-        foreach ($verifications as $index => $verify) {
-            array_push($vrf_id, $verify->id);
-        }
-        $users = NULL;
-        if (count($verifications) != '0') {
-            foreach ($verifications as $index => $verify) {
-                $users = User::whereIn('user_verifications_id', $vrf_id)->get();
-            }
-        }
-        return view('users.index-verify')->with('users', $users);
-    }
-
-    public function verify_show(User $user)
-    {
-        if ($user) {
-            if (Auth::user()->id === $user->id || Auth::user()->hasRole('Admin')) {
-                return view('users.verification_show')->with('user', $user);
-            }
-            else {
-                return back();
-            }
-        }
-        else {
-            Session::flash('fail', 'This user is no longer available.');
-            return back();
-        }
-    }
-
     public function verify_user(User $user)
     {
         if (Auth::user()->id === $user->id) {
@@ -232,68 +204,9 @@ class UserController extends Controller
         return redirect()->route('dashboard.account.index');
     }
 
-    public function verify_approve(User $user)
-    {
-        if ($user) {
-            $verification = UserVerification::find($user->user_verifications_id);
-            $verification->verify = '1';
-            $passport = bcrypt(Auth::user()->id.Auth::user()->email.Auth::user()->created_at);
-            $passport = str_replace(' ', '-', $passport);
-            $passport = preg_replace('/[^A-Za-z0-9\-]/', '', $passport);
-            $verification->passport = $passport;
-            $verification->save();
-            return redirect()->route('users.verify-show', $user->id);
-        }
-        else {
-            Session::flash('fail', 'This user is no longer available.');
-            return back();
-        }
-    }
-
-    public function verify_reject(User $user)
-    {
-        if ($user) {
-            $user_verification = UserVerification::find($user->user_verifications_id);
-            $filename = $user_verification->id_card;
-            $location = public_path('images/verification/'.$user->id.'/'.$filename);
-            File::delete($location);
-            $filename = $user_verification->census_registration;
-            $location = public_path('images/verification/'.$user->id.'/'.$filename);
-            File::delete($location);
-            $user_verification->verify = '2';
-            $user_verification->title = null;
-            $user_verification->name = null;
-            $user_verification->lastname = null;
-            $user_verification->id_card = null;
-            $user_verification->census_registration = null;
-            $user_verification->save();
-            return redirect()->route('user.verify-show', $user->id);
-        }
-        else {
-            Session::flash('fail', 'This user is no longer available.');
-            return back();
-        }
-    }
-
     public function description(User $user){
         if ($user) {
             return view('users.description')->with('user', $user);
-        }
-        else {
-            Session::flash('fail', 'This user is no longer available.');
-            return back();
-        }
-    }
-
-    public function block(User $user){
-        if ($user) {
-            if($user->user_score === 0){
-                return redirect()->route('users.show', $user->id);
-            }
-            $user->user_score = 0;
-            $user->save();
-            Session::flash('success', 'This user has been blocked.');
-            return redirect()->route('users.show', $user->id);
         }
         else {
             Session::flash('fail', 'This user is no longer available.');

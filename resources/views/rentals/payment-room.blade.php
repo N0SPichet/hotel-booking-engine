@@ -1,5 +1,5 @@
 @extends ('dashboard.main')
-@section ('title', 'Room Detail | Payment')
+@section ('title', 'Payment | Rental')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
@@ -18,7 +18,7 @@
 					</div>
 					<hr>
 					<div class="col-md-12">
-						<span>Room price ฿{{ $rental->house->houseprices->price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
+						<span><i class="fas fa-bed"></i> Room price ฿{{ $rental->house->houseprices->price }} ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}) x {{ $days }} {{ $days > 1 ? "nights" : "night" }}
 						</span>
 						<span class="float-right"> ฿{{ $rental->house->houseprices->price*$days }} </span>
 					</div>
@@ -28,7 +28,7 @@
 					</div>
 					@if ($rental->inc_food == '1')
 					<div class="col-md-12">
-						<span>Food included ฿{{ $rental->house->houseprices->food_price }} x {{ $days }} {{ $days > 1 ? "days" : "day" }}
+						<span><i class="fas fa-utensils"></i> Food included ฿{{ $rental->house->houseprices->food_price }} ({{ $rental->house->houseprices->price_perperson==1?'price/person':'price/day' }}) x {{ $days }} {{ $days > 1 ? "days" : "day" }}
 						</span>
 						<span class="float-right"> ฿{{ $rental->house->houseprices->food_price*$days }} </span>
 					</div>
@@ -40,21 +40,20 @@
 					</div>
 					<hr>
 					<div class="col-md-12">
-						@if($days/7 >= 1 && $months < 1)
-						<span> Weekly Discount </span>
-						<span class="float-right"> {{$rental->house->houseprices->weekly_discount}} % </span>
-						@elseif($months >= 1)
-						<span> Monthly Discount </span>
-						<span class="float-right"> {{$rental->house->houseprices->monthly_discount}} % </span>
-						@endif
-					</div>
-					<div class="col-md-12">
-						<span> Service fee </span>
+						<span><i class="fas fa-concierge-bell"></i> Service fee </span>
 						<span class="float-right"> ฿{{ $fee }} </span>
 					</div>
+					@if ($discount > 0)
+					<div class="row">
+						<div class="col-md-12">
+							<span><i class="fas fa-hand-holding-usd"></i> Discount {{ $rental->discount }} %</span>
+							<span class="float-right">฿{{ $discount }} </span>
+						</div>
+					</div>
+					@endif
 					<hr>
 					<div class="col-md-12">
-						<span> Total (Thai Baht)  </span>
+						<span><i class="fas fa-money-check"></i> Total (Thai Baht)  </span>
 						<span class="float-right"> ฿{{ $total_price }} </span>
 					</div>
 				</div>
@@ -75,7 +74,7 @@
 					<div class="collapse" id="KBank">
 						<div class="card card-block">
 							<b>KASIKORN Bank</b>
-							<p class="font-weight-bold">Beneficiary name	PICHET FUENGFU</p>
+							<p>Beneficiary name	PICHET FUENGFU</p>
 							<p>Beneficiary account	4822525739</p>
 						</div>
 					</div>
@@ -88,7 +87,7 @@
 					<div class="collapse" id="KrungsriBank">
 						<div class="card card-block">
 							<b>Krungsri Bank</b>
-							<p class="font-weight-bold">Beneficiary name	PICHET FUENGFU</p>
+							<p>Beneficiary name	PICHET FUENGFU</p>
 							<p>Beneficiary account	4651327731</p>
 						</div>
 					</div>
@@ -101,29 +100,29 @@
 					<div class="collapse" id="SCBBank">
 						<div class="card card-block">
 							<b>Siam Commercial Bank</b>
-							<p class="font-weight-bold">Beneficiary name	PICHET FUENGFU</p>
+							<p>Beneficiary name	PICHET FUENGFU</p>
 							<p>Beneficiary account	8572169998</p>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row m-t-10">
 				{!! Form::model($payment, ['route' => ['rentals.update', $payment->id], 'files' => true, 'method' => 'PUT', 'data-parsley-validate' => '']) !!}
 
 					<div class="col-md-12">
-						{{ Form::label('payment_bankaccount', 'Bank Account: ') }}
-						{{ Form::text('payment_bankaccount', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::label('payment_bank_account') }}
+						{{ Form::text('payment_bank_account', $payment->payment_bankaccount, array('class' => 'form-control', 'required' => '', 'placeholder'=>"xxx-x-xxxxx-x")) }}
 					</div>
 
 					<div class="col-md-12">
-						{{ Form::label('payment_holder', 'Bank Holder Name') }}
-						{{ Form::text('payment_holder', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::label('payment_holder') }}
+						{{ Form::text('payment_holder', null, array('class' => 'form-control', 'required' => '', 'placeholder'=>"Mr. Name Lastname")) }}
 					</div>
 
 					<div class="col-md-12">
-						{{ Form::label('payment_amount', 'Amount (Thai Baht)') }}
-						{{ Form::text('payment_amount', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::label('payment_amount', 'Payment Amount (Thai baht)') }}
+						{{ Form::text('payment_amount', null, array('class' => 'form-control', 'required' => '', 'placeholder'=>$total_price." Thai baht")) }}
 					</div>
 
 					<div class="col-md-12">

@@ -81,13 +81,15 @@ class PagesController extends Controller
         foreach ($houses as $key => $house) {
             array_push($houses_id, $house->id);
         }
-        $rentals = Rental::whereIn('house_id', $houses_id)->where('host_decision', 'waiting')->get();
+        $rentals = Rental::whereIn('house_id', $houses_id)->where('host_decision', 'waiting')->join('payments', 'rentals.payment_id', 'payments.id')->whereNull('payment_status')->get();
         return view('dashboard.index')->with('apartments', $apartments)->with('rooms', $rooms)->with('rentals', $rentals);
     }
 
     public function dashboard_diaries_index()
     {
-        $diaries = Auth::user()->diaries()->orderBy('id', 'desc')->take(5)->get();
+        $diaries = Auth::user()->diaries()->where(function ($query) {
+            $query->whereNull('days')->orWhere('days', '0');
+        })->orderBy('id', 'desc')->take(5)->get();
         return view('dashboard.index-diaries')->with('diaries', $diaries);
     }
 

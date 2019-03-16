@@ -1,5 +1,5 @@
 @extends('main')
-@section('title','Login')
+@section('title','login')
 
 @section('content')
 <div class="container">
@@ -7,6 +7,7 @@
         <div class="col-md-8 margin-auto">
             <div class="card col">
                 <div class="card-title">Login</div>
+
                 <div class="card-body">
                     <form class="form-horizontal" role="form" method="POST" action="{{ route('login') }}">
                         {{ csrf_field() }}
@@ -66,5 +67,4 @@
         </div>
     </div>
 </div>
-
 @endsection

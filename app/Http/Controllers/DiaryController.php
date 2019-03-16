@@ -25,7 +25,6 @@ class DiaryController extends Controller
     public function __construct()
     {
         $this->middleware('auth', ['except' => ['index', 'show']]);
-        $this->middleware('crole:Admin')->except('index', 'create', 'show', 'store', 'edit', 'update', 'destroy', 'mydiaries', 'single', 'tripdiary', 'tripdiary_edit', 'tripdiary_update', 'tripdiary_destroy', 'detroyimage', 'temp_delete', 'restore', 'subscribe', 'unsubscribe');
     }
     /**
      * Display a listing of the resource.
@@ -159,9 +158,12 @@ class DiaryController extends Controller
                 $diary_image->save();
             }
         }
-        $subscribe = new Subscribe;
+        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
+        if (is_null($subscribe)) {
+            $subscribe = new Subscribe;
+        }
         $subscribe->writer = $diary->user_id;
-        $subscribe->follower = Auth::user()->id;
+        $subscribe->follower = $diary->user_id;
         $subscribe->save();
         $diary->tags()->sync($request->tags, false);
         Session::flash('success', 'This diary was succussfully save!');
@@ -217,40 +219,28 @@ class DiaryController extends Controller
                 }
                 if ($diary->publish == '2') {
                     if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                        if ($subscribe) {
-                            return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
+                        if (!Auth::user()->subscribe($diary->id)) {
+                            return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('days', $days)->with('date', $date);
                         }
                     }
-                    else {
-                        return view('diaries.subscribe')->with('diary', $diary);
-                    }
+                    return view('diaries.subscribe')->with('diary', $diary);
                 }
-                elseif ($diary->publish == '1') {
-                    if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                        return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('subscribe', $subscribe)->with('days', $days)->with('date', $date);
-                    }
+                if ($diary->publish == '1') {
+                    return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('days', $days)->with('date', $date);
                 }
             }
             else {
                 $categories = Category::all();
-                if ($diary->publish == '1') {
-                    if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                        return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
-                    }
-                    return redirect()->route('login');
-                }
                 if ($diary->publish == '2') {
                     if (Auth::check()) {
-                        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
-                        if ($subscribe) {
-                            return view('diaries.show')->with('diary', $diary)->with('subscribe', $subscribe)->with('categories', $categories);
+                        if (!is_null(Auth::user()->subscribe($diary->id))) {
+                            return view('diaries.show')->with('diary', $diary)->with('categories', $categories);
                         }
-                        return view('diaries.subscribe')->with('diary', $diary);
                     }
-                    return redirect()->route('login');
+                    return view('diaries.subscribe')->with('diary', $diary);
+                }
+                if ($diary->publish == '1') {
+                    return view('diaries.show')->with('diary', $diary)->with('categories', $categories);
                 }
             }
         }
@@ -264,7 +254,7 @@ class DiaryController extends Controller
         $subscribe = Subscribe::where('writer', $userId)->where('follower', Auth::user()->id)->first();
         if ($subscribe) {
             Session::flash('success', "You already follow " . $user->user_fname . ".");
-            return back();
+            return redirect()->route('diaries.show', $request->diary_id);
         }
         else {
             $subscribe = new Subscribe;
@@ -272,7 +262,7 @@ class DiaryController extends Controller
             $subscribe->follower = Auth::user()->id;
             $subscribe->save();
             Session::flash('success', "You are now following " . $user->user_fname . ".");
-            return back();
+            return redirect()->route('diaries.show', $request->diary_id);
         }
     }
 

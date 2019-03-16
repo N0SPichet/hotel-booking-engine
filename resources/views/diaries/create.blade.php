@@ -20,7 +20,7 @@
 			{!! Form::open(array('route' => 'diaries.store', 'data-parsley-validate' => '', 'files' => true)) !!}
 			
 				{{ Form::label('title', 'Title: ') }}
-				{{ Form::text('title', null, array('class' => 'form-control input-lg', 'required' => '')) }}
+				{{ Form::text('title', null, array('class' => 'form-control input-lg', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"8", "data-parsley-maxlength"=>"100", "data-parsley-minlength-message"=>"Title should be 8 characters long.")) }}
 
 				{{ Form::label('cover_image', 'Cover Image', ['class' => 'm-t-20']) }}
 				{{ Form::file('cover_image', ['class' => 'form-control-file']) }}
@@ -47,7 +47,7 @@
 				{{ Form::file('images[]', ['class' => 'form-control-file', 'multiple' => 'multiple']) }}
 				
 				{{ Form::label('message', 'Message: ', ['class' => 'm-t-20']) }}
-				{{ Form::textarea('message', null, array('class' => 'form-control input-lg', 'rows' => '5')) }}
+				{{ Form::textarea('message', null, array('class' => 'form-control input-lg', 'rows' => '5', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"32", "data-parsley-maxlength"=>"500", "data-parsley-minlength-message"=>"Title should be 32 characters long.")) }}
 				
 				{{ Form::submit('Create Post', array('class' => 'btn btn-success form-spacing-top')) }}
 			{!! Form::close() !!}

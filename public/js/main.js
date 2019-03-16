@@ -1,10 +1,10 @@
 $( document ).ready(function() {	
-	if($('#gender').text() === '1')
+	if($('#gender').text() == '1')
 	{
-		$('#gender').text('Male')
+		$('#gender').text('Male');
 	}
-	else if($('#gender').text() === '2')
+	else if($('#gender').text() == '2')
 	{
-		$('#gender').text('Female')
+		$('#gender').text('Female');
 	}
 });

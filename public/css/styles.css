@@ -1,14 +1,20 @@
 @import url('https://fonts.googleapis.com/css?family=Quicksand');
-html, body{ height:100%; margin:0; }
-body{ 
-  display:flex; 
-  flex-direction:column; 
+html, body{ height:100%; margin:0; font-size: 16px; }
+body{
+    display:flex;
+    flex-direction:column; 
 }
 body {
     font-family: 'Quicksand', sans-serif;
     font-size: 16px;
     font-weight: normal;
     margin: 0;
+    background: rgb(230, 236, 240);
+}
+div#app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 .clear-both:after {
     clear: both;
@@ -27,8 +33,9 @@ ul.pagination li.active {
 ul.pagination li.disabled {
     display: none;
 }
-li.parsley-required {
+.parsley-errors-list.filled {
     color: orange;
+    margin-top: 10px;
 }
 header {
     background-color: #BCDEFA;
@@ -99,8 +106,8 @@ header.manage nav ul li a {
     padding: 0px 20px;
     color: #fff;
 }
-header nav ul li a:hover {
-    background-color: #007bff;
+header nav ul li a:hover, header nav ul li a:focus {
+    background: #007bff;
     color: #fff;
 }
 header.manage nav ul li a:hover {
@@ -209,9 +216,9 @@ a:hover {
     color: #DF0101;
 }
 
-/*diary*/
+/*page title*/
 .title-page {
-    padding: 40px 0;
+    padding: 40px 0 0;
     letter-spacing: .08em;
     margin: 0;
 }
@@ -221,6 +228,7 @@ a:hover {
     font-size: 60px;
     font-weight: 100;
 }
+/*diary*/
 .thumb-article__date {
     color: #7e7e7e;
     font-size: 14px;
@@ -313,7 +321,7 @@ a:hover {
     margin: 5px 0px;
 }
 .author-time {
-    font-size: 11px;
+    font-size: 12px;
     font-style: italic;
     color: #aaa;
 }
@@ -576,12 +584,10 @@ img.img-responsive {
     font-size: 18px;
     padding: 10px;
 }
-
 .rooms .create li {
     border-bottom: 1px solid #ccc;
     margin-block-end: 12px;
 }
-
 .rooms .create li .active:before {
     content: "* ";
 }
@@ -681,18 +687,135 @@ span.use_as_home_thum {
 .dashboard-index li.nav-item {
     border-bottom: solid 1px #0000;
 }
-.dashboard-index li.nav-item.active, .dashboard-index li.nav-item:hover {
+.dashboard-index li.nav-item.active {
     background: #87b9c1;
+    border-bottom: solid 1px #000;
+}
+.dashboard-index li.nav-item:hover {
     border-bottom: solid 1px #000;
 }
 .dashboard-index .text-title {
     text-transform: capitalize;
 }
-@media only screen and (max-width: 450px) {
+.users .card {
+    box-shadow: 0 3px 30px rgba(0, 0, 0, .14);
+    color: #444;
+    text-align: center;
+    font-size: 16px;
+    padding: 10px 0;
+}
+.dashboard-index.users .card {
+    text-align: left;
+}
+.users .card-header {
+    position: relative;
+    height: 112px;
+}
+.users .card-header .profile-img {
+    width: 200px;
+    height: 200px;
+    border-radius: 1000px;
+    position: absolute;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
+    border: 6px solid #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .14);
+    top: 110px;
+}
+.users .card-body {
+    padding-top: 110px;
+    padding-left: 40px;
+    padding-right: 40px; 
+}
+.users .card-body .full-name {
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin: 10px 0 0;
+}
+.users .card-body .username {
+    color: #777;
+    margin: 5px 0 0;
+}
+.users .card-body .address {
+    font-weight: 500;
+    margin: 10px 0 0;
+}
+.users .card-body .description p {
+    line-height: 24px;
+}
+.users .card-body .description:after {
+    clear: both;
+    display: block;
+    content: "";
+}
+.users .card-footer {
+    display: table;
+    width: 100%;
+    border-top: 1px solid #e6e6e6;
+}
+.users .card-footer .col-6 {
+    display: table-cell;
+    padding: 5px 10px;
+    font-size: 15px;
+}
+.users .card-footer .col-6:nth-child(odd) {
+    border-right: 1px solid #ccc;
+}
+.users .card-footer .count {
+    font-size: 18px;
+    font-weight: 600;
+}
+@media only screen and (max-width: 575px) {
+    header nav {
+        float: none;
+    }
+    header nav ul li {
+        width: 100%;
+        text-align: center;
+    }
+    header nav ul li a {
+        width: 100%;
+        line-height: 40px;
+    }
+    header nav ul li ul.hav-sub-nav {
+        width: 100%;
+    }
+    .home .show {
+        height: 320px;
+    }
+    .users .card-body {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .users .card-body .room-rating {
+        display: block;
+    }
+    .author-info {
+        text-align: center;
+    }
+    .author-info .author-image {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        float: none;
+    }
+    .author-info .author-name {
+        width: 100%;
+        margin: 0 auto;
+        padding: 5px;
+    }
+    .comment-content {
+        margin: auto;
+    }
     .checkin-preview .rental-id, .checkin-preview .stay-date, .checkin-preview .rental-payment {
         width: 100%;
     }
     .checkin-preview hr {
         display: block;
+    }
+    .title-page, .title-section {
+        font-size: 30px;
     }
 }

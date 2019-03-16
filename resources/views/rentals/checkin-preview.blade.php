@@ -93,9 +93,6 @@
 <script type="text/javascript">
 	var change;
 	$(document).ready(function() {
-		$( window ).load(function() {
-		  $('#checkincode_preview').val('{{$checkincode}}');
-		});
 		$('#use_another_code').on('click', function(event) {
 			event.preventDefault();
 			console.log(change);

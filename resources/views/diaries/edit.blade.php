@@ -15,11 +15,11 @@
 <div class="container">
 	<div class="row m-t-10">
 
-		{!! Form::model($diary, ['route' => ['diaries.update', $diary->id], 'method' => 'PUT', 'files' => true]) !!}
+		{!! Form::model($diary, ['route' => ['diaries.update', $diary->id], 'data-parsley-validate' => '', 'method' => 'PUT', 'files' => true]) !!}
 			{{ csrf_field() }}
 		<div class="col-md-8 col-sm-8 float-left">
 			{{ Form::label('title', 'Title:') }}
-			{{ Form::text('title', null, ['class' => 'form-control']) }}
+			{{ Form::text('title', null, ['class' => 'form-control', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"8", "data-parsley-maxlength"=>"100", "data-parsley-minlength-message"=>"Title should be 8 characters long."]) }}
 
 			{{ Form::label('cover_image', 'Cover Image', ['class' => 'm-t-20']) }}
 			{{ Form::file('cover_image', ['class' => 'form-control-file']) }}
@@ -60,7 +60,7 @@
 			{{ Form::file('images[]', ['class' => 'form-control-file', 'multiple' => 'multiple']) }}
 
 			{{ Form::label('message', 'Message:', ['class' => 'm-t-20']) }}
-			{{ Form::textarea('message', null, ['class' => 'form-control', 'rows' => '5']) }}
+			{{ Form::textarea('message', null, ['class' => 'form-control', 'rows' => '5', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"32", "data-parsley-maxlength"=>"500", "data-parsley-minlength-message"=>"Title should be 32 characters long."]) }}
 		</div>
 
 		<div class="col-md-4 col-sm-4 float-left">

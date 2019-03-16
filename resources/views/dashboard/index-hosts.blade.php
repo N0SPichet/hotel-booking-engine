@@ -35,7 +35,7 @@
 						<div class="margin-content">
 							<div class="m-t-10 text-center">
 								<a href="{{ route('hosts.introroom') }}" class="btn btn-danger">New Room</a>
-								<a href="{{ route('rooms.index-myroom', Auth::user()->id) }}" class="btn btn-info">Lists Rooms</a>
+								<a href="{{ route('rooms.index') }}" class="btn btn-info">Lists Rooms</a>
 							</div>
 						</div>
 					</div>
@@ -61,7 +61,7 @@
 						<div class="margin-content">
 							<div class="m-t-10 text-center">
 								<a href="{{ route('hosts.introapartment') }}" class="btn btn-danger m-t-10">New Apartment</a>
-								<a href="{{ route('apartments.index-myapartment', Auth::user()->id) }}" class="btn btn-info m-t-10">Lists Apartments</a>
+								<a href="{{ route('apartments.index') }}" class="btn btn-info m-t-10">Lists Apartments</a>
 							</div>
 						</div>
 					</div>

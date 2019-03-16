@@ -24,7 +24,7 @@
 		</div>
 			
 		<div class="col-md-6 float-left">
-			<form action="{{ route('helps.postcontacthost') }}" method="POST">
+			<form action="{{ route('helps.postcontacthost') }}" data-parsley-validate method="POST">
 				{{ csrf_field() }}
 				<input type="hidden" name="houseId" value="{{ $house->id }}">
 				<input type="hidden" name="hostname" value="{{ $house->user->user_fname }}">
@@ -61,7 +61,7 @@
 				</div>
 				<div class="form-group">
 					<label for="message">Message</label>
-					<textarea name="message" class="form-control" required="" rows="5"></textarea>
+					<textarea id="message" name="message" data-parsley-trigger="keyup" data-parsley-minlength="20" data-parsley-maxlength="100" data-parsley-minlength-message="Message should have have length 20 alphabets." class="form-control" required="" rows="5"></textarea>
 				</div>
 				<input type="submit" value="Sent Message" class="btn btn-success">
 			</form>

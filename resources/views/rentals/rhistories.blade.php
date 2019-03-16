@@ -1,5 +1,5 @@
 @extends ('dashboard.main')
-@section ('title', 'Rentals | History')
+@section ('title', 'History | Rental')
 
 @section ('content')
 <div class="container">

@@ -4,6 +4,11 @@
 @section ('content')
 <div class="container diaries">
 	<div class="row m-t-10">
+		<div class="col-sm-12">
+			<a href="{{ route('dashboard.diaries.index') }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back to Dashboard</a>
+		</div>
+	</div>
+	<div class="row m-t-10">
 		<div class="col-md-9 float-left">
 			<h1>My Diaries</h1>
 		</div>

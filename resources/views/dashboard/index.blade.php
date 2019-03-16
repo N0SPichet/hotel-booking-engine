@@ -31,7 +31,7 @@
 						<div class="card-title">
 							<h4>Apartments</h4>
 							<div class="col-md-4 float-left text-center">
-								<a href="{{ route('apartments.index-myapartment', Auth::user()->id) }}">
+								<a href="{{ route('apartments.index') }}">
 								<b>{{ $apartments->count() }} {{ $apartments->count()>1? 'apartments':'apartment' }} created</b>
 								</a>
 							</div>
@@ -53,7 +53,7 @@
 						<div class="card-title">
 							<h4>Rooms</h4>
 							<div class="col-md-4 float-left text-center">
-								<a href="{{ route('rooms.index-myroom', Auth::user()->id) }}">
+								<a href="{{ route('rooms.index') }}">
 								<b>{{ $rooms->count() }} {{ $rooms->count()>1? 'rooms':'room' }} created</b>
 								</a>
 							</div>

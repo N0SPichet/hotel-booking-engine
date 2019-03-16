@@ -29,7 +29,7 @@
 								<p class="text-danger">{{$rental->payment->payment_status!=null?"payment ".$rental->payment->payment_status:"host ".$rental->host_decision}}</p>
 								@endif
 								<p>@if($rental->house->checkType($rental->house_id)) <img src="{{ asset('images/houses/house.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @else <img src="{{ asset('images/houses/apartment.png')}}" style="height: 20px; width: 20px; margin-bottom: 10px;"> @endif Room Name :  {{ $rental->house->house_title }}  </p>
-								<p><i class="far fa-calendar-alt"></i> Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))+1 }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))+1>'1'?'days':'day' }}) </p>
+								<p><i class="far fa-calendar-alt"></i> Date : {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} ({{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout)) }} {{ Carbon::parse($rental->rental_datein)->diffInDays(Carbon::parse($rental->rental_dateout))>'1'?'days':'day' }}) </p>
 								<p><i class="far fa-user"></i> {{ $rental->rental_guest }} guest</p>
 								</a>
 							</div>

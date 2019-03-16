@@ -51,9 +51,9 @@
 
 		<div class="col-md-8 float-left">
 			<div class="tab-content">
-		    	<div id="menu1" class="tab-pane fade active show in">
+		    	<div id="menu1" class="tab-pane fade show active in">
 		    		<div class="col-md-10 float-left m-t-10">
-		    			{!! Form::model($house, ['route' => ['rooms.update', $house->id], 'files' => true, 'method' => 'PUT']) !!}
+		    			{!! Form::model($house, ['route' => ['rooms.update', $house->id], 'data-parsley-validate' => '', 'files' => true, 'method' => 'PUT']) !!}
 
 						{{ Form::label('housetype_id', 'What type of property is this?') }}
 						<select id="housetype_id" class="form-control m-t-10" name="housetype_id">
@@ -102,7 +102,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu2" class="tab-pane fade">
+		    	<div id="menu2" class="tab-pane fade show">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('province_id', 'Provinces', array('class' => 'm-t-10')) }}
 						<select id="province_id" class="form-control m-t-10" name="province_id">
@@ -148,7 +148,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu3" class="tab-pane fade">
+		    	<div id="menu3" class="tab-pane fade show">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('houseamenities', 'What amenities do you offer?', ['class' => 'm-t-10']) }}
 		    			<div class="row ">
@@ -172,10 +172,10 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu4" class="tab-pane fade">
+		    	<div id="menu4" class="tab-pane fade show">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('house_title', 'House Title: ') }}
-						{{ Form::text('house_title', null, ['class' => 'form-control', 'required' => '']) }}
+						{{ Form::text('house_title', null, ['class' => 'form-control', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"8", "data-parsley-maxlength"=>"100", "data-parsley-minlength-message"=>"Title should be 8 characters long."]) }}
 
 						{{ Form::label('house_description', 'Short description of your house') }}
 						{{ Form::textarea('house_description', null, ['class' => 'form-control m-t-10', 'required' => '', 'rows' => '5']) }}
@@ -194,7 +194,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu5" class="tab-pane fade">
+		    	<div id="menu5" class="tab-pane fade show">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('cover_image', 'Cover Images') }}
 						<div class="row">
@@ -218,7 +218,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu6" class="tab-pane fade">
+		    	<div id="menu6" class="tab-pane fade show">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('houserules', 'Rules') }}
 						<div class="row">
@@ -245,7 +245,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu7" class="tab-pane fade">
+		    	<div id="menu7" class="tab-pane fade show">
 		    		<div class="col-md-10 float-left m-t-10">
 		    			{{ Form::label('notice', 'How much notice do you need before a guest arrives?') }}
 						<select class="form-control m-t-10" name="notice">

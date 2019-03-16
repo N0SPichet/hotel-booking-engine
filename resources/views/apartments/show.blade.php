@@ -12,6 +12,7 @@
 	<div class="row">
 		<div class="card col-md-12" align="center">
 			{!! Form::open(array('route' => 'rentals.agreement', 'data-parsley-validate' => '')) !!}
+				{{ Form::hidden('house_id', $house->id, array('class' => 'form-control input-lg')) }}
 			<div class="col-md-4 float-left">
 				<div class="form-group m-t-10">
 		    		<i class="far fa-calendar-alt"></i>
@@ -67,7 +68,6 @@
 		</div>
 		<div class="col-md-12" align="center">
 			<div class="form-group m-t-10">
-				{{ Form::hidden('id', $house->id, array('class' => 'form-control input-lg')) }}
 				<button type="submit" class="btn btn-success m-t-20">Request to Book</button>
 			{!! Form::close() !!}
 			</div>
@@ -119,11 +119,11 @@
 		<div class="col-md-6 float-left show">
 			<ul class="nav nav-tabs room_info">
 	    		<li class="active" ><a data-toggle="tab" href="#menu1">Details</a></li>
-	    		<li class=""><a data-toggle="tab" href="#menu2">Reviews</a></li>
+	    		<li class=""><a data-toggle="tab" href="#menu2">Reviews @if ($house->reviews->count() > 0)({{ $avg }}/5)@endif</a></li>
 	  		</ul>
 
 	  		<div class="tab-content">
-	    		<div id="menu1" class="tab-pane fade in active show">
+	    		<div id="menu1" class="tab-pane fade show active in">
 	    			<p class="m-t-10"><img src="https://www.shareicon.net/data/128x128/2015/10/29/663979_users_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_capacity }} guests 
 						<img src="https://www.shareicon.net/data/128x128/2016/07/11/598206_home_64x64.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_bedrooms }} bedroom 
 						<img src="https://www.shareicon.net/data/128x128/2015/12/21/691012_sleep_512x512.png" style="width: 15px; margin-bottom: 5px;"> {{ $house->house_beds}} bed 
@@ -211,41 +211,46 @@
 						</div>
 					</div>
 	    		</div>
-	    		<div id="menu2" class="tab-pane fade">
-	    			<h2>Reviews</h2>
-					<h4>User Reviews</h4>
-					@if ($house->reviews()->count() != 0)
-					<h3 class="comment-title"><i class="far fa-star"></i> Average {{ $avg }} <small>Base on {{ $house->reviews()->count() }} Reviews</small></h3>
-					@elseif ($house->reviews()->count() == 0)
-					<h3 class="comment-title"><i class="far fa-star"></i> No Review</h3>
+	    		<div id="menu2" class="tab-pane fade show">
+	    			<h4>Reviews</h4>
+	    			<?php
+	    				$reviews = $house->reviews->take(10);
+	    				$review_count = $house->reviews->take(10)->count();
+	    				$review_count_total = $house->reviews->count();
+	    			?>
+					@if ($review_count > 0)
+					<p><b>Renter reviews</b> ({{ $review_count }}/{{ $review_count_total }})</p>
+					<b class="comment-title"><i class="far fa-star"></i> Average {{ $avg }}/5 <small>Base on {{ $house->reviews()->count() }} Reviews</small></b>
+					@else
+					<p><b>Renter reviews</b></p>
+					<b class="comment-title"><i class="far fa-star"></i> No Review</b>
 					@endif
 
-					@foreach ($house->reviews as $review)
-					<div class="card">
+					@foreach ($reviews as $review)
+					<div class="card m-t-10">
 						<div class="margin-content">
 							<div class="comment">
 								<div class="author-info">
-									<img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($review->user->email))) . '?s=50&d=monsterid' }}" class="author-image">
+									<a target="_blank" href="{{ route('users.show', $review->user_id) }}"><img src="{{ 'https://www.gravatar.com/avatar/' . md5(strtolower(trim($review->user->email))) . '?s=50&d=monsterid' }}" class="author-image"></a>
 									<div class="author-name">
-										<h4>{{ $review->user->user_fname }} @if ($review->user->user_verifications->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i></small> @endif</h4>
+										<a target="_blank" href="{{ route('users.show', $review->user_id) }}"><h4>{{ $review->user->user_fname }} @if ($review->user->verification->verify == '1') <small style="color: green;"><i class="far fa-check-circle"></i></small> @endif</h4></a>
 										<p class="author-time">{{ date('jS F, Y - g:iA', strtotime($review->created_at)) }}</p>
 									</div>
 								</div>
-								<div class="comment-content">
-									<p>{!! $review->comment !!}</p>
-								</div>
+								<div class="comment-content">{!! $review->comment !!}</div>
 							</div>
 						</div>
 					</div>
 					@endforeach
+					@if ($review_count_total > 10)
 					<a id="readMoreReviews" href="#" class="btn btn-info btn-sm form-spacing-top-8">Read more reviews</a>
+					@endif
 	    		</div>
 			</div>
 		</div>
 	</div>
 </div>
 @endsection
-
 @section('scripts')
 {!! Html::script('js/parsley.min.js') !!}
 <script type="text/javascript">

@@ -2,14 +2,16 @@
 @section('title', 'Dashboard | Account')
 
 @section('content')
-<div class="container dashboard-index">
+<div class="container dashboard-index users">
 	<div class="col-md-3 float-left m-t-10">
 		@include('layouts.side-tab-dashboard')
 	</div>
 	<div class="col-md-9 float-left m-t-10">
-		<div class="card-body">
+		<div class="card">
 			<div class="card-title">
-				<h4>{{ Auth::user()->user_fname }}'s Account @if (Auth::user()->hasRole('Admin'))<small>Role:{{Auth::user()->roles[0]->name}}</small>@endif @if (Auth::user()->verification->verify === '1') <span class="text-success"><i class="far fa-check-circle"></i> verifired</span> @else <span class="text-danger"><a href="{{ route('users.verify-user', Auth::user()->id) }}" class="btn btn-outline-danger"><i class="fa fa-exclamation-circle"></i> unverify</a></span>@endif</h4>
+				<div class="col-md-12">
+					<h4>{{ Auth::user()->user_fname }}'s Account @if (Auth::user()->hasRole('Admin'))<small>Role:{{Auth::user()->roles[0]->name}}</small>@endif @if (Auth::user()->verification->verify === '1') <span class="text-success"><i class="far fa-check-circle"></i> verifired</span> @else <span class="text-danger"><a href="{{ route('users.verify-user', Auth::user()->id) }}" class="btn btn-outline-danger"><i class="fa fa-exclamation-circle"></i> unverify</a></span>@endif</h4>
+				</div>
 			</div>
 			<div class="card-text">
 				@if (Auth::user()->verification->passport != null)
@@ -36,10 +38,7 @@
 						    	<input name="user_image" type="file" id="user_image">
 						    </span>
 						</div>
-
-						<div style="width: 50%;">
-							{{ Form::submit('Update image', ['class' => 'btn btn-success btn-block']) }}
-						</div>
+						{{ Form::submit('Update image', ['class' => 'btn btn-success']) }}
 					{!! Form::close() !!}
 				</div>
 				<div class="col-md-12">
@@ -52,12 +51,16 @@
 						<hr>
 						@endif
 
+						@if (Auth::user()->email != null)
+						<p><b>Email</b> <a href="mailto:{{ Auth::user()->email }}">{{ Auth::user()->email }}</a></p>
+						@endif
+
 						@if (Auth::user()->user_gender != null)
 						<p><b>Gender</b> <span id="gender">{{ Auth::user()->user_gender }}</span></p>
 						<hr>
 						@endif
 
-						@if(Auth::user()->user_address !== null || Auth::user()->sub_district_id !== null || Auth::user()->district_id !== null || Auth::user()->province_id !== null)
+						@if(Auth::user()->user_address != null || Auth::user()->sub_district_id != null || Auth::user()->district_id != null || Auth::user()->province_id != null)
 						<p><b>Address</b><span>
 							@if (Auth::user()->user_address !== null) {{ Auth::user()->user_address }} @endif
 							@if (Auth::user()->sub_district->name !== null) {{ Auth::user()->sub_district->name }} @endif

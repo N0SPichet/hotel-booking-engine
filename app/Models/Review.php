@@ -10,7 +10,7 @@ class Review extends Model
 {
     protected $table = 'room_reviews';
 
-    public function houses() {
+    public function house() {
     	return $this->belongsTo(House::class);
     }
 

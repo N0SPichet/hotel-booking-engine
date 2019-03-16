@@ -1,5 +1,5 @@
 @extends ('dashboard.main')
-@section ('title', 'Room Detail | Payment')
+@section ('title', 'Payment | Rental')
 @section('stylesheets')
 {{ Html::style('css/parsley.css') }}
 @endsection
@@ -13,14 +13,12 @@
 				<div class="panel-body">
 					<p style="font-size: 18px;"> <b>{{ $rental->house->house_title }}</b> for <b> {{ $days }} {{ $days > 1 ? "Nights" : "Night" }}</b> </p>
 					<hr>
-					<div class="row">
-						<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
-					</div>
+					<p> {{ date('jS F, Y', strtotime($rental->rental_datein)) }} <i class="fas fa-long-arrow-alt-right"></i> {{ date('jS F, Y', strtotime($rental->rental_dateout)) }} </p>
 					<div class="row">
 						@if ($rental->no_type_single > 0)
 						<div class="col-md-12">
-							<span>Single Room (Standard) ฿{{ $rental->house->apartmentprices->single_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
-							<span class="float-right"> ฿{{ $rental->house->apartmentprices->single_price*$days }} </span>
+							<span><i class="fas fa-bed"></i> Single Room (Standard) ฿{{ $rental->type_single_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
+							<span class="float-right"> ฿{{ $rental->type_single_price*$days }} </span>
 							<p>
 								<span> {{ $rental->no_type_single }} {{ $rental->no_type_single > 1 ? 'rooms' : 'room' }}</span>
 								<span class="float-right">{{ $rental->no_type_single }}</span>
@@ -29,8 +27,8 @@
 						@endif
 						@if ($rental->no_type_deluxe_single > 0)
 						<div class="col-md-12">
-							<span>Deluxe Single Room ฿{{ $rental->house->apartmentprices->deluxe_single_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
-							<span class="float-right"> ฿{{ $rental->house->apartmentprices->deluxe_single_price*$days }} </span>
+							<span><i class="fas fa-bed"></i> Deluxe Single Room ฿{{ $rental->type_deluxe_single_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
+							<span class="float-right"> ฿{{ $rental->type_deluxe_single_price*$days }} </span>
 							<p>
 								<span> {{ $rental->no_type_deluxe_single }} {{ $rental->no_type_deluxe_single > 1 ? 'rooms' : 'room' }}</span>
 								<span class="float-right">{{ $rental->no_type_deluxe_single }}</span>
@@ -39,8 +37,8 @@
 						@endif
 						@if ($rental->no_type_double_room > 0 )
 						<div class="col-md-12">
-							<span>Double Room (Standard) ฿{{ $rental->house->apartmentprices->double_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
-							<span class="float-right"> ฿{{ $rental->house->apartmentprices->double_price*$days }} </span>
+							<span><i class="fas fa-bed"></i> Double Room (Standard) ฿{{ $rental->type_double_room_price }} x {{ $days }} {{ $days > 1 ? "nights" : "night" }}</span>
+							<span class="float-right"> ฿{{ $rental->type_double_room_price*$days }} </span>
 							<p>
 								<span> {{ $rental->no_type_double_room }} {{ $rental->no_type_double_room > 1 ? 'rooms' : 'room' }}</span>
 								<span class="float-right">{{ $rental->no_type_double_room }}</span>
@@ -48,25 +46,26 @@
 						</div>
 						@endif
 					</div>
-					@if ($discount > 0)
-					<div class="row">
-						<div class="col-md-12">
-							<span>Discount </span>
-							<span class="float-right"> {{$rental->discount}} % </span>
-						</div>
-					</div>
-					@endif
-					<div class="row">
-						<div class="col-md-12">
-							<span>Service fee</span>
-							<span class="float-right"> ฿{{ $fee }} </span>
-						</div>
-					</div>
 					<hr>
 					<div class="row">
 						<div class="col-md-12">
-							<span>Total (Thai Baht)</span>
-							<span class="float-right"> ฿{{ $total_price }} </span>
+							<span><i class="fas fa-concierge-bell"></i> Service fee</span>
+							<span class="float-right">฿{{ $fee }} </span>
+						</div>
+					</div>
+					@if ($discount > 0)
+					<div class="row">
+						<div class="col-md-12">
+							<span><i class="fas fa-hand-holding-usd"></i> Discount {{ $rental->discount }} %</span>
+							<span class="float-right">฿{{ $discount }} </span>
+						</div>
+					</div>
+					@endif
+					<hr>
+					<div class="row">
+						<div class="col-md-12">
+							<span><i class="fas fa-money-check"></i> Total (Thai Baht)</span>
+							<span class="float-right">฿{{ $total_price }} </span>
 						</div>
 					</div>
 				</div>
@@ -74,7 +73,7 @@
 		</div>
 	</div>
 
-	<div class="row">
+	<div class="row m-t-10">
 		<div class="col-md-6 float-left" style="margin: auto">
 			<div class="lead">Payment detail</div>
 			
@@ -120,22 +119,22 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row m-t-10">
 				{!! Form::model($payment, ['route' => ['rentals.update', $payment->id], 'files' => true, 'method' => 'PUT', 'data-parsley-validate' => '']) !!}
 
 					<div class="col-md-12">
-						{{ Form::label('payment_bankaccount', 'Bank Account: ') }}
-						{{ Form::text('payment_bankaccount', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::label('payment_bank_account') }}
+						{{ Form::text('payment_bank_account', null, array('class' => 'form-control', 'required' => '', 'placeholder'=>"xxx-x-xxxxx-x")) }}
 					</div>
 
 					<div class="col-md-12">
-						{{ Form::label('payment_holder', 'Bank Holder Name') }}
-						{{ Form::text('payment_holder', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::label('payment_holder') }}
+						{{ Form::text('payment_holder', null, array('class' => 'form-control', 'required' => '', 'placeholder'=>"Mr. Name Lastname")) }}
 					</div>
 
 					<div class="col-md-12">
-						{{ Form::label('payment_amount', 'Amount (Thai Baht)') }}
-						{{ Form::text('payment_amount', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::label('payment_amount', 'Payment Amount (Thai baht)') }}
+						{{ Form::text('payment_amount', null, array('class' => 'form-control', 'required' => '', 'placeholder'=>$total_price." Thai baht")) }}
 					</div>
 
 					<div class="col-md-12">

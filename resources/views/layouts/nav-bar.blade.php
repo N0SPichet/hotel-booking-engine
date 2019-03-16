@@ -14,6 +14,7 @@
 				<li>
 					<a href="#">{{ Auth::user()->user_fname }} Account <i class="material-icons">keyboard_arrow_down</i></a>
 					<ul class="hav-sub-nav">
+						<li><a href="{{ route('users.profile', Auth::user()->id) }}">Profile</a></li>
 						<li><a href="{{ route('dashboard.index') }}">Dashboard</a></li>
 						<li><a href="{{ route('dashboard.summary.index') }}">Rental Summary</a></li>
 						<li><a href="{{ route('helps.index') }}">Help</a></li>

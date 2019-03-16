@@ -6,9 +6,7 @@
 	<div class="row m-t-10">
 		<div class="col-sm-12">
 			@if (Auth::user()->id == $house->user_id)
-			{!! Html::linkRoute('rooms.index-myroom', 'Back to My Room', Auth::user()->id, ['class' => 'btn btn-outline-secondary']) !!}
-			@else
-			<a href="{{route('rooms.index')}}" class="btn btn-outline-secondary">Back</a>
+			<a href="{{route('rooms.index')}}" class="btn btn-outline-secondary">Back to My Room</a>
 			@endif
 		</div>
 	</div>
@@ -149,9 +147,9 @@
 				<h4>Pricing</h4>
 				<div class="card">
 					<div style="margin-left: 10px; margin-right: 10px;">
-						<p>Base price: ฿{{ $house->houseprices->price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+						<p>Base price: ฿{{ $house->houseprices->price }} Thai baht/@if ($house->houseprices->price_perperson == '1')person @elseif ($house->houseprices->price_perperson == '2')day @endif</p>
 						@if ($house->houseprices->food_price)
-						<p>Food included : ฿{{ $house->houseprices->food_price }}/Night/@if ($house->houseprices->price_perperson == '1')Person @elseif ($house->houseprices->price_perperson == '2')Day @endif</p>
+						<p>Food included : ฿{{ $house->houseprices->food_price }} Thai baht/@if ($house->houseprices->price_perperson == '1')person @elseif ($house->houseprices->price_perperson == '2')day @endif</p>
 						<div class="alert alert-info" role="alert">
   							@if ($house->foods->breakfast == '1')Breakfast
 	  							@if ($house->foods->lunch == '1')/ Lunch
@@ -181,7 +179,7 @@
 				<div class="dl-horizontal">
 					<p><b>Created by</b> {{ $house->user->user_fname }} {{ $house->user->user_lname }}</p>
 					<p><b>Created at</b> {{ date("jS M, Y", strtotime($house->created_at)) }}</p>
-					<p><b>Date modified</b> {{ $house->updated_at->diffForHumans() }}</p>
+					<p><b>Last modified</b> {{ $house->updated_at->diffForHumans() }}</p>
 				</div>
 				<div class="margin-content">
 				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>

@@ -6,9 +6,7 @@
 	<div class="row m-t-10">
 		<div class="col-sm-12">
 			@if (Auth::user()->id == $house->user_id)
-			{!! Html::linkRoute('apartments.index-myapartment', 'Back to My Apartment', Auth::user()->id, ['class' => 'btn btn-outline-secondary']) !!}
-			@else
-			<a href="{{route('apartments.index')}}" class="btn btn-outline-secondary">Back</a>
+			<a href="{{route('apartments.index')}}" class="btn btn-outline-secondary">Back to My Apartment</a>
 			@endif
 		</div>
 	</div>
@@ -219,9 +217,9 @@
 				<h4>Pricing</h4>
 				<div class="card">
 					<div class="margin-content">
-						<p>Single Room (Standard) : {{ $house->apartmentprices->single_price }} Thai Baht/Night</p>
-						<p>Deluxe Single Room : {{ $house->apartmentprices->deluxe_single_price }} Thai Baht/Night</p>
-						<p>Double Room (Standard) : {{ $house->apartmentprices->double_price }} Thai Baht/Night</p>
+						<p>Single Room (Standard) : {{ $house->apartmentprices->single_price }} Thai baht/day</p>
+						<p>Deluxe Single Room : {{ $house->apartmentprices->deluxe_single_price }} Thai baht/day</p>
+						<p>Double Room (Standard) : {{ $house->apartmentprices->double_price }} Thai baht/day</p>
 						<p>Discount: {{ $house->apartmentprices->discount }}%</p>
 					</div>
 				</div>
@@ -232,7 +230,7 @@
 				<div class="dl-horizontal">
 					<p><b>Created by</b> {{ $house->user->user_fname }} {{ $house->user->user_lname }}</p>
 					<p><b>Created at</b> {{ date("jS M, Y", strtotime($house->created_at)) }}</p>
-					<p><b>Date modified</b> {{ $house->updated_at->diffForHumans() }}</p>
+					<p><b>Last modified</b> {{ $house->updated_at->diffForHumans() }}</p>
 				</div>
 				<div class="margin-content">
 				<p>Link to public <a target="_blank" href="{{ route('rooms.show', $house->id) }}" class="btn btn-outline-secondary">Link</a></p>

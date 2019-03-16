@@ -15,13 +15,13 @@
 <div class="container diaries">
 	<div class="row m-t-10">
 		<div class="col">
-			{!! Form::model($diary, ['route' => ['diaries.tripdiary.update', $diary->id ], 'method' => 'PUT', 'data-parsley-validate' => '', 'files' => true]) !!}
+			{!! Form::model($diary, ['route' => ['diaries.tripdiary.update', $diary->id ], 'data-parsley-validate' => '', 'method' => 'PUT', 'files' => true]) !!}
 			<div class="col-md-9 float-left">
 				@if ($day != 0)
 				<h4>{{ $diary_title }} day {{ $day }}</h4>
 				@else
 				{{ Form::label('title', 'Title:') }}
-				{{ Form::text('title', null, ['class' => 'form-control']) }}
+				{{ Form::text('title', null, ['class' => 'form-control', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"8", "data-parsley-maxlength"=>"100", "data-parsley-minlength-message"=>"Title should be 8 characters long."]) }}
 
 				{{ Form::label('category_id', 'Category:', ['class' => 'form-spacing-top']) }}
 				<select class="form-control form-spacing-top-8" name="category_id">
@@ -49,7 +49,7 @@
 				{{ Form::file('images[]', ['class' => 'form-control-file', 'multiple' => 'multiple']) }}
 				@endif
 				{{ Form::label('message', 'Body:', ['class' => 'form-spacing-top']) }}
-				{{ Form::textarea('message', null, ['class' => 'form-control', 'rows' => '5']) }}
+				{{ Form::textarea('message', null, ['class' => 'form-control', 'rows' => '5', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"32", "data-parsley-maxlength"=>"500", "data-parsley-minlength-message"=>"Title should be 32 characters long."]) }}
 			</div>
 			<div class="col-md-3 float-left m-t-20">
 				<div class="col-sm-6 float-left">

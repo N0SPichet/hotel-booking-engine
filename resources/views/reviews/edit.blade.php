@@ -12,11 +12,13 @@
 
 @section ('content')
 <div class="container">
-	<div class="row">
-		<div class="col-md-12">
-			<a href="{{ route('rentals.show', $review->rental_id) }}" class="btn btn-default"><i class="fas fa-chevron-left"></i> Back to Diaries</a>
+	<div class="row m-t-10">
+		<div class="col-sm-12">
+			<a href="{{ route('rentals.show', $review->rental_id) }}" class="btn btn-outline-secondary"><i class="fas fa-chevron-left"></i> Back</a>
 		</div>
-		<div class="col-md-10 col-md-offset-1">
+	</div>
+	<div class="row m-t-10">
+		<div class="col-md-6 margin-auto">
 		{!! Form::model($review, ['route' => ['reviews.update', $review->id], 'method' => 'PUT']) !!}
 
 			{{ Form::label('name', 'Review as') }}

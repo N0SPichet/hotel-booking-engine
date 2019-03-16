@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
   <head>
-    <title>@yield('title')</title>
+    <title>@yield('title') | Dashboard | Love to Travel</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="https://cdn1.iconfinder.com/data/icons/hotel-restaurant/512/1-512.png">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
@@ -23,7 +23,8 @@
     @include('layouts.footer')
     {{-- form --}}
     <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" defer></script>
+    {{-- <script src="https://use.fontawesome.com/releases/v5.0.6/js/all.js" defer></script> --}}
+    <script defer src="https://use.fontawesome.com/releases/v5.7.2/js/all.js" integrity="sha384-0pzryjIRos8mFBWMzSSZApWtPl/5++eIfzYmTgBBmXYdhvxPc+XcFEk+zJwDgWbP" crossorigin="anonymous"></script>
     {{-- bootstrap --}}
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>

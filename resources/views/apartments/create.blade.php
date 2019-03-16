@@ -50,7 +50,7 @@
 		</div>
 		<div class="col-md-9 float-left">
 			<div class="tab-content">
-		    	<div id="menu1" class="tab-pane fade active show in">
+		    	<div id="menu1" class="tab-pane fade show active in">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			{!! Form::open(array('route' => 'apartments.store', 'data-parsley-validate' => '', 'files' => true)) !!}
 		    			
@@ -139,7 +139,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu2" class="tab-pane fade">
+		    	<div id="menu2" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Address and Map</h2>
 		    			{{ Form::label('province_id', '* Provinces', ['class' => 'm-t-10']) }}
@@ -175,7 +175,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu3" class="tab-pane fade">
+		    	<div id="menu3" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Amenities</h2>
 					    {{ Form::label('houseamenities', '* What amenities do you offer?', ['class' => 'm-t-10']) }}
@@ -201,11 +201,11 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu4" class="tab-pane fade">
+		    	<div id="menu4" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Title</h2>
 		    			{{ Form::label('house_title', '* House Title: ', ['class' => 'm-t-10']) }}
-						{{ Form::text('house_title', null, array('class' => 'form-control', 'required' => '')) }}
+						{{ Form::text('house_title', null, array('class' => 'form-control', 'required' => '', "data-parsley-trigger"=>"keyup", "data-parsley-minlength"=>"8", "data-parsley-maxlength"=>"100", "data-parsley-minlength-message"=>"Title should be 8 characters long.")) }}
 
 						<h2>Description</h2>
 						{{ Form::label('house_description', '* Short description of your house', ['class' => 'm-t-10']) }}
@@ -226,7 +226,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu5" class="tab-pane fade">
+		    	<div id="menu5" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Photos</h2>
 		    			{{ Form::label('image_names', '* Images', ['class' => 'm-t-10']) }}
@@ -249,7 +249,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu6" class="tab-pane fade">
+		    	<div id="menu6" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Rules</h2>
 		    			{{ Form::label('houserules', '* Set your house rules', ['class' => 'm-t-10']) }}
@@ -277,7 +277,7 @@
 		    		</div>
 		    	</div>
 
-		    	<div id="menu7" class="tab-pane fade">
+		    	<div id="menu7" class="tab-pane fade show">
 		    		<div class="col-md-10 col-md-offset-1 m-t-10">
 		    			<h2>Availability</h2>
 		    			{{ Form::label('notice', '* How much notice do you need before a guest arrives?', ['class' => 'm-t-10']) }}

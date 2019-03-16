@@ -16,8 +16,9 @@ class CreateRentalsTable extends Migration
         Schema::create('rentals', function (Blueprint $table) {
             $table->increments('id');
             $table->enum('host_decision', ['waiting', 'accept', 'reject'])->default('waiting');
-            $table->date('rental_datein')->nullable();
-            $table->date('rental_dateout')->nullable();
+            $table->date('rental_datein');
+            $table->date('rental_dateout');
+            
             $table->integer('rental_guest')->nullable();
             $table->integer('no_type_single')->nullable();
             $table->integer('type_single_price')->nullable();
@@ -26,9 +27,10 @@ class CreateRentalsTable extends Migration
             $table->integer('no_type_double_room')->nullable();
             $table->integer('type_double_room_price')->nullable();
             $table->integer('no_rooms')->nullable();
-            $table->integer('inc_food')->default(0);
+            $table->integer('room_price')->nullable();
+            $table->enum('inc_food', ['0', '1'])->default('0');
             $table->integer('discount')->default(0);
-            $table->enum('checkin_status', ['0', '1'])->default(0);
+            $table->enum('checkin_status', ['0', '1'])->default('0');
             $table->string('checkincode', 50)->nullable();
             $table->integer('rental_checkroom')->default(0);
             $table->timestamps();

@@ -10,9 +10,11 @@ use App\Models\Rental;
 use App\Models\Review;
 use App\Models\Role;
 use App\Models\SubDistrict;
+use App\Models\Subscribe;
 use App\Models\UserVerification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -58,6 +60,34 @@ class User extends Authenticatable
         return false;
     }
 
+    public function followers($user_id)
+    {
+        $count = Subscribe::where('writer', $user_id)->count();
+        if (($count/1000000) > 1) {
+            $count = ($count/1000000);
+            $count = $count."M";
+        }
+        elseif (($count/1000) > 1) {
+            $count = ($count/1000);
+            $count = $count."k";
+        }
+        return $count;
+    }
+
+    public function following($user_id)
+    {
+        $count = Subscribe::where('follower', $user_id)->count();
+        if (($count/1000000) > 1) {
+            $count = ($count/1000000);
+            $count = $count."M";
+        }
+        elseif (($count/1000) > 1) {
+            $count = ($count/1000);
+            $count = $count."k";
+        }
+        return $count;
+    }
+
     public function diaries() {
         return $this->hasMany(Diary::class);
     }
@@ -92,6 +122,13 @@ class User extends Authenticatable
     public function sub_district()
     {
         return $this->belongsTo(SubDistrict::class);
+    }
+
+    public function subscribe($diary_id)
+    {
+        $diary = Diary::find($diary_id);
+        $subscribe = Subscribe::where('writer', $diary->user_id)->where('follower', Auth::user()->id)->first();
+        return $subscribe;
     }
 
     public function verification() {

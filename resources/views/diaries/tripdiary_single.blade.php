@@ -27,8 +27,10 @@
 				@endif
 					<div id="showPublish">
 						@if ($diaries[0]->publish == '2')
+						<a href="{{ route('diaries.show', $diaries[0]->id) }}" class="btn btn-sm btn-info">Public link</a>
 						<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>
 						@elseif ($diaries[0]->publish == '1')
+						<a href="{{ route('diaries.show', $diaries[0]->id) }}" class="btn btn-sm btn-info">Public link</a>
 						<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>
 						@elseif ($diaries[0]->publish == '0')
 						<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>
@@ -182,10 +184,10 @@
 				dataType: 'json',
 				success: function(response) {
 					if (response.data == 2) {
-						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>')
+						$('#showPublish').html('<a href="{{ route('diaries.show', $diaries[0]->id) }}" class="btn btn-sm btn-info">Public link</a><p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>')
 					}
 					else if(response.data == 1) {
-						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>')
+						$('#showPublish').html('<a href="{{ route('diaries.show', $diaries[0]->id) }}" class="btn btn-sm btn-info">Public link</a><p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>')
 					}
 					else if(response.data == 0) {
 						$('#showPublish').html('<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>')
