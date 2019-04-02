@@ -1,5 +1,5 @@
 @extends('dashboard.main')
-@section('title', 'Dashboard')
+@section('title', 'Home')
 
 @section('content')
 <div class="container dashboard-index">

@@ -55,12 +55,11 @@
 				<div class="card-body" style="padding-top: 0px;">
 					<p style="color: #7e7e7e; font-size: 14px; letter-spacing: .04em;">Date modified {{ date('jS F, Y - g:iA', strtotime($diary->updated_at)) }}
 					@if ($diary->days != '0')
-					<a href="{{ route('diaries.single', $diary->id) }}" class="btn btn-primary btn-sm"><i class="fas fa-eye"></i> Read More</a>
-					<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-sm"><i class="far fa-edit"></i> Edit</a>
+					<a href="{{ route('diaries.edit', $diary->id) }}" class="btn btn-outline-warning btn-sm btn-block m-t-10" style="max-width: 100px;"><i class="far fa-edit"></i> Edit</a>
+					<a href="{{ route('diaries.single', $diary->id) }}" ><div class="text-over-flow-ellipsis"> {!! $diary->message !!} </div></a>
 					@elseif ($diary->days == '0')
-					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" class="btn btn-primary btn-sm">Read More</a>
+					<a href="{{ route('diaries.tripdiary', [$diary->rental_id, $diary->rental->user_id]) }}" ><div class="text-over-flow-ellipsis"> {!! $diary->message !!} </div></a>
 					@endif</p>
-					<div class="text-over-flow-ellipsis"> {!! $diary->message !!} </div>
 				</div>
 			</div>
 			@endif

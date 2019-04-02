@@ -63,10 +63,6 @@ class ReviewController extends Controller
             Session::flash('success', 'Review was added');
             return redirect()->route('rentals.show', [$review->rental_id]);
         }
-        else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
-        }
     }
 
     /**
@@ -103,10 +99,6 @@ class ReviewController extends Controller
                 Session::flash('fail', "This review is no longer available.");
                 return back();
             }
-        }
-        else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
         }
     }
 
@@ -154,10 +146,6 @@ class ReviewController extends Controller
                 return back();
             }
         }
-        else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
-        }
     }
 
     /**
@@ -173,10 +161,6 @@ class ReviewController extends Controller
             $review->delete();
             Session::flash('success', 'Comment deleted.');
             return back();
-        }
-        else {
-            Session::flash('fail', "You need to login first.");
-            return redirect()->route('login');
         }
     }
 }

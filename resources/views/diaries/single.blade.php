@@ -112,9 +112,9 @@
 				<div class="col-md-12" align="center">
 					<div id="showPublish">
 						@if ($diary->publish == '2')
-						<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>
+						<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only <a href="{{ route('diaries.show', $diary->id) }}" class="btn btn-sm btn-info">Public link</a></p>
 						@elseif ($diary->publish == '1')
-						<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>
+						<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published <a href="{{ route('diaries.show', $diary->id) }}" class="btn btn-sm btn-info">Public link</a></p>
 						@elseif ($diary->publish == '0')
 						<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>
 						@endif
@@ -175,10 +175,10 @@
 				dataType: 'json',
 				success: function(response) {
 					if (response.data == 2) {
-						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only</p>')
+						$('#showPublish').html('<p class="text-success m-t-20"><i class="fas fa-eye"></i> Subscriber only <a href="{{ route('diaries.show', $diary->id) }}" class="btn btn-sm btn-info">Public link</a></p>')
 					}
 					else if(response.data == 1) {
-						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published</p>')
+						$('#showPublish').html('<p class="text-primary m-t-20"><i class="fas fa-eye"></i> Published <a href="{{ route('diaries.show', $diary->id) }}" class="btn btn-sm btn-info">Public link</a></p>')
 					}
 					else if(response.data == 0) {
 						$('#showPublish').html('<p class="text-danger m-t-20"><i class="fas fa-eye-slash"></i> Private</p>')

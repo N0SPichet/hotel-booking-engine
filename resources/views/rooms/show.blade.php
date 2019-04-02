@@ -7,7 +7,9 @@
 @section ('content')
 <div class="container rooms">
 	<div class="row m-t-10">
-		<h2><img src="{{ asset('images/houses/house.png')}}" style="width: 35px; margin-bottom: 10px;"> Room : {{ $house->house_title }} <small class="text-danger">{{ $house->house_guestspace }} space</small></h2>
+		<div class="col-md-12">
+			<h2><img src="{{ asset('images/houses/house.png')}}" style="width: 35px; margin-bottom: 10px;"> Room : {{ $house->house_title }} <small class="text-danger">{{ $house->house_guestspace }} space</small></h2>
+		</div>
 	</div>
 	<div class="row">
 		<div class="card col-md-12">

@@ -16,6 +16,9 @@ div#app {
     flex-direction: column;
     height: 100%;
 }
+form {
+    margin-bottom: 10px;
+}
 .clear-both:after {
     clear: both;
     display: block;
@@ -696,6 +699,7 @@ span.use_as_home_thum {
 }
 .dashboard-index .text-title {
     text-transform: capitalize;
+    margin: 0;
 }
 .users .card {
     box-shadow: 0 3px 30px rgba(0, 0, 0, .14);
@@ -771,15 +775,19 @@ span.use_as_home_thum {
     header nav {
         float: none;
     }
-    header nav ul li {
+    header nav ul li, header.manage nav ul li {
         width: 100%;
         text-align: center;
     }
-    header nav ul li a {
+    header nav ul li a, header.manage nav ul li a {
         width: 100%;
         line-height: 40px;
     }
     header nav ul li ul.hav-sub-nav {
+        width: 100%;
+    }
+    h1.logo, header.manage h1.logo {
+        background-position-x: center;
         width: 100%;
     }
     .home .show {

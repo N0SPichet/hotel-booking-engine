@@ -206,10 +206,10 @@
 										</div>
 									</div>
 									<div class="comment-content">
-										<p>cleaness : <span class="text-danger">{{ $review->clean }}</span></p>
-										<p>amenities : <span class="text-danger">{{ $review->amenity }}</span></p>
-										<p>services : <span class="text-danger">{{ $review->service }}</span></p>
-										<p>host : <span class="text-danger">{{ $review->host }}</span></p>
+										<p>cleaness : <span class="text-warning">@for ( $i=0; $i<$review->clean; $i++) <i class="far fa-star"></i> @endfor</span><span class="text-danger">@for ( $i=0; $i<5-$review->clean; $i++) <i class="far fa-star"></i> @endfor</span></p>
+										<p>amenities : <span class="text-warning">@for ( $i=0; $i<$review->amenity; $i++) <i class="far fa-star"></i> @endfor</span><span class="text-danger">@for ( $i=0; $i<5-$review->amenity; $i++) <i class="far fa-star"></i> @endfor</span></p>
+										<p>services : <span class="text-warning">@for ( $i=0; $i<$review->service; $i++) <i class="far fa-star"></i> @endfor</span><span class="text-danger">@for ( $i=0; $i<5-$review->service; $i++) <i class="far fa-star"></i> @endfor</span></p>
+										<p>host : <span class="text-warning">@for ( $i=0; $i<$review->host; $i++) <i class="far fa-star"></i> @endfor</span><span class="text-danger">@for ( $i=0; $i<5-$review->host; $i++) <i class="far fa-star"></i> @endfor</span></p>
 										<p>{!! $review->comment !!}</p>
 									</div>
 								</div>

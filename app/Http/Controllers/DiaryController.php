@@ -219,7 +219,7 @@ class DiaryController extends Controller
                 }
                 if ($diary->publish == '2') {
                     if (Auth::check()) {
-                        if (!Auth::user()->subscribe($diary->id)) {
+                        if (Auth::user()->subscribe($diary->id)) {
                             return view('diaries.tripdiary_show')->with('diaries', $diaries)->with('days', $days)->with('date', $date);
                         }
                     }
@@ -233,7 +233,7 @@ class DiaryController extends Controller
                 $categories = Category::all();
                 if ($diary->publish == '2') {
                     if (Auth::check()) {
-                        if (!is_null(Auth::user()->subscribe($diary->id))) {
+                        if (Auth::user()->subscribe($diary->id)) {
                             return view('diaries.show')->with('diary', $diary)->with('categories', $categories);
                         }
                     }
