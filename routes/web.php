@@ -117,6 +117,13 @@ Route::prefix('dashboard')->name('dashboard.')->group(function() {
 	Route::get('{user}/rooms/offline', 'PagesController@dashboard_rooms_offline')->name('rooms.offline');
 	Route::get('{user}/apartments/online', 'PagesController@dashboard_apartments_online')->name('apartments.online');
 	Route::get('{user}/apartments/offline', 'PagesController@dashboard_apartments_offline')->name('apartments.offline');
+
+	//creqte route for PaymentController
+	Route::prefix('payments')->name('payments.')->group(function() {
+		Route::get('/', 'PaymentController@index')->name('index');
+		Route::get('request', 'PaymentController@create')->name('create');
+		Route::get('show/{payment}', 'PaymentController@show')->name('show');
+	});
 });
 
 //Create resource route for UserController
